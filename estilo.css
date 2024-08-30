@@ -1,20 +1,14 @@
-/* styles.css */
-body,
-html {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    box-sizing: border-box;
-}
-
+/* Estilização do cabeçalho */
 header {
     background-color: #EDEBE3;
+    padding: 0px 3px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
     z-index: 1000;
 }
 
+/* Estilização da barra de navegação */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -22,22 +16,25 @@ header {
     padding: 10px 20px;
 }
 
+/* Estilização do logotipo */
 .logo img {
-    width: 53px;
-    height: auto;
-
+    width: auto;
+    max-height: 48px;
 }
 
+/* Estilização dos links de navegação */
 .nav-links {
     list-style: none;
     display: flex;
     gap: 20px; /* Espaçamento entre os itens do menu */
 }
 
+/* Estilização dos itens de lista nos links de navegação */
 .nav-links li {
     padding: 10px 0;
 }
 
+/* Estilização dos links dentro da barra de navegação */
 .nav-links a {
     text-decoration: none;
     color: #333;
@@ -45,22 +42,18 @@ header {
     transition: color 0.3s ease;
 }
 
+/* Estilização dos links ao passar o mouse */
 .nav-links a:hover {
     color: #4CAF50;
 }
 
-
-
+/* Estilização do contêiner do logotipo */
 .logo-container {
     /* Alterado: novo estilo para o contêiner da logo */
     position: relative;
 }
 
-.logo img {
-    width: 53px;
-    height: auto;
-}
-
+/* Estilização da imagem na seção de herói */
 .hero {
     position: relative;
     height: 580px;
@@ -73,6 +66,7 @@ header {
     overflow: hidden;
 }
 
+/* Estilização do contêiner dos slides */
 .slide-container {
     position: relative;
     width: 100%;
@@ -81,6 +75,7 @@ header {
     overflow: hidden;
 }
 
+/* Estilização dos slides */
 .mySlides {
     display: none;
     width: 100%;
@@ -90,12 +85,14 @@ header {
     left: 0;
 }
 
+/* Estilização das imagens dentro dos slides */
 .mySlides img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
+/* Estilização do texto na seção de herói */
 .hero-txt {
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
     font-size: 2.5rem;
@@ -103,11 +100,13 @@ header {
     z-index: 1;
 }
 
+/* Estilização do contêiner de busca */
 .search-container {
     position: relative;
     width: 500px;
 }
 
+/* Estilização do campo de busca */
 .search-input {
     width: 100%;
     padding: 10px 20px 10px 40px;
@@ -116,13 +115,14 @@ header {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     font-size: 16px;
     outline: none;
-
 }
 
+/* Estilização do placeholder no campo de busca */
 .search-input::placeholder {
     color: #9e9e9e;
 }
 
+/* Estilização do ícone de busca */
 .search-icon {
     position: absolute;
     top: 50%;
@@ -131,17 +131,20 @@ header {
     fill: #9e9e9e;
 }
 
+/* Estilização da seção de favoritos */
 .favorites {
     padding: 40px 20px;
     background-color: #f4f4f4;
     text-align: center;
 }
 
+/* Estilização do título na seção de favoritos */
 .favorites h2 {
     margin-bottom: 20px;
     color: #4CAF50;
 }
 
+/* Estilização dos locais */
 .locations {
     display: flex;
     flex-wrap: wrap;
@@ -149,6 +152,7 @@ header {
     justify-content: center;
 }
 
+/* Estilização de cada local */
 .location {
     background-color: #fff;
     padding: 20px;
@@ -159,25 +163,30 @@ header {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Efeito ao passar o mouse sobre um local */
 .location:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Estilização do título dentro de cada local */
 .location h3 {
     margin: 10px 0;
     color: #333;
 }
 
+/* Estilização do parágrafo dentro de cada local */
 .location p {
     color: #666;
 }
 
+/* Estilização da animação de fade */
 .fade {
     animation-name: fade;
     animation-duration: 1.5s;
 }
 
+/* Animação de fade */
 @keyframes fade {
     from {
         opacity: 1
@@ -188,6 +197,7 @@ header {
     }
 }
 
+/* Estilização do contêiner de registro */
 .register-container {
     display: flex;
     justify-content: center;
@@ -201,6 +211,7 @@ header {
     padding: 20px;
 }
 
+/* Estilização da caixa de registro */
 .register-box {
     background-color: rgba(255, 255, 255, 0.9);
     padding: 40px;
@@ -211,17 +222,20 @@ header {
     text-align: center;
 }
 
+/* Estilização do título na caixa de registro */
 .register-box h2 {
     margin-bottom: 20px;
     color: #4CAF50;
 }
 
+/* Estilização do formulário de registro */
 .register-form {
     display: flex;
     flex-direction: column;
     width: 100%;
 }
 
+/* Estilização dos rótulos no formulário de registro */
 .register-form label {
     margin-bottom: 5px;
     color: #333;
@@ -229,6 +243,7 @@ header {
     text-align: left;
 }
 
+/* Estilização dos campos de entrada no formulário de registro */
 .register-form input {
     margin-bottom: 15px;
     padding: 10px;
@@ -236,6 +251,7 @@ header {
     border-radius: 5px;
 }
 
+/* Estilização do botão no formulário de registro */
 .register-form button {
     padding: 10px;
     background-color: #4CAF50;
@@ -247,11 +263,12 @@ header {
     font-weight: bold;
 }
 
+/* Estilização do botão ao passar o mouse */
 .register-form button:hover {
     background-color: #45a049;
 }
 
-/* Estilos Responsivos */
+/* Estilos Responsivos para telas pequenas */
 @media (max-width: 600px) {
     .register-box {
         padding: 20px;
@@ -264,22 +281,23 @@ header {
     }
 }
 
-/* Css local */
+/* Estilização geral do corpo */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #EDEBE3;
     color: #333;
-
 }
 
+/* Estilização do contêiner principal */
 .container {
     max-width: 1200px;
     margin: 20px auto;
     padding: 20px;
 }
 
+/* Estilização do título */
 h2 {
     color: #2e7d32;
     font-size: 2em;
@@ -287,12 +305,14 @@ h2 {
     margin-bottom: 20px;
 }
 
+/* Estilização das cartas */
 .cards {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
 }
 
+/* Estilização de cada carta */
 .card {
     position: relative;
     background-color: #fff;
@@ -304,10 +324,12 @@ h2 {
     overflow: hidden;
 }
 
+/* Efeito ao passar o mouse sobre uma carta */
 .card:hover {
     transform: scale(1.05);
 }
 
+/* Estilização das imagens dentro das cartas */
 .card img {
     width: 100%;
     height: auto;
@@ -316,33 +338,44 @@ h2 {
     transition: transform 0.3s ease;
 }
 
+/* Efeito ao passar o mouse sobre a imagem de uma carta */
 .card:hover img {
     transform: scale(1.1);
 }
 
+/* Estilização do ícone de favorito */
 .favorite-icon {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(255, 255, 255, 0);
-    border-radius: 50%;
-    padding: 5px;
+    top: 5px;
+    right: 5px;
+    border-radius: 80px; 
+    padding: 10px;
     cursor: pointer;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
 }
 
+/* Estilização do ícone dentro do botão de favorito */
 .favorite-icon i {
     color: #7bb35d;
     font-size: 1.5em;
+
 }
 
+/* Cor do ícone quando o favorito está ativo */
 .favorite-icon.active i {
     color: #e3535c;
 }
 
+/* Estilização do conteúdo dentro da carta */
 .card-content {
     padding: 15px;
 }
 
+/* Estilização do título dentro da carta */
 .card-content h3 {
     margin: 0 0 10px;
     font-size: 1.2em;
@@ -350,18 +383,19 @@ h2 {
     cursor: pointer;
 }
 
+/* Estilização do parágrafo dentro da carta */
 .card-content p {
     margin: 5px 0;
     color: #666;
 }
 
+/* Estilização dos links dentro da carta */
 .card-content a {
     text-decoration: none;
-    color: inherit
+    color: inherit;
 }
 
-/* Pagina1 */
-
+/* Estilização da seção trail-hero */
 .trail-hero {
     position: relative;
     width: 100%;
@@ -372,12 +406,14 @@ h2 {
     overflow: hidden;
 }
 
+/* Estilização da imagem na seção trail-hero */
 .trail-hero-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
+/* Estilização do texto na seção trail-hero */
 .trail-hero-txt {
     position: absolute;
     color: white;
@@ -385,19 +421,23 @@ h2 {
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
 }
 
+/* Estilização do título na seção trail-hero */
 .trail-hero-txt h1 {
     font-size: 2.5rem;
     margin: 0;
 }
 
+/* Estilização do parágrafo na seção trail-hero */
 .trail-hero-txt p {
     font-size: 1.2rem;
 }
 
+/* Estilização dos detalhes da trilha */
 .trail-details {
     padding: 20px;
 }
 
+/* Estilização do título na seção de detalhes da trilha */
 .trail-details h2 {
     font-size: 2em;
     color: #2e7d32;
@@ -405,30 +445,34 @@ h2 {
     margin-bottom: 20px;
 }
 
+/* Estilização dos subtítulos na seção de detalhes da trilha */
 .trail-details h3 {
     font-size: 1.5em;
     color: #2e7d32;
     margin-top: 20px;
 }
 
+/* Estilização dos parágrafos na seção de detalhes da trilha */
 .trail-details p {
     color: #666;
     font-size: 1em;
     line-height: 1.6;
 }
 
+/* Estilização das listas na seção de detalhes da trilha */
 .trail-details ul {
     list-style-type: disc;
     margin-left: 20px;
     color: #666;
 }
 
+/* Estilização dos itens de lista na seção de detalhes da trilha */
 .trail-details ul li {
     margin-bottom: 5px;
     font-size: 1em;
 }
 
-/* Responsive Styles */
+/* Estilos Responsivos para telas pequenas */
 @media (max-width: 600px) {
     .trail-hero {
         height: 200px;
@@ -451,6 +495,7 @@ h2 {
     }
 }
 
+/* Estilização do cabeçalho da trilha */
 .trail-header {
     position: relative;
     display: flex;
@@ -463,6 +508,7 @@ h2 {
     background: rgba(0, 0, 0, 0.5);
 }
 
+/* Estilização da imagem na seção de cabeçalho da trilha */
 .trail-header-img {
     width: 100%;
     height: 400px;
@@ -474,10 +520,12 @@ h2 {
     z-index: -1;
 }
 
+/* Estilização do conteúdo dentro do cabeçalho da trilha */
 .trail-header-content {
     z-index: 1;
 }
 
+/* Estilização das informações da trilha */
 .trail-info {
     display: flex;
     gap: 10px;
@@ -485,6 +533,7 @@ h2 {
     font-size: 1.2em;
 }
 
+/* Estilização dos botões na seção de trilha */
 .trail-buttons button {
     background: #4CAF50;
     border: none;
@@ -497,19 +546,23 @@ h2 {
     transition: background 0.3s ease;
 }
 
+/* Estilização dos botões ao passar o mouse */
 .trail-buttons button:hover {
     background: #45a049;
 }
 
+/* Estilização dos detalhes da trilha */
 .trail-details {
     padding: 20px;
 }
 
+/* Estilização do parágrafo na seção de resumo da trilha */
 .trail-summary p,
 .trail-description p {
     font-size: 1.1em;
 }
 
+/* Estilização do botão de visualização */
 .preview-button {
     background: #4CAF50;
     border: none;
@@ -525,10 +578,12 @@ h2 {
     text-align: center;
 }
 
+/* Estilização do botão de visualização ao passar o mouse */
 .preview-button:hover {
     background: #45a049;
 }
 
+/* Estilização dos atributos da trilha */
 .trail-attributes button {
     background: #EDEBE3;
     border: 1px solid #CCC;
@@ -539,25 +594,30 @@ h2 {
     transition: background 0.3s ease;
 }
 
+/* Estilização dos botões de atributos da trilha ao passar o mouse */
 .trail-attributes button:hover {
     background: #DDD;
 }
 
+/* Estilização do mapa da trilha */
 .trail-map {
     margin: 20px 0;
     text-align: center;
 }
 
+/* Estilização das imagens do mapa da trilha */
 .trail-map img {
     width: 100%;
     max-width: 600px;
     border-radius: 10px;
 }
 
+/* Estilização das trilhas próximas */
 .nearby-trails {
     margin: 20px 0;
 }
 
+/* Estilização do título na seção de trilhas próximas */
 .nearby-trails h2 {
     font-size: 1.5em;
     color: #2e7d32;
@@ -565,6 +625,7 @@ h2 {
     margin-bottom: 20px;
 }
 
+/* Estilização do cartão de trilha */
 .trail-card {
     display: flex;
     margin-bottom: 20px;
@@ -573,30 +634,54 @@ h2 {
     overflow: hidden;
 }
 
+/* Estilização da imagem dentro do cartão de trilha */
 .trail-card img {
     width: 100px;
     height: 100px;
     object-fit: cover;
 }
 
+/* Estilização do conteúdo dentro do cartão de trilha */
 .trail-card-content {
     padding: 10px;
     flex-grow: 1;
 }
 
+/* Estilização do título dentro do cartão de trilha */
 .trail-card-content h3 {
     margin: 0;
     font-size: 1.2em;
     color: #2e7d32;
 }
 
+/* Estilização do parágrafo dentro do cartão de trilha */
 .trail-card-content p {
     margin: 5px 0;
     color: #666;
 }
 
-/* Responsive Styles */
+/* Estilos Responsivos para telas pequenas */
 @media (max-width: 600px) {
+    .trail-hero {
+        height: 200px;
+    }
+
+    .trail-hero-txt h1 {
+        font-size: 1.5rem;
+    }
+
+    .trail-hero-txt p {
+        font-size: 1rem;
+    }
+
+    .trail-details h2 {
+        font-size: 1.5em;
+    }
+
+    .trail-details h3 {
+        font-size: 1.2em;
+    }
+
     .trail-header-img {
         height: 200px;
     }
@@ -638,3 +723,73 @@ h2 {
         padding: 10px;
     }
 }
+
+/* CSS DA PAGINA LAGOA DA MEDITAÇÃO */
+
+/* Estilização da imagem da trilha */
+.trail-hero-img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Estilização do container da imagem e texto da trilha */
+.trail-hero {
+    text-align: center;
+    margin: 20px auto;
+}
+
+/* Estilização do texto sobre a trilha */
+.trail-hero-txt {
+    margin-top: 15px;
+}
+
+/* Estilização do título da trilha */
+.trail-hero-txt h1 {
+    font-size: 2.5em;
+    margin: 0;
+    color: #333;
+}
+
+/* Estilização da descrição da trilha */
+.trail-hero-txt p {
+    font-size: 1.2em;
+    margin: 5px 0;
+    color: #666;
+}
+
+/* Estilização dos detalhes da trilha */
+.container.trail-details {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin: 20px auto;
+    max-width: 800px;
+}
+
+/* Estilização do título dos detalhes da trilha */
+.container.trail-details h2 {
+    font-size: 2em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Estilização do texto dos detalhes da trilha */
+.container.trail-details p {
+    font-size: 1em;
+    color: #555;
+}
+
+/* Estilização dos atributos da trilha */
+.container.trail-details ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.container.trail-details ul li {
+    font-size: 1em;
+    margin-bottom: 5px;
+    color: #444;
+}
+
+
