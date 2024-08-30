@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar - Parques Brasil</title>
+    <link rel="stylesheet" href="Teste4.css">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <a href="Teste4.html" class="logo">
+                <img src="images/Captura de tela 2024-06-17 104159.png" alt="Parques Brasil">
+            </a>
+            <div class="menu-container"> <!-- Alterado: contêiner para o menu -->
+                <button class="menu-button">☰</button> <!-- Alterado: botão de menu -->
+                <nav class="dropdown-menu"> <!-- Alterado: menu dropdown -->
+                    <ul>
+                        <li><a href="#">Trilhas</a></li>
+                        <li><a href="#">Favoritos</a></li>
+                        <li><a href="#">Sobre</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="register-container">
+            <div class="register-box">
+                <h2>Criar Conta</h2>
+                <form class="register-form">
+                    <label for="name">Nome</label>
+                    <input type="text" id="name" name="name" required>
+                    
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                    
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" name="password" required>
+                    
+                    <label for="confirm-password">Confirmar Senha</label>
+                    <input type="password" id="confirm-password" name="confirm-password" required>
+                    
+                    <button type="submit">Cadastrar</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

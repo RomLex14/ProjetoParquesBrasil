@@ -1,0 +1,671 @@
+/* styles.css */
+body,
+html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+header {
+    background-color: #EDEBE3;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.logo img {
+    width: 53px;
+    height: auto;
+
+}
+
+.logo-container {
+    /* Alterado: novo estilo para o contêiner da logo */
+    position: relative;
+}
+
+.logo img {
+    width: 53px;
+    height: auto;
+}
+
+.menu-container { /* Alterado: novo estilo para o contêiner do menu */
+    position: relative;
+    left: -95%;
+}
+
+.menu-button { /* Alterado: novo estilo para o botão de menu */
+    background-color: transparent;
+    border: none;
+    color: #333;
+    font-size: 24px;
+    cursor: pointer;
+   
+}
+
+.menu-button:hover {
+    color: #4CAF50;
+}
+
+.dropdown-menu { /* Alterado: novo estilo para o menu dropdown */
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0%;
+    background-color: #EDEBE3;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 10px 0;
+}
+
+.menu-container:hover .dropdown-menu { /* Alterado: exibir menu dropdown ao passar o mouse sobre o contêiner do menu */
+    display: block;
+}
+
+.dropdown-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-menu ul li {
+    padding: 10px 20px;
+}
+
+.dropdown-menu ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.dropdown-menu ul li a:hover {
+    color: #4CAF50;
+}
+
+.hero {
+    position: relative;
+    height: 580px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    text-align: center;
+    overflow: hidden;
+}
+
+.slide-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+    overflow: hidden;
+}
+
+.mySlides {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.mySlides img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-txt {
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    font-size: 2.5rem;
+    color: #fff;
+    z-index: 1;
+}
+
+.search-container {
+    position: relative;
+    width: 500px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 20px 10px 40px;
+    border-radius: 30px;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+    outline: none;
+
+}
+
+.search-input::placeholder {
+    color: #9e9e9e;
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    fill: #9e9e9e;
+}
+
+.favorites {
+    padding: 40px 20px;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+
+.favorites h2 {
+    margin-bottom: 20px;
+    color: #4CAF50;
+}
+
+.locations {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.location {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex: 1 1 calc(25% - 40px);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.location:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.location h3 {
+    margin: 10px 0;
+    color: #333;
+}
+
+.location p {
+    color: #666;
+}
+
+.fade {
+    animation-name: fade;
+    animation-duration: 1.5s;
+}
+
+@keyframes fade {
+    from {
+        opacity: 1
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 80px);
+    /* Ajusta a altura para preencher a tela, menos a altura do header */
+    background-image: url('images/register-bg.jpg');
+    /* Substitua pela URL da sua imagem de fundo */
+    background-size: cover;
+    background-position: center;
+    padding: 20px;
+}
+
+.register-box {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.register-box h2 {
+    margin-bottom: 20px;
+    color: #4CAF50;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.register-form label {
+    margin-bottom: 5px;
+    color: #333;
+    font-weight: bold;
+    text-align: left;
+}
+
+.register-form input {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.register-form button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.register-form button:hover {
+    background-color: #45a049;
+}
+
+/* Estilos Responsivos */
+@media (max-width: 600px) {
+    .register-box {
+        padding: 20px;
+    }
+
+    .register-form label,
+    .register-form input,
+    .register-form button {
+        font-size: 14px;
+    }
+}
+
+/* Css local */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #EDEBE3;
+    color: #333;
+
+}
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+h2 {
+    color: #2e7d32;
+    font-size: 2em;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.cards {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.card {
+    position: relative;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    width: 22%;
+    transition: transform 0.3s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card img {
+    width: 100%;
+    height: auto;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.card:hover img {
+    transform: scale(1.1);
+}
+
+.favorite-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0);
+    border-radius: 50%;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.favorite-icon i {
+    color: #7bb35d;
+    font-size: 1.5em;
+}
+
+.favorite-icon.active i {
+    color: #e3535c;
+}
+
+.card-content {
+    padding: 15px;
+}
+
+.card-content h3 {
+    margin: 0 0 10px;
+    font-size: 1.2em;
+    color: #2e7d32;
+    cursor: pointer;
+}
+
+.card-content p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.card-content a {
+    text-decoration: none;
+    color: inherit
+}
+
+/* Pagina1 */
+
+.trail-hero {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.trail-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.trail-hero-txt {
+    position: absolute;
+    color: white;
+    text-align: center;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.trail-hero-txt h1 {
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+.trail-hero-txt p {
+    font-size: 1.2rem;
+}
+
+.trail-details {
+    padding: 20px;
+}
+
+.trail-details h2 {
+    font-size: 2em;
+    color: #2e7d32;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.trail-details h3 {
+    font-size: 1.5em;
+    color: #2e7d32;
+    margin-top: 20px;
+}
+
+.trail-details p {
+    color: #666;
+    font-size: 1em;
+    line-height: 1.6;
+}
+
+.trail-details ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    color: #666;
+}
+
+.trail-details ul li {
+    margin-bottom: 5px;
+    font-size: 1em;
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+    .trail-hero {
+        height: 200px;
+    }
+
+    .trail-hero-txt h1 {
+        font-size: 1.5rem;
+    }
+
+    .trail-hero-txt p {
+        font-size: 1rem;
+    }
+
+    .trail-details h2 {
+        font-size: 1.5em;
+    }
+
+    .trail-details h3 {
+        font-size: 1.2em;
+    }
+}
+
+.trail-header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.trail-header-img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    filter: brightness(70%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+.trail-header-content {
+    z-index: 1;
+}
+
+.trail-info {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+    font-size: 1.2em;
+}
+
+.trail-buttons button {
+    background: #4CAF50;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 5px;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.trail-buttons button:hover {
+    background: #45a049;
+}
+
+.trail-details {
+    padding: 20px;
+}
+
+.trail-summary p,
+.trail-description p {
+    font-size: 1.1em;
+}
+
+.preview-button {
+    background: #4CAF50;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 10px 0;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.preview-button:hover {
+    background: #45a049;
+}
+
+.trail-attributes button {
+    background: #EDEBE3;
+    border: 1px solid #CCC;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.trail-attributes button:hover {
+    background: #DDD;
+}
+
+.trail-map {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.trail-map img {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 10px;
+}
+
+.nearby-trails {
+    margin: 20px 0;
+}
+
+.nearby-trails h2 {
+    font-size: 1.5em;
+    color: #2e7d32;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.trail-card {
+    display: flex;
+    margin-bottom: 20px;
+    border: 1px solid #CCC;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.trail-card img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.trail-card-content {
+    padding: 10px;
+    flex-grow: 1;
+}
+
+.trail-card-content h3 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #2e7d32;
+}
+
+.trail-card-content p {
+    margin: 5px 0;
+    color: #666;
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+    .trail-header-img {
+        height: 200px;
+    }
+
+    .trail-info {
+        flex-direction: column;
+        font-size: 1em;
+    }
+
+    .trail-buttons button {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+
+    .preview-button {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+
+    .trail-attributes button {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+
+    .trail-map img {
+        width: 100%;
+    }
+
+    .trail-card {
+        flex-direction: column;
+    }
+
+    .trail-card img {
+        width: 100%;
+        height: auto;
+    }
+
+    .trail-card-content {
+        padding: 10px;
+    }
+}
