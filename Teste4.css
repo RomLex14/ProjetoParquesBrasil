@@ -28,6 +28,29 @@ header {
 
 }
 
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px; /* Espaçamento entre os itens do menu */
+}
+
+.nav-links li {
+    padding: 10px 0;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #4CAF50;
+}
+
+
+
 .logo-container {
     /* Alterado: novo estilo para o contêiner da logo */
     position: relative;
@@ -36,60 +59,6 @@ header {
 .logo img {
     width: 53px;
     height: auto;
-}
-
-.menu-container { /* Alterado: novo estilo para o contêiner do menu */
-    position: relative;
-    left: -95%;
-}
-
-.menu-button { /* Alterado: novo estilo para o botão de menu */
-    background-color: transparent;
-    border: none;
-    color: #333;
-    font-size: 24px;
-    cursor: pointer;
-   
-}
-
-.menu-button:hover {
-    color: #4CAF50;
-}
-
-.dropdown-menu { /* Alterado: novo estilo para o menu dropdown */
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0%;
-    background-color: #EDEBE3;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    padding: 10px 0;
-}
-
-.menu-container:hover .dropdown-menu { /* Alterado: exibir menu dropdown ao passar o mouse sobre o contêiner do menu */
-    display: block;
-}
-
-.dropdown-menu ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.dropdown-menu ul li {
-    padding: 10px 20px;
-}
-
-.dropdown-menu ul li a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-    transition: color 0.3s ease;
-}
-
-.dropdown-menu ul li a:hover {
-    color: #4CAF50;
 }
 
 .hero {

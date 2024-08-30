@@ -5,39 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parques Brasil</title>
     <link rel="stylesheet" href="Teste4.css">
+    <!-- Link para o Font Awesome para ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <header>
+    <header>   <!-- Header de navegação -->
         <div class="navbar">
+            <!-- Logo do site -->
             <a href="Teste4.html" class="logo">
                 <img src="images/Captura de tela 2024-06-17 104159.png" alt="Parques Brasil">
             </a>
-            <div class="menu-container"> <!-- Alterado: contêiner para o menu -->
-                <button class="menu-button">☰</button> <!-- Alterado: botão de menu -->
-                <nav class="dropdown-menu"> <!-- Alterado: menu dropdown -->
-                    <ul>
-                        <li><a href="#">Trilhas</a></li>
-                        <li><a href="#">Favoritos</a></li>
-                        <li><a href="Teste4Register.html">Fazer Login</a></li>
-                        <li><a href="#">Sobre</a></li>
-                    </ul>
-                </nav>
-                <ul>
-                    
-                </ul>
-            </div>
+            <!-- Links de navegação -->
+            <ul class="nav-links">
+                <li><a href="#">Trilhas</a></li>
+                <li><a href="#">Favoritos</a></li>
+                <li><a href="Teste4Register.html">Fazer Login</a></li>
+                <li><a href="#">Sobre</a></li>
+            </ul>
         </div>
     </header>
     <main>
+        <!-- Seção de destaque com slides -->
         <div class="hero">
             <div class="slideshow-container">
+                <!-- Slide 1 -->
                 <div class="mySlides fade">
                     <img src="images/Park6.jpg" style="width:100%">
                 </div>
+                <!-- Slide 2 -->
                 <div class="mySlides fade">
                     <img src="images/park7.jpg" style="width:100%">
                 </div>
+                <!-- Slide 3 -->
                 <div class="mySlides fade">
                     <img src="images/park3.jpg" style="width:100%">
                 </div>
@@ -45,17 +44,21 @@
             <div class="hero-txt">
                 <h1>Busque a sua trilha</h1>
             </div>
+            <!-- Container da barra de pesquisa -->
             <div class="search-container">
                 <input type="text" class="search-input" placeholder="Pesquisar por cidade, parque ou nome da trilha">
+                <!-- Ícone da barra de pesquisa -->
                 <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
                     <path d="M0 0h24v24H0z" fill="none"/>
                     <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
                 </svg>
             </div>
         </div>
+        <!-- Seção de cards de locais favoritos -->
         <div class="container">
             <h2>Locais favoritos perto de você</h2>
             <div class="cards">
+                <!-- Card 1 -->
                 <div class="card">
                     <a href="pagina1.html">
                         <img src="images/parque da cidade 1.jpg" alt="Circuito Parque da Cidade Sarah Kubitschek">
@@ -71,6 +74,7 @@
                         <p>⭐4.3 · 9.8 km · Fácil</p>
                     </div>
                 </div>
+                <!-- Card 2 -->
                 <div class="card">
                     <a href="pagina2.html">
                         <img src="images/lagoaDaMeditacao.jpg" alt="Trilha Cristal Água - Lagoa da Meditação">
@@ -86,6 +90,7 @@
                         <p>⭐4.8 · 17.9 km · Moderada</p>
                     </div>
                 </div>
+                <!-- Card 3 -->
                 <div class="card">
                     <a href="pagina3.html">
                         <img src="images/tilhaCristalAgua.jpg" alt="Trilha Cristal Água">
@@ -101,6 +106,7 @@
                         <p>⭐4.4 · 5.8 km · Fácil</p>
                     </div>
                 </div>
+                <!-- Card 4 -->
                 <div class="card">
                     <a href="pagina4.html">
                         <img src="images/parqueOlhosDagua.jpg" alt="Grande Circuito do Parque Olhos d'Água">
