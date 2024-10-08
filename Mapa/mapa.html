@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa da Região</title>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js'></script>
+</head>
+<body>
+    <div id="map" style="width: 100%; height: 600px;"></div>
+
+    <script>
+        // Função para obter os parâmetros lat e lng da URL
+        function getCoordinatesFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const lat = parseFloat(urlParams.get('lat'));
+            const lng = parseFloat(urlParams.get('lng'));
+            return [lng, lat]; // Retorna as coordenadas como um array [longitude, latitude]
+        }
+    
+        var coordinates = getCoordinatesFromUrl(); // Pega as coordenadas da URL
+
+        mapboxgl.accessToken = 'pk.eyJ1Ijoicm9tdWxvYWYiLCJhIjoiY20xczcxeHdiMDB4bTJrcHk4M2E1N2RibCJ9.tYW8gyYnnQdZcmXXhNNg7w';
+    
+        // Inicializa o mapa com as coordenadas recebidas
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: coordinates, // Centraliza o mapa nas coordenadas
+            zoom: 12
+        });
+    </script>
+
+</body>
+</html>

@@ -1,10 +1,10 @@
 /* Estilização do cabeçalho */
 header {
-    background-color: #EDEBE3;
-    padding: 0px 3px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: sticky;
+    background-color: transparent;
+    position: absolute;
     top: 0;
+    left: 0;
+    width: 100%;
     z-index: 1000;
 }
 
@@ -14,6 +14,8 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0));
+    border-radius: 10px;
 }
 
 /* Estilização do logotipo */
@@ -27,6 +29,7 @@ header {
     list-style: none;
     display: flex;
     gap: 20px; /* Espaçamento entre os itens do menu */
+    color: white;
 }
 
 /* Estilização dos itens de lista nos links de navegação */
@@ -37,7 +40,7 @@ header {
 /* Estilização dos links dentro da barra de navegação */
 .nav-links a {
     text-decoration: none;
-    color: #333;
+    color: #ffffff;
     font-weight: bold;
     transition: color 0.3s ease;
 }
@@ -419,6 +422,7 @@ h2 {
     color: white;
     text-align: center;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    
 }
 
 /* Estilização do título na seção trail-hero */
@@ -791,5 +795,88 @@ h2 {
     margin-bottom: 5px;
     color: #444;
 }
+
+/* Estilização Responsiva para telas menores */
+@media (max-width: 768px) {
+    /* Ajuste do tamanho da barra de navegação */
+    .navbar {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    /* Logo menor para ajustar em telas pequenas */
+    .logo img {
+        max-height: 40px; /* Diminuir o tamanho da logo */
+    }
+
+    /* Estilização da barra de navegação */
+    .nav-links {
+        flex-direction: column;
+        gap: 10px; /* Menos espaço entre os itens */
+    }
+
+    /* Ajuste na altura do hero em telas menores */
+    .hero {
+        height: 400px;
+    }
+
+    /* Ajuste do tamanho da caixa de busca */
+    .search-container {
+        width: 100%;
+        padding: 0 15px; /* Menor margem lateral */
+    }
+
+    /* Texto do hero menor */
+    .hero-txt {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 600px) {
+    /* Ajuste maior para telas pequenas */
+    .navbar {
+        padding: 10px;
+    }
+
+    /* Ajuste nos cards de trilhas */
+    .cards {
+        flex-direction: column; /* Uma coluna em telas pequenas */
+    }
+
+    .card {
+        width: 100%; /* Cartões ocupam toda a largura em dispositivos pequenos */
+        margin-bottom: 20px;
+    }
+
+    /* Ajuste no contêiner de busca */
+    .search-container {
+        width: 100%;
+    }
+
+    /* Ajuste na altura do hero em telas ainda menores */
+    .hero {
+        height: 350px;
+    }
+    
+    /* Texto do hero ajustado para ficar menor */
+    .hero-txt {
+        font-size: 1.8rem;
+    }
+
+    /* Diminuir tamanho da caixa de favoritos */
+    .favorites h2 {
+        font-size: 1.8em;
+    }
+    
+    /* Ajuste de espaçamento no conteúdo dos cards */
+    .card-content h3 {
+        font-size: 1.1em;
+    }
+
+    .card-content p {
+        font-size: 0.9em;
+    }
+}
+
 
 

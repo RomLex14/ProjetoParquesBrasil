@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="estilo.css">
     <!-- Link para o Font Awesome para ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Inclua o jQuery UI no head -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
 </head>
 <body>
     <header>   <!-- Header de navegação -->
@@ -42,11 +47,12 @@
                 </div>
             </div>
             <div class="hero-txt">
-                <h1>Busque a sua trilha</h1>
+                <h1>Se conecte com natureza</h1>
             </div>
             <!-- Container da barra de pesquisa -->
             <div class="search-container">
-                <input type="text" class="search-input" placeholder="Pesquisar por cidade, parque ou nome da trilha">
+                <input type="text" id="search-input" placeholder="Pesquisar por cidade, parque ou nome da trilha">
+                <button id="search-btn"><i class="fa fa-search"></i></button>
                 <!-- Ícone da barra de pesquisa -->
                 <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
                     <path d="M0 0h24v24H0z" fill="none"/>
@@ -54,6 +60,7 @@
                 </svg>
             </div>
         </div>
+
         <!-- Seção de cards de locais favoritos -->
         <div class="container">
             <h2>Locais favoritos perto de você</h2>
@@ -128,6 +135,7 @@
             </div>
         </div>
     </main>
+
     <script src="javascripthome.js"></script>
 </body>
 </html>
