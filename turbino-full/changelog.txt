@@ -1,0 +1,27 @@
+-----------------------------------------------------------------------------------------
+Version 1 - 22 August 2018
+
+-----------------------------------------------------------------------------------------
+ 
+- Implemented Cookie Bar for EU Laws
+- Added Information about the Instagram Feed Installation
+- Improved Image File size
+
+
+-----------------------------------------------------------------------------------------
+Version 2 - 26 August 2018
+
+-----------------------------------------------------------------------------------------
+ 
+- Fixed AJAX Contact Form on contact page
+- Added Google analytics shortcode. Paste your Google Analytics code  in only 
+one place (js/main.js) to make it work in ALL PAGES.
+
+
+-----------------------------------------------------------------------------------------
+Version 3 - 28 August 2018
+
+-----------------------------------------------------------------------------------------
+ 
+- Fixed font on navbar.
+- Fixed the height of hero images to match the viewport of the user
