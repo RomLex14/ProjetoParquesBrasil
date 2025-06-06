@@ -1,0 +1,40 @@
+
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files
+.env.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+
+# Editor/OS specific (sugestões)
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE - VSCode (sugestões)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Cache do ESLint (sugestão)
+.eslintcache
