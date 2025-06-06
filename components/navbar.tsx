@@ -13,7 +13,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { User, LogOut, Settings, Heart, Activity, ChevronDown, Mountain /* Adicionado para logo */ } from "lucide-react" // Ícones mantidos por enquanto
+import { User, LogOut, Settings, Heart, Activity, ChevronDown, Mountain, /* Adicionado para logo */ 
+LayoutDashboard} from "lucide-react" // Ícones mantidos por enquanto
 
 export default function Navbar() {
   const [user, setUser] = useState<any>(null)
@@ -86,7 +87,6 @@ export default function Navbar() {
             <Link href="/map" className="text-gray-700 hover:text-green-600 dark:text-gray-300 dark:hover:text-green-400">
               Mapa
             </Link>
-            {/* Removido "Sobre" se não for essencial agora */}
           </div>
 
           <div className="flex items-center space-x-4">
@@ -118,7 +118,7 @@ export default function Navbar() {
                   <DropdownMenuSeparator />
                   {/* ITENS REMOVIDOS: Dashboard, Minhas Atividades, Configurações */}
                   <DropdownMenuItem asChild>
-                    <Link href="/profile" className="cursor-pointer w-full"> {/* Link para Perfil mantido */}
+                    <Link href="/profile" className="cursor-pointer w-full"> 
                       <User className="mr-2 h-4 w-4" />
                       Meu Perfil
                     </Link>
@@ -127,8 +127,14 @@ export default function Navbar() {
                     <Link href="/favorites" className="cursor-pointer w-full">
                       <Heart className="mr-2 h-4 w-4" />
                       Favoritos
-                    </Link>
+                    </Link>  
                   </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard" className="cursor-pointer w-full">
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      Dashboard
+                    </Link> 
+                    </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600 dark:hover:text-red-400 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-900/50">
                     <LogOut className="mr-2 h-4 w-4" />
