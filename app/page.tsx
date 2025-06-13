@@ -135,7 +135,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-slate-900 dark:to-slate-800">
+    <div className="min-h-screen dark:from-slate-900 dark:to-slate-800">
       <Navbar />
 
       {isClient && showLocationRequest && locationPermission === 'prompt' && (
@@ -163,7 +163,7 @@ export default function HomePage() {
 
       <section className="container mx-auto px-4 py-16 text-center">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-          Explore os <span className="text-green-600 dark:text-green-400">Parques Nacionais</span> do Brasil
+          Explore os <span className="text-primary dark:text-green-400">Parques Nacionais</span> do Brasil
         </h1>
         <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
           Descubra trilhas incríveis, paisagens deslumbrantes e a biodiversidade única dos parques nacionais
