@@ -1,26 +1,45 @@
-// lib/types.ts
+export interface Waypoint {
+  name: string;
+  lat: number;
+  lng: number;
+}
+export interface Parque {
+  id: string;
+  uuid: string;
+  nome: string;
+  estado: string;
+  localizacao: string;
+  area: string;
+  trilhas: number;
+  visitantes: string;
+  rating: number;
+  imagem: string;
+  descricao: string;
+  destaque: boolean;
+}
 
 export interface Trilhas {
   id: string;
-  name: string; // Nome da trilha
-  location: string; 
+  name: string;
+  location: string;
   description: string;
   imageUrl: string;
-  difficulty: "Fácil" | "Moderado" | "Difícil" | "Extrema"; 
-  distance: number; // em km
-  duration: string; // Ex: "2-3 horas"
-  elevation: number; // em metros
-  rating: number; // Ex: 4.7
+  difficulty: "Fácil" | "Moderado" | "Difícil" | "Extrema";
+  distance: number;
+  duration: string;
+  elevation: number;
+  rating: number;
   reviews: Review[];
-  coordinates?: { 
+  coordinates?: {
     lat: number;
     lng: number;
   };
-  path?: Array<{ 
+  path?: Array<{
     lat: number;
     lng: number;
   }>;
   parque_id: string;
+  waypoints?: Waypoint[]; // <-- NOVA PROPRIEDADE ADICIONADA
 }
 
 export interface Review {
@@ -44,12 +63,6 @@ export interface Perfil {
   localizacao?: string | null;
   criado_em: string;
   atualizado_em: string;
-}
-
-export interface Parque { 
-  id: string;
-  nome: string;
-
 }
 
 export interface Avaliacao {

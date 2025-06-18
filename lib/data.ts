@@ -1,113 +1,58 @@
 // lib/data.ts
-import type { Trilhas, Review } from "./types";
+import type { Trilhas, Review, Parque } from "./types";
 import { calculateDistance } from "./weather-service";
 
 // --- IDs ÚNICOS PARA OS PARQUES ---
 const PARQUE_NACIONAL_BRASILIA_ID = "7a103b3b-d434-4da6-88df-687df60043da";
 const PARQUE_ESTADUAL_PIRENEUS_ID = "33d94de9-008d-4337-a300-62637c8ba278";
 const PARQUE_NACIONAL_CHAPADA_VEADEIROS_ID = "f99ad11e-4242-4024-86b6-1ba840b55c25";
-const PARQUE_NACIONAL_IGUACU_ID = "b2c3d4e5-f6a7-8901-2345-67890abcdef1";
-const PARQUE_NACIONAL_SERRA_CANASTRA_ID = "a1b2c3d4-e5f6-7890-1234-567890abcdef";
 
 // --- DADOS DOS PARQUES ---
-export const parques = [
-  {
-    id: "1", // ID simples para a URL, ex: /parques/1
-    uuid: PARQUE_NACIONAL_BRASILIA_ID,
-    nome: "Parque Nacional de Brasília",
-    estado: "Distrito Federal",
-    localizacao: "Brasília, DF",
-    area: "42.389 hectares",
-    trilhas: 2,
-    visitantes: "150k/ano",
-    rating: 4.7,
-    imagem: "/images/parques/parquenacional.jpg", // Sugestão de novo caminho
-    descricao: "Conhecido como Água Mineral, o parque protege ecossistemas do Cerrado e abriga as famosas piscinas de água corrente, além de duas trilhas para caminhada.",
-    destaque: true,
-  },
-  {
-    id: "2",
-    uuid: PARQUE_NACIONAL_CHAPADA_VEADEIROS_ID,
-    nome: "Parque Nacional da Chapada dos Veadeiros",
-    estado: "Goiás",
-    localizacao: "Alto Paraíso de Goiás, GO",
-    area: "240.611 hectares",
-    trilhas: 1,
-    visitantes: "80k/ano",
-    rating: 4.9,
-    imagem: "/images/parques/chapada.jpg",
-    descricao: "Patrimônio Mundial Natural da UNESCO, famoso por seus cânions, cachoeiras espetaculares e formações de quartzo com mais de um bilhão de anos.",
-    destaque: true,
-  },
-  {
-    id: "3",
-    uuid: PARQUE_NACIONAL_SERRA_CANASTRA_ID,
-    nome: "Parque Nacional da Serra da Canastra",
-    estado: "Minas Gerais",
-    localizacao: "São Roque de Minas, MG",
-    area: "71.525 hectares",
-    trilhas: 0, // 0 pois não há trilhas mockadas com este ID
-    visitantes: "180k/ano",
-    rating: 4.8,
-    imagem: "/images/parques/canastra.jpg",
-    descricao: "Nascente do Rio São Francisco e paisagens únicas do cerrado, com cachoeiras como a Casca d'Anta.",
-    destaque: false,
-  },
-  {
-    id: "4",
-    uuid: PARQUE_NACIONAL_IGUACU_ID,
-    nome: "Parque Nacional do Iguaçu",
-    estado: "Paraná",
-    localizacao: "Foz do Iguaçu, PR",
-    area: "185.262 hectares",
-    trilhas: 0,
-    visitantes: "1.8M/ano",
-    rating: 4.9,
-    imagem: "/images/parques/iguacu.jpg",
-    descricao: "Lar das famosas Cataratas do Iguaçu, uma das Sete Maravilhas Naturais do Mundo.",
-    destaque: true,
-  },
-  {
-    id: "5",
-    uuid: PARQUE_ESTADUAL_PIRENEUS_ID,
-    nome: "Parque Estadual dos Pireneus",
-    estado: "Goiás",
-    localizacao: "Pirenópolis, GO",
-    area: "2.833 hectares",
-    trilhas: 1,
-    visitantes: "50k/ano",
-    rating: 4.8,
-    imagem: "/images/parques/pireneus.jpg",
-    descricao: "Unidade de conservação que protege o ponto mais alto da região, com mirantes, formações rochosas e vegetação de cerrado rupestre.",
-    destaque: false,
-  },
+export const parques: Parque[] = [
+    {
+        id: "1",
+        uuid: PARQUE_NACIONAL_BRASILIA_ID,
+        nome: "Parque Nacional de Brasília",
+        estado: "Distrito Federal",
+        localizacao: "Brasília, DF",
+        area: "42.389 hectares",
+        trilhas: 2,
+        visitantes: "150k/ano",
+        rating: 4.7,
+        imagem: "/images/parques/parquenacional.jpg",
+        descricao: "Conhecido como Água Mineral, o parque protege ecossistemas do Cerrado e abriga as famosas piscinas de água corrente, além de duas trilhas para caminhada.",
+        destaque: true,
+    },
+    // ... outros parques
 ];
 
 // --- DADOS DAS TRILHAS ---
 export const featuredTrails: Trilhas[] = [
-  // ... (Seus dados de trilhas existentes, conforme você enviou)
   {
     id: "6b97fd34-dd97-45d6-a825-84f2a9001771",
     parque_id: PARQUE_NACIONAL_BRASILIA_ID,
     name: "Trilha da Cachoeira do Tororó",
     location: "Santa Maria, Distrito Federal",
-    description: "Uma trilha encantadora que leva a uma das cachoeiras mais bonitas do DF. O percurso é de dificuldade moderada e termina em uma queda d'água refrescante, perfeita para um mergulho após a caminhada.",
+    description: "Uma trilha encantadora que leva a uma das cachoeiras mais bonitas do DF...",
     imageUrl: "/images/trilhas/tororo.jpg",
     difficulty: "Moderado",
     distance: 5.2,
     duration: "2-3 horas",
     elevation: 180,
     rating: 4.7,
-    coordinates: { lat: -15.9647, lng: -47.9977 },
-    path: [ { lat: -15.9647, lng: -47.9977 }, { lat: -15.9657, lng: -47.9967 }, { lat: -15.9667, lng: -47.9957 }, { lat: -15.9677, lng: -47.9947 }, { lat: -15.9687, lng: -47.9937 }, { lat: -15.9697, lng: -47.9927 }, ],
-    reviews: [ { id: "review-uuid-001", user: { name: "Marcelo Alves", avatar: "/placeholder-images/avatar-marcelo.jpg", }, rating: 5, date: "12 de março de 2024", content: "Trilha incrível! A cachoeira no final compensa todo o esforço. Recomendo ir cedo para evitar o movimento que aumenta bastante nos finais de semana. A água estava deliciosa e conseguimos aproveitar bastante.", photos: [ "/placeholder-images/review-tororo-1.jpg", "/placeholder-images/review-tororo-2.jpg", ], }, { id: "review-uuid-002", user: { name: "Juliana Costa", avatar: "/placeholder-images/avatar-juliana.jpg", }, rating: 4, date: "28 de fevereiro de 2024", content: "Trilha bem sinalizada e de dificuldade média. Alguns trechos são um pouco íngremes, mas nada muito difícil. A cachoeira é linda e vale cada passo. Leve água e protetor solar!", }, ],
+    reviews: [],
+    coordinates: { lat: -15.9333, lng: -47.9833 },
+    path: [
+        { lat: -15.93482, lng: -47.98593 }, { lat: -15.93484, lng: -47.98588 },
+        { lat: -15.93486, lng: -47.98583 }, { lat: -15.93489, lng: -47.98577 },
+    ]
   },
   {
     id: "ba2b1c8c-4045-4a42-8475-89b135960ae6",
     parque_id: PARQUE_NACIONAL_BRASILIA_ID,
     name: "Trilha da Chapada Imperial",
     location: "Brazlândia, Distrito Federal",
-    description: "A maior reserva particular do DF oferece diversas trilhas em meio à vegetação preservada do cerrado. Com várias cachoeiras e mirantes, é possível observar uma rica biodiversidade durante o percurso.",
+    description: "A maior reserva particular do DF...",
     imageUrl: "/images/trilhas/imperial.jpg",
     difficulty: "Fácil",
     distance: 3.8,
@@ -115,15 +60,94 @@ export const featuredTrails: Trilhas[] = [
     elevation: 120,
     rating: 4.8,
     coordinates: { lat: -15.7801, lng: -48.1223 },
-    path: [ /* Adicione o path da trilha aqui */ ],
-    reviews: [ { id: "review-uuid-003", user: { name: "Pedro Mendes", avatar: "/placeholder-images/avatar-pedro.jpg", }, rating: 5, date: "15 de janeiro de 2024", content: "Lugar maravilhoso! As trilhas são bem cuidadas e os guias são muito atenciosos. Vimos várias espécies de pássaros e até um tamanduá! As cachoeiras são lindas e a vista do mirante é de tirar o fôlego. Recomendo para toda a família.", }, ],
+    path:[
+      { lat: -15.560143, lng: -48.107195 }, { lat: -15.560065, lng: -48.107652 },
+      { lat: -15.560150, lng: -48.108187 }, { lat: -15.560102, lng: -48.108983 },
+      { lat: -15.559851, lng: -48.110423 }, { lat: -15.559881, lng: -48.110878 },
+      { lat: -15.560018, lng: -48.111359 }, { lat: -15.559806, lng: -48.111841 },
+      { lat: -15.559783, lng: -48.112124 }, { lat: -15.559337, lng: -48.112504 },
+      { lat: -15.559118, lng: -48.112888 }, { lat: -15.558186, lng: -48.113585 },
+      { lat: -15.557500, lng: -48.113733 }, { lat: -15.556662, lng: -48.114065 },
+      { lat: -15.555704, lng: -48.114161 }, { lat: -15.554652, lng: -48.114364 },
+      { lat: -15.554122, lng: -48.114333 }, { lat: -15.554078, lng: -48.114400 },
+      { lat: -15.553836, lng: -48.114453 }, { lat: -15.553069, lng: -48.114471 },
+      { lat: -15.552431, lng: -48.114342 }, { lat: -15.551649, lng: -48.114321 },
+      { lat: -15.550981, lng: -48.114162 }, { lat: -15.550273, lng: -48.114249 },
+      { lat: -15.549243, lng: -48.113944 }, { lat: -15.549018, lng: -48.113951 },
+      { lat: -15.548927, lng: -48.114080 }, { lat: -15.548808, lng: -48.114108 },
+      { lat: -15.548118, lng: -48.113643 }, { lat: -15.548055, lng: -48.113052 },
+      { lat: -15.547794, lng: -48.112562 }, { lat: -15.547566, lng: -48.112347 },
+      { lat: -15.546013, lng: -48.111614 }, { lat: -15.545264, lng: -48.111087 },
+      { lat: -15.544952, lng: -48.111044 }, { lat: -15.544502, lng: -48.110675 },
+      { lat: -15.544124, lng: -48.110065 }, { lat: -15.543146, lng: -48.108982 },
+      { lat: -15.543065, lng: -48.108708 }, { lat: -15.542072, lng: -48.107561 },
+      { lat: -15.541702, lng: -48.107366 }, { lat: -15.541542, lng: -48.107438 },
+      { lat: -15.541508, lng: -48.107531 }, { lat: -15.541552, lng: -48.107876 },
+      { lat: -15.541169, lng: -48.107924 }, { lat: -15.540971, lng: -48.107773 },
+      { lat: -15.540983, lng: -48.107664 }, { lat: -15.540899, lng: -48.107601 },
+      { lat: -15.540957, lng: -48.107352 }, { lat: -15.540808, lng: -48.107199 },
+      { lat: -15.540780, lng: -48.107051 }, { lat: -15.540493, lng: -48.107137 },
+      { lat: -15.540403, lng: -48.107045 }, { lat: -15.540385, lng: -48.107115 },
+      { lat: -15.540387, lng: -48.106971 }, { lat: -15.540332, lng: -48.106958 },
+      { lat: -15.540378, lng: -48.106978 }, { lat: -15.540388, lng: -48.106870 },
+      { lat: -15.540285, lng: -48.106706 }, { lat: -15.540055, lng: -48.106719 },
+      { lat: -15.539787, lng: -48.106498 }, { lat: -15.539662, lng: -48.106564 },
+      { lat: -15.539589, lng: -48.106434 }, { lat: -15.539432, lng: -48.106530 },
+      { lat: -15.539161, lng: -48.106478 }, { lat: -15.539004, lng: -48.106164 },
+      { lat: -15.539151, lng: -48.106067 }, { lat: -15.538768, lng: -48.105711 },
+      { lat: -15.538779, lng: -48.105939 }, { lat: -15.538675, lng: -48.106023 },
+      { lat: -15.538483, lng: -48.105692 }, { lat: -15.538622, lng: -48.105814 },
+      { lat: -15.538641, lng: -48.105991 }, { lat: -15.538492, lng: -48.106105 },
+      { lat: -15.538438, lng: -48.106060 }, { lat: -15.538847, lng: -48.105766 },
+      { lat: -15.539243, lng: -48.105927 }, { lat: -15.539291, lng: -48.105703 },
+      { lat: -15.539489, lng: -48.105583 }, { lat: -15.539806, lng: -48.105580 },
+      { lat: -15.540238, lng: -48.105457 }, { lat: -15.540519, lng: -48.105209 },
+      { lat: -15.540599, lng: -48.105263 }, { lat: -15.540836, lng: -48.105102 },
+      { lat: -15.541397, lng: -48.105073 }, { lat: -15.541702, lng: -48.105281 },
+      { lat: -15.542147, lng: -48.105386 }, { lat: -15.542438, lng: -48.105649 },
+      { lat: -15.542667, lng: -48.105645 }, { lat: -15.542569, lng: -48.105693 },
+      { lat: -15.542254, lng: -48.105471 }, { lat: -15.542215, lng: -48.105352 },
+      { lat: -15.542646, lng: -48.105411 }, { lat: -15.543117, lng: -48.105788 },
+      { lat: -15.543641, lng: -48.105988 }, { lat: -15.543758, lng: -48.105954 },
+      { lat: -15.543708, lng: -48.105815 }, { lat: -15.543794, lng: -48.105788 },
+      { lat: -15.544256, lng: -48.106189 }, { lat: -15.544287, lng: -48.106491 },
+      { lat: -15.545239, lng: -48.107039 }, { lat: -15.545624, lng: -48.107479 },
+      { lat: -15.546190, lng: -48.107777 }, { lat: -15.546425, lng: -48.108014 },
+      { lat: -15.546639, lng: -48.107930 }, { lat: -15.546942, lng: -48.107962 },
+      { lat: -15.547185, lng: -48.107905 }, { lat: -15.547899, lng: -48.107442 },
+      { lat: -15.548130, lng: -48.107463 }, { lat: -15.548113, lng: -48.107292 },
+      { lat: -15.548355, lng: -48.107144 }, { lat: -15.548751, lng: -48.107150 },
+      { lat: -15.549334, lng: -48.106930 }, { lat: -15.549486, lng: -48.106612 },
+      { lat: -15.549644, lng: -48.106559 }, { lat: -15.549781, lng: -48.106346 },
+      { lat: -15.549915, lng: -48.106373 }, { lat: -15.549966, lng: -48.106298 },
+      { lat: -15.550063, lng: -48.106347 }, { lat: -15.550585, lng: -48.106236 },
+      { lat: -15.550819, lng: -48.106094 }, { lat: -15.551286, lng: -48.106102 },
+      { lat: -15.551735, lng: -48.105891 }, { lat: -15.552768, lng: -48.105926 },
+      { lat: -15.553654, lng: -48.105806 }, { lat: -15.553796, lng: -48.106049 },
+      { lat: -15.553973, lng: -48.106133 }, { lat: -15.553951, lng: -48.105993 },
+      { lat: -15.553936, lng: -48.106058 }, { lat: -15.554055, lng: -48.106018 },
+      { lat: -15.554351, lng: -48.106189 }, { lat: -15.554899, lng: -48.106223 },
+      { lat: -15.555612, lng: -48.105802 }, { lat: -15.556117, lng: -48.105650 },
+      { lat: -15.557178, lng: -48.105819 }, { lat: -15.557435, lng: -48.106108 },
+      { lat: -15.557595, lng: -48.105934 }, { lat: -15.557684, lng: -48.105924 },
+      { lat: -15.557984, lng: -48.105530 }, { lat: -15.558565, lng: -48.105284 },
+      { lat: -15.559480, lng: -48.105291 }, { lat: -15.559633, lng: -48.105039 },
+      { lat: -15.559894, lng: -48.104923 }, { lat: -15.560658, lng: -48.104871 },
+      { lat: -15.560963, lng: -48.104955 }, { lat: -15.561114, lng: -48.105067 },
+      { lat: -15.561172, lng: -48.105221 }, { lat: -15.561650, lng: -48.105546 },
+      { lat: -15.561659, lng: -48.105696 }, { lat: -15.561535, lng: -48.105860 },
+      { lat: -15.561097, lng: -48.106064 }, { lat: -15.560662, lng: -48.105985 },
+      { lat: -15.560401, lng: -48.106372 }, { lat: -15.560407, lng: -48.106677 },
+      { lat: -15.560256, lng: -48.106739 }, { lat: -15.560143, lng: -48.107195 },
+    ],
+    reviews: [],
   },
   {
     id: "5f23719b-13d0-401f-809e-9b218800b5dd",
     parque_id: PARQUE_NACIONAL_BRASILIA_ID,
     name: "Trilha do Poço Azul",
     location: "Brazlândia, Distrito Federal",
-    description: "Uma das trilhas mais populares do DF, o Poço Azul encanta com suas águas cristalinas de cor azul intensa. A trilha é relativamente curta, mas o terreno irregular exige atenção. A recompensa é um mergulho refrescante.",
+    description: "Uma das trilhas mais populares do DF...",
     imageUrl: "/images/trilhas/pocoazul.jpg",
     difficulty: "Moderado",
     distance: 2.5,
@@ -131,15 +155,111 @@ export const featuredTrails: Trilhas[] = [
     elevation: 90,
     rating: 4.6,
     coordinates: { lat: -15.7721, lng: -48.1982 },
-    path: [ /* Adicione o path da trilha aqui */ ],
-    reviews: [ { id: "review-uuid-004", user: { name: "Camila Rodrigues", avatar: "/placeholder-images/avatar-camila.jpg", }, rating: 5, date: "22 de dezembro de 2023", content: "O Poço Azul é simplesmente incrível! A cor da água é surreal, parece uma piscina natural. A trilha é curta mas tem algumas partes escorregadias, então é bom ir com calçado adequado. Fomos em um dia de semana e estava tranquilo, conseguimos aproveitar bastante.", }, ],
+    reviews: [],
+    path: [
+  { lat: -15.594029, lng: -48.053135 }, { lat: -15.594000, lng: -48.053094 },
+  { lat: -15.592776, lng: -48.053362 }, { lat: -15.590552, lng: -48.054223 },
+  { lat: -15.590349, lng: -48.054363 }, { lat: -15.590056, lng: -48.054372 },
+  { lat: -15.589485, lng: -48.054519 }, { lat: -15.588530, lng: -48.054524 },
+  { lat: -15.588519, lng: -48.054429 }, { lat: -15.588293, lng: -48.054164 },
+  { lat: -15.588017, lng: -48.054067 }, { lat: -15.587023, lng: -48.054227 },
+  { lat: -15.586649, lng: -48.054082 }, { lat: -15.586287, lng: -48.053799 },
+  { lat: -15.585177, lng: -48.053229 }, { lat: -15.585039, lng: -48.053235 },
+  { lat: -15.584647, lng: -48.053692 }, { lat: -15.584297, lng: -48.053850 },
+  { lat: -15.583666, lng: -48.053984 }, { lat: -15.583501, lng: -48.054264 },
+  { lat: -15.583571, lng: -48.054562 }, { lat: -15.583528, lng: -48.054742 },
+  { lat: -15.583396, lng: -48.054886 }, { lat: -15.583163, lng: -48.054628 },
+  { lat: -15.583225, lng: -48.054560 }, { lat: -15.583305, lng: -48.054597 },
+  { lat: -15.583264, lng: -48.054624 }, { lat: -15.583327, lng: -48.054566 },
+  { lat: -15.583114, lng: -48.054581 }, { lat: -15.582808, lng: -48.053891 },
+  { lat: -15.582428, lng: -48.053807 }, { lat: -15.582356, lng: -48.053673 },
+  { lat: -15.582072, lng: -48.053418 }, { lat: -15.581984, lng: -48.053448 },
+  { lat: -15.581842, lng: -48.053391 }, { lat: -15.581415, lng: -48.053463 },
+  { lat: -15.581328, lng: -48.053421 }, { lat: -15.581277, lng: -48.053291 },
+  { lat: -15.581337, lng: -48.053238 }, { lat: -15.581254, lng: -48.053063 },
+  { lat: -15.581324, lng: -48.052929 }, { lat: -15.581244, lng: -48.052717 },
+  { lat: -15.581296, lng: -48.052526 }, { lat: -15.581128, lng: -48.052305 },
+  { lat: -15.581187, lng: -48.052338 }, { lat: -15.581135, lng: -48.052296 },
+  { lat: -15.581167, lng: -48.052165 }, { lat: -15.581095, lng: -48.051583 },
+  { lat: -15.580796, lng: -48.051369 }, { lat: -15.580528, lng: -48.051475 },
+  { lat: -15.580481, lng: -48.051394 }, { lat: -15.580479, lng: -48.051493 },
+  { lat: -15.580451, lng: -48.051454 }, { lat: -15.580492, lng: -48.051477 },
+  { lat: -15.580394, lng: -48.051508 }, { lat: -15.580195, lng: -48.051226 },
+  { lat: -15.580073, lng: -48.051172 }, { lat: -15.580085, lng: -48.051122 },
+  { lat: -15.579974, lng: -48.051152 }, { lat: -15.579646, lng: -48.050719 },
+  { lat: -15.579511, lng: -48.050671 }, { lat: -15.579536, lng: -48.050573 },
+  { lat: -15.579391, lng: -48.050623 }, { lat: -15.579284, lng: -48.050538 },
+  { lat: -15.579293, lng: -48.050489 }, { lat: -15.579060, lng: -48.050288 },
+  { lat: -15.579076, lng: -48.050178 }, { lat: -15.578968, lng: -48.050092 },
+  { lat: -15.578776, lng: -48.049746 }, { lat: -15.578247, lng: -48.049330 },
+  { lat: -15.578082, lng: -48.048911 }, { lat: -15.577986, lng: -48.048872 },
+  { lat: -15.578047, lng: -48.048855 }, { lat: -15.577992, lng: -48.048734 },
+  { lat: -15.577956, lng: -48.048832 }, { lat: -15.578149, lng: -48.049023 },
+  { lat: -15.577786, lng: -48.049077 }, { lat: -15.577462, lng: -48.048857 },
+  { lat: -15.577027, lng: -48.048905 }, { lat: -15.576432, lng: -48.048800 },
+  { lat: -15.576204, lng: -48.048648 }, { lat: -15.576244, lng: -48.048515 },
+  { lat: -15.576182, lng: -48.048391 }, { lat: -15.575989, lng: -48.048279 },
+  { lat: -15.575870, lng: -48.048344 }, { lat: -15.575753, lng: -48.048296 },
+  { lat: -15.575756, lng: -48.048344 }, { lat: -15.575846, lng: -48.048339 },
+  { lat: -15.576037, lng: -48.048307 }, { lat: -15.576035, lng: -48.048259 },
+  { lat: -15.576203, lng: -48.048323 }, { lat: -15.576354, lng: -48.048166 },
+  { lat: -15.576573, lng: -48.048104 }, { lat: -15.576751, lng: -48.048150 },
+  { lat: -15.576825, lng: -48.048095 }, { lat: -15.577093, lng: -48.048141 },
+  { lat: -15.577350, lng: -48.048075 }, { lat: -15.577370, lng: -48.048117 },
+  { lat: -15.578474, lng: -48.048043 }, { lat: -15.578433, lng: -48.048064 },
+  { lat: -15.578818, lng: -48.047838 }, { lat: -15.579095, lng: -48.047781 },
+  { lat: -15.579395, lng: -48.047475 }, { lat: -15.579720, lng: -48.047667 },
+  { lat: -15.579679, lng: -48.047798 }, { lat: -15.579738, lng: -48.047876 },
+  { lat: -15.580161, lng: -48.047979 }, { lat: -15.581019, lng: -48.047560 },
+  { lat: -15.581124, lng: -48.047594 }, { lat: -15.581356, lng: -48.047538 },
+  { lat: -15.581563, lng: -48.047347 }, { lat: -15.581670, lng: -48.047342 },
+  { lat: -15.581717, lng: -48.047188 }, { lat: -15.581909, lng: -48.047462 },
+  { lat: -15.582129, lng: -48.047089 }, { lat: -15.582352, lng: -48.047063 },
+  { lat: -15.582441, lng: -48.047229 }, { lat: -15.582763, lng: -48.047430 },
+  { lat: -15.582803, lng: -48.047518 }, { lat: -15.582871, lng: -48.047794 },
+  { lat: -15.582687, lng: -48.048170 }, { lat: -15.582791, lng: -48.048386 },
+  { lat: -15.582999, lng: -48.048501 }, { lat: -15.583066, lng: -48.048686 },
+  { lat: -15.583006, lng: -48.049176 }, { lat: -15.582813, lng: -48.049740 },
+  { lat: -15.582727, lng: -48.050266 }, { lat: -15.582714, lng: -48.051296 },
+  { lat: -15.583408, lng: -48.052033 }, { lat: -15.583994, lng: -48.052556 },
+  { lat: -15.584833, lng: -48.052951 }, { lat: -15.585339, lng: -48.053313 },
+  { lat: -15.586048, lng: -48.053616 }, { lat: -15.586639, lng: -48.054024 },
+  { lat: -15.586981, lng: -48.054174 }, { lat: -15.587408, lng: -48.054191 },
+  { lat: -15.587618, lng: -48.054069 }, { lat: -15.588095, lng: -48.054049 },
+  { lat: -15.588490, lng: -48.054468 }, { lat: -15.589578, lng: -48.054460 },
+  { lat: -15.590375, lng: -48.054309 }, { lat: -15.591956, lng: -48.053614 },
+  { lat: -15.592774, lng: -48.053321 }, { lat: -15.593782, lng: -48.053084 },
+  { lat: -15.593870, lng: -48.052968 }
+  ],
+  waypoints: [
+        { name: "Primeira passagem", lat: -15.583527, lng: -48.054695 },
+        { name: "Cachoeira Mãe", lat: -15.583321, lng: -48.054569 },
+        { name: "Deck na cachoeira mãe", lat: -15.583276, lng: -48.054576 },
+        { name: "Vale", lat: -15.581458, lng: -48.053460 },
+        { name: "Cachoeira da Árvore", lat: -15.581287, lng: -48.053246 },
+        { name: "Cachoeira da Paz", lat: -15.581185, lng: -48.052341 },
+        { name: "Dois caminhos", lat: -15.580480, lng: -48.051395 },
+        { name: "Cachoeira Rapunzel", lat: -15.580188, lng: -48.051271 },
+        { name: "Cachoeira filha", lat: -15.578240, lng: -48.049329 },
+        { name: "Queda d'água", lat: -15.578074, lng: -48.048909 },
+        { name: "Cachoeira da Caverna", lat: -15.578030, lng: -48.048880 },
+        { name: "Mirante da Cachoeira do veu da noiva", lat: -15.577955, lng: -48.048776 },
+        { name: "Ponto de subida para rodear o veu da noiva", lat: -15.578141, lng: -48.049020 },
+        { name: "Waypoint", lat: -15.576977, lng: -48.048890 },
+        { name: "Descida com corda", lat: -15.576198, lng: -48.048643 },
+        { name: "Cachoeira do Suicídio", lat: -15.576047, lng: -48.048344 },
+        { name: "Encontro dos rios", lat: -15.577343, lng: -48.048066 },
+        { name: "Poço verde", lat: -15.578474, lng: -48.048043 },
+        { name: "Mirante", lat: -15.578832, lng: -48.047848 },
+        { name: "Garganta do diabo", lat: -15.581526, lng: -48.047375 }
+    ]
   },
   {
     id: "0548f4dd-e29c-4121-8415-b1c114befab1",
     parque_id: PARQUE_ESTADUAL_PIRENEUS_ID,
     name: "Trilha da Serra dos Pireneus (Pico)",
     location: "Pirenópolis, Goiás",
-    description: "A apenas 150km de Brasília, esta trilha oferece vistas panorâmicas incríveis do alto da Serra dos Pireneus. O pico dos Pireneus é o ponto culminante da região e proporciona um nascer do sol inesquecível.",
+    description: "A apenas 150km de Brasília, esta trilha oferece vistas panorâmicas...",
     imageUrl: "/images/trilhas/pirineus.jpg",
     difficulty: "Difícil",
     distance: 8.5,
@@ -147,7 +267,7 @@ export const featuredTrails: Trilhas[] = [
     elevation: 520,
     rating: 4.9,
     coordinates: { lat: -15.7899, lng: -48.8292 },
-    path: [ /* Adicione o path da trilha aqui */ ],
+    path: [],
     reviews: [],
   },
   {
@@ -155,7 +275,7 @@ export const featuredTrails: Trilhas[] = [
     parque_id: PARQUE_NACIONAL_CHAPADA_VEADEIROS_ID,
     name: "Trilha do Vale da Lua",
     location: "Alto Paraíso de Goiás, Chapada dos Veadeiros, Goiás",
-    description: "Uma das atrações mais famosas da Chapada dos Veadeiros, o Vale da Lua impressiona com suas formações rochosas esculpidas pela água ao longo de milhões de anos. A trilha é curta mas o local é mágico.",
+    description: "Uma das atrações mais famosas da Chapada dos Veadeiros...",
     imageUrl: "/images/trilhas/valedalua.jpg",
     difficulty: "Moderado",
     distance: 1.8,
@@ -163,51 +283,25 @@ export const featuredTrails: Trilhas[] = [
     elevation: 50,
     rating: 4.8,
     coordinates: { lat: -14.180, lng: -47.796 },
-    path: [ /* Adicione o path da trilha aqui */ ],
+    path: [],
     reviews: [],
   },
 ];
 
-// --- FUNÇÕES PARA BUSCAR DADOS MOCKADOS ---
-
-export function getParkById(id?: string) {
-  if (!id) return undefined;
-  return parques.find((parque) => parque.id === id);
+// --- FUNÇÕES DE BUSCA ---
+export function getParkById(id?: string): Parque | undefined {
+    if (!id) return undefined;
+    return parques.find((parque) => parque.id === id);
 }
 
-export function getTrailsByParkId(parkUUID?: string) {
-  if (!parkUUID) return [];
-  return featuredTrails.filter((trail) => trail.parque_id === parkUUID);
+export function getTrailsByParkId(parkUUID?: string): Trilhas[] {
+    if (!parkUUID) return [];
+    return featuredTrails.filter((trail) => trail.parque_id === parkUUID);
 }
 
 export function getTrailById(id?: string): Trilhas | undefined {
-  if (!id) return undefined;
-  return featuredTrails.find((trail) => trail.id === id);
+    if (!id) return undefined;
+    return featuredTrails.find((trail) => trail.id === id);
 }
 
-export function getNearbyTrails(userLat?: number | null, userLng?: number | null): Trilhas[] {
-  if (userLat === undefined || userLat === null || userLng === undefined || userLng === null) {
-    return featuredTrails
-      .filter((trail) => trail.location.includes("Distrito Federal"))
-      .sort((a, b) => a.distance - b.distance)
-      .slice(0, 3);
-  }
-  return [...featuredTrails]
-    .map((trail) => {
-      if (trail.coordinates) {
-        const realDistance = calculateDistance(userLat, userLng, trail.coordinates.lat, trail.coordinates.lng);
-        return { ...trail, realDistance };
-      }
-      return { ...trail, realDistance: Infinity };
-    })
-    .sort((a, b) => a.realDistance - b.realDistance)
-    .slice(0, 6);
-}
-
-export function getTopRatedTrails(): Trilhas[] {
-  return [...featuredTrails].sort((a, b) => b.rating - a.rating).slice(0, 6);
-}
-
-export function getPopularTrails(): Trilhas[] {
-  return [...featuredTrails].sort((a, b) => b.reviews.length - a.reviews.length).slice(0, 6);
-}
+// ...funções getNearbyTrails, getTopRatedTrails, getPopularTrails...
