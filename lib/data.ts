@@ -147,7 +147,7 @@ export const featuredTrails: Trilhas[] = [
     parque_id: PARQUE_NACIONAL_BRASILIA_ID,
     name: "Trilha do Poço Azul",
     location: "Brazlândia, Distrito Federal",
-    description: "Uma das trilhas mais populares do DF...",
+    description: "Uma das trilhas mais populares do DF, o Poço Azul encanta com suas águas cristalinas...",
     imageUrl: "/images/trilhas/pocoazul.jpg",
     difficulty: "Moderado",
     distance: 2.5,
@@ -155,7 +155,8 @@ export const featuredTrails: Trilhas[] = [
     elevation: 90,
     rating: 4.6,
     coordinates: { lat: -15.7721, lng: -48.1982 },
-    reviews: [],
+    reviews: [
+    ],
     path: [
   { lat: -15.594029, lng: -48.053135 }, { lat: -15.594000, lng: -48.053094 },
   { lat: -15.592776, lng: -48.053362 }, { lat: -15.590552, lng: -48.054223 },

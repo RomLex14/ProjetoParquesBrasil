@@ -1,3 +1,4 @@
+/* Page.tsx*/
 "use client"
 
 import { useEffect, useState } from "react"
@@ -135,7 +136,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen dark:from-slate-900 dark:to-slate-800">
+    <div className="min-h-screen">
       <Navbar />
 
       {isClient && showLocationRequest && locationPermission === 'prompt' && (
@@ -161,37 +162,35 @@ export default function HomePage() {
         </div>
       )}
 
-      <section className="container mx-auto px-4 py-16 text-center">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-          Explore os <span className="text-primary dark:text-green-400">Parques Nacionais</span> do Brasil
-        </h1>
-        <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-          Descubra trilhas incríveis, paisagens deslumbrantes e a biodiversidade única dos parques nacionais
-          brasileiros. Planeje sua próxima aventura na natureza.
-        </p>
-        {!isClient || loadingAuth ? ( // Mostra placeholder se não for cliente ou se auth estiver carregando
-            <div className="flex justify-center">
-                <div className="h-12 w-48 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse"></div>
-            </div>
-        ) : user ? (
-          <div className="flex flex-col items-center gap-4">
-            <p className="text-lg text-green-700 dark:text-green-300 font-medium">
-              Bem-vindo(a) de volta, {getDisplayName(user)}!
-            </p>
-            <Button size="lg" asChild className="bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white">
-              <Link href="/trilhas">Explorar Todas as Trilhas</Link>
-            </Button>
-          </div>
-        ) : (
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild className="bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white">
-              <Link href="/trilhas">Ver Trilhas</Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <Link href="/login">Entrar para Personalizar</Link>
-            </Button>
-          </div>
-        )}
+      
+      <section className="relative flex h-screen min-h-[600px] w-full flex-col items-center justify-center bg-cover bg-center text-white" style={{ backgroundImage: "url('/images/home_bg01.jpg')" }}>
+      {/* Overlay de gradiente para legibilidade */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/40 to-transparent" />
+
+      {/* Container do conteúdo */}
+      <div className="relative z-10 flex flex-col items-center text-center px-4">
+      <h1 className="font-display text-4xl font-bold md:text-5xl lg:text-7xl">
+      Descubra sua próxima aventura
+      </h1>
+      <p className="mt-4 max-w-2xl text-lg text-gray-200">
+      Explore trilhas, parques nacionais e as paisagens mais incríveis do Brasil.
+      </p>
+    
+      {/* Barra de Busca Proeminente */}
+      <div className="mt-8 flex w-full max-w-2xl flex-col gap-2 sm:flex-row">
+      <div className="relative flex-grow">
+        <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+        <Input
+          type="search"
+          placeholder="Busque por um parque, cidade ou trilha..."
+          className="h-14 w-full rounded-full border-2 border-transparent bg-white/90 pl-12 text-base text-foreground placeholder:text-gray-500 focus:border-primary focus:bg-white"
+        />
+      </div>
+      <Button size="lg" className="h-14 rounded-full bg-primary px-8 font-bold text-base hover:bg-primary/90">
+        Buscar
+      </Button>
+      </div>
+      </div>
       </section>
 
       <section className="container mx-auto px-4 py-16">
@@ -202,7 +201,7 @@ export default function HomePage() {
             ) : user ? "Trilhas Recomendadas para Você" 
                    : "Trilhas em Destaque"}
           </h2>
-          {/* CORRIGIDO: <p> substituído por <div> para permitir <div> interno */}
+          
           <div className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             {!isClient || loadingAuth ? (
                 <div className="space-y-2 mt-2">
@@ -305,7 +304,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer Profissional - Placeholder */}
       <footer className="bg-gray-900 text-white dark:bg-slate-950">
         <div className="container mx-auto px-4 py-12">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">

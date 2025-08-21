@@ -39,7 +39,7 @@ export interface Trilhas {
     lng: number;
   }>;
   parque_id: string;
-  waypoints?: Waypoint[]; // <-- NOVA PROPRIEDADE ADICIONADA
+  waypoints?: Waypoint[]; // Pings no mapa
 }
 
 export interface Review {

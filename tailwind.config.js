@@ -16,7 +16,11 @@ module.exports = {
         "2xl": "1400px",
       },
     },
-    extend: {
+    extend: {    
+      fontFamily: { // Adicione esta seção
+        sans: ["var(--font-inter)"], // Define Inter como a fonte padrão (body)
+        display: ["var(--font-lexend)"], // Cria uma classe 'font-display' para títulos
+      },  
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -26,15 +30,15 @@ module.exports = {
         'nature-green': {
           500: '#059669',
           800: '#047857'
-        }, // Vírgula adicionada
+        }, 
         'earth-amber': {
           500: '#F59E0B',
           600: '#D97706'
-        }, // Vírgula adicionada
+        }, 
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
-        }, // Vírgula adicionada
+        }, 
         secondary: {
           
           DEFAULT: "hsl(var(--secondary))",
@@ -71,11 +75,11 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
-      }, // Vírgula adicionada
+      },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-      }, // Esta vírgula é opcional se for o último item em 'extend'
+      },
     }, // Fecha o objeto 'extend'
   }, // Fecha o objeto 'theme'
   plugins: [require("tailwindcss-animate")],

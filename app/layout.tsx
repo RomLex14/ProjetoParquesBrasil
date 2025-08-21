@@ -1,25 +1,21 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Inter, Lexend } from "next/font/google"
 import "./globals.css"
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ 
+  subsets: ["latin"],
+  variable: "--font-inter", // Cria uma variável CSS para a fonte
+})
 
-export const metadata: Metadata = {
-  title: "Explorador de Trilhas",
-  description: "Descubra, acompanhe e compartilhe trilhas incríveis",
-    generator: 'v0.dev'
-}
+const lexend = Lexend({
+  subsets: ["latin"],
+  variable: "--font-lexend", // Cria uma variável CSS para a fonte
+  weight: ['400', '500', '600', '700'], // Importa pesos diferentes
+})
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR">
-      <head>{/* Leaflet CSS will be imported client-side */}</head>
-      <body className={inter.className}>{children}</body>
+    <html lang="pt-br" className={`${inter.variable} ${lexend.variable}`}>
+      <body>{children}</body>
     </html>
   )
 }
