@@ -70,7 +70,7 @@ export default function Navbar() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-2 text-xl font-bold text-green-600 dark:text-green-400">
               <Mountain className="h-6 w-6" /> {/* Ícone de logo */}
-              <span>Parques Brasil</span>
+              <span>TrilhasBrasil</span>
             </Link>
           </div>
 

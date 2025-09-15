@@ -1,11 +1,10 @@
+// next.config.mjs
+
+import withPWAInit from "next-pwa";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // env: {
-  //   // Removido se NEXT_PUBLIC_API_URL era apenas para o backend Python
-  // },
-  // async rewrites() { // Removido se os rewrites eram apenas para o backend Python
-  //   return []
-  // },
+  // ... suas outras configurações do next.config.mjs
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -15,6 +14,13 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-}
+};
 
-export default nextConfig
+const withPWA = withPWAInit({
+  dest: "public",
+  disable: process.env.NODE_ENV === "development", // Desativa o PWA em modo de desenvolvimento
+  register: true,
+  skipWaiting: true,
+});
+
+export default withPWA(nextConfig);

@@ -240,8 +240,8 @@ export default function TrilhasPage() {
        <footer className="w-full border-t py-6 md:py-0 bg-background">
         <div className="container flex flex-col md:flex-row items-center justify-between gap-4 md:h-16">
           <div className="flex items-center gap-2">
-            <img src="/logo.png" alt="Logo Parques Brasil" className="h-5 w-5" />
-            <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} Parques Brasil. Todos os direitos reservados.</p>
+            <img src="/logo.png" alt="Logo TrilhasBrasil" className="h-5 w-5" />
+            <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} TrilhasBrasil. Todos os direitos reservados.</p>
           </div>
           <div className="flex gap-4">
             <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground">Termos</Link>
