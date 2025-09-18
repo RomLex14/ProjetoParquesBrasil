@@ -200,14 +200,6 @@ export default function EditProfilePage() {
             </CardContent>
           </Card>
         </main>
-         {/* Footer (mantido como placeholder, conforme solicitado na HomePage) */}
-        <footer className="bg-gray-900 text-white dark:bg-slate-950 mt-12">
-          <div className="container mx-auto px-4 py-8">
-            <div className="text-center text-sm text-gray-500 dark:text-gray-600">
-              © {new Date().getFullYear()} Parques Brasil. Todos os direitos reservados.
-            </div>
-          </div>
-        </footer>
       </div>
     </AuthGuard>
   );

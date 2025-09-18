@@ -306,3 +306,30 @@ export function getTrailById(id?: string): Trilhas | undefined {
 }
 
 // ...funções getNearbyTrails, getTopRatedTrails, getPopularTrails...
+export function getTopRatedTrails(): Trilhas[] {
+  // Retorna as trilhas ordenadas pela maior nota (rating)
+  return [...featuredTrails].sort((a, b) => (b.rating || 0) - (a.rating || 0));
+}
+
+export function getPopularTrails(): Trilhas[] {
+  // Simplesmente retorna a lista padrão por enquanto,
+  // mas poderia ter uma lógica mais complexa (ex: por número de reviews)
+  return featuredTrails;
+}
+
+export function getNearbyTrails(latitude: number | null, longitude: number | null): Trilhas[] {
+  if (!latitude || !longitude) {
+    return []; // Retorna vazio se a localização não estiver disponível
+  }
+
+  const trailsWithDistance = featuredTrails.map(trail => {
+    if (trail.coordinates) {
+      const distance = calculateDistance(latitude, longitude, trail.coordinates.lat, trail.coordinates.lng);
+      return { ...trail, distancia_usuario: distance };
+    }
+    return { ...trail, distancia_usuario: Infinity }; // Trilhas sem coordenadas ficam no final
+  });
+
+  // Ordena pela menor distância
+  return trailsWithDistance.sort((a, b) => a.distancia_usuario - b.distancia_usuario);
+}

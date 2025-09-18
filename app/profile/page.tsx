@@ -172,16 +172,6 @@ export default function ProfilePage() {
             </div>
           </div>
         </main>
-
-        {/* Footer (mantido como placeholder, conforme solicitado) */}
-        <footer className="bg-gray-900 text-white">
-          <div className="container mx-auto px-4 py-12">
-            {/* ... (Conteúdo do Footer placeholder, como na página inicial) ... */}
-            <div className="text-center mt-4 text-sm text-gray-500">
-              © 2025 Parques Brasil. Todos os direitos reservados.
-            </div>
-          </div>
-        </footer>
       </div>
     </AuthGuard>
   )

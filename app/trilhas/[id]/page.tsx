@@ -480,11 +480,7 @@ export default function TrailDetailPage() {
           </div>
         </section>
       </main>
-      <footer className="w-full border-t dark:border-slate-800 py-6 md:py-8 mt-12">
-        <div className="container text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Parques Brasil. Todos os direitos reservados.
-        </div>
-      </footer>
+      
     </div>
   );
 }

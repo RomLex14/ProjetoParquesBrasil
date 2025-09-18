@@ -1,7 +1,10 @@
+// components/navbar.tsx
+
 "use client"
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
@@ -13,14 +16,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { User, LogOut, Settings, Heart, Activity, ChevronDown, Mountain, /* Adicionado para logo */ 
-LayoutDashboard} from "lucide-react" // Ícones mantidos por enquanto
+import { User, LogOut, Heart, LayoutDashboard, ChevronDown } from "lucide-react"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export default function Navbar() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
+  // ... (toda a sua lógica de useEffect, handleLogout, etc. continua a mesma)
   useEffect(() => {
     const checkSession = async () => {
       try {
@@ -34,7 +38,7 @@ export default function Navbar() {
     }
     checkSession()
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
       setLoading(false)
     })
@@ -44,13 +48,13 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
-    router.push("/") // Redireciona para a home após logout
+    router.push("/")
     router.refresh()
   }
 
   const getDisplayName = (user: any) => {
     if (user?.user_metadata?.nome_completo) return user.user_metadata.nome_completo;
-    if (user?.user_metadata?.full_name) return user.user_metadata.full_name; // Para login com Google
+    if (user?.user_metadata?.full_name) return user.user_metadata.full_name;
     if (user?.email) return user.email.split("@")[0];
     return "Usuário";
   }
@@ -64,47 +68,52 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="border-b bg-white dark:bg-gray-900 dark:border-gray-700 sticky top-0 z-50"> {/* Adicionado sticky e z-index */}
+    // <<< ALTERAÇÃO PRINCIPAL AQUI >>>
+    // Trocamos 'bg-white dark:bg-gray-900 dark:border-gray-700' por 'bg-background border-border'
+    // que se adaptam automaticamente ao tema.
+    <nav className="border-b bg-background border-border sticky top-0 z-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="flex items-center gap-2 text-xl font-bold text-green-600 dark:text-green-400">
-              <Mountain className="h-6 w-6" /> {/* Ícone de logo */}
+            <Link href="/" className="flex items-center gap-2 text-xl font-bold text-primary">
+              <Image src="/icon.png" alt="Logo Trilhas Brasil" width={32} height={32} />
               <span>TrilhasBrasil</span>
             </Link>
           </div>
 
           <div className="hidden md:flex items-center space-x-8">
-            <Link href="/" className="text-gray-700 hover:text-green-600 dark:text-gray-300 dark:hover:text-green-400">
+             {/* Links agora usam cores do tema */}
+            <Link href="/" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
               Início
             </Link>
-            <Link href="/parques" className="text-gray-700 hover:text-green-600 dark:text-gray-300 dark:hover:text-green-400">
+            <Link href="/parques" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
               Parques
             </Link>
-            <Link href="/trilhas" className="text-gray-700 hover:text-green-600 dark:text-gray-300 dark:hover:text-green-400">
+            <Link href="/trilhas" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
               Trilhas
             </Link>
-            <Link href="/map" className="text-gray-700 hover:text-green-600 dark:text-gray-300 dark:hover:text-green-400">
+            <Link href="/map" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
               Mapa
             </Link>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            <ThemeToggle />
             {loading ? (
-              <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
+              <div className="w-8 h-8 bg-muted rounded-full animate-pulse" />
             ) : user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center space-x-2 h-auto p-1 rounded-full"> {/* Estilo de botão para trigger */}
+                  <Button variant="ghost" className="flex items-center space-x-2 h-auto p-1 rounded-full">
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={user.user_metadata?.avatar_url || undefined} alt={getDisplayName(user)} />
                       <AvatarFallback>{getInitials(getDisplayName(user))}</AvatarFallback>
                     </Avatar>
-                    <span className="hidden sm:inline text-sm text-gray-700 dark:text-gray-300">{getDisplayName(user)}</span>
-                    <ChevronDown className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                    <span className="hidden sm:inline text-sm font-medium text-foreground">{getDisplayName(user)}</span>
+                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuContent className="w-56" align="end" forceMount>                 
                   <div className="flex items-center justify-start gap-2 p-2">
                     <Avatar className="h-9 w-9">
                         <AvatarImage src={user.user_metadata?.avatar_url || undefined} alt={getDisplayName(user)} />
@@ -116,7 +125,12 @@ export default function Navbar() {
                     </div>
                   </div>
                   <DropdownMenuSeparator />
-                  {/* ITENS REMOVIDOS: Dashboard, Minhas Atividades, Configurações */}
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard" className="cursor-pointer w-full">
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      Dashboard
+                    </Link> 
+                  </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/profile" className="cursor-pointer w-full"> 
                       <User className="mr-2 h-4 w-4" />
@@ -129,14 +143,8 @@ export default function Navbar() {
                       Favoritos
                     </Link>  
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/dashboard" className="cursor-pointer w-full">
-                      <LayoutDashboard className="mr-2 h-4 w-4" />
-                      Dashboard
-                    </Link> 
-                    </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600 dark:hover:text-red-400 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-900/50">
+                  <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10">
                     <LogOut className="mr-2 h-4 w-4" />
                     Sair
                   </DropdownMenuItem>

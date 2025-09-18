@@ -1,6 +1,7 @@
 "use client"
 import dynamic from "next/dynamic"
 import { Loader2 } from "lucide-react"
+import type { Trilhas } from "@/lib/types"; // <<< 1. IMPORTAR O TIPO TRILHAS
 
 // Dynamically import Leaflet with no SSR
 const LeafletMapComponent = dynamic(() => import("@/components/leaflet-map-client"), {
@@ -13,14 +14,17 @@ const LeafletMapComponent = dynamic(() => import("@/components/leaflet-map-clien
   ),
 })
 
+// <<< 2. ATUALIZAR A INTERFACE DE PROPRIEDADES >>>
 interface LeafletMapProps {
   trailId?: string
   fullscreen?: boolean
   recording?: boolean
   showAllTrails?: boolean
   selectedTrailId?: string
+  trailsToDisplay?: Trilhas[] // Adicionada a nova propriedade
 }
 
 export default function LeafletMap(props: LeafletMapProps) {
+  // O componente agora passará todas as propriedades, incluindo trailsToDisplay
   return <LeafletMapComponent {...props} />
 }
