@@ -1,0 +1,89 @@
+/* global.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Paleta "Biomas do Brasil" - Modo Claro */
+    --background: 30 17% 96%;        /* Areia Clara */
+    --foreground: 195 10% 19%;        /* Grafite Profundo */
+    --card: 0 0% 100%;                /* Branco para cards, para maior destaque */
+    --card-foreground: 195 10% 19%;   /* Grafite Profundo */
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 195 10% 19%;
+    
+    --primary: 165 100% 25%;         /* Verde Mata */
+    --primary-foreground: 0 0% 100%; /* Branco */
+    
+    --secondary: 29 100% 50%;         /* Laranja Pôr do Sol */
+    --secondary-foreground: 0 0% 100%; /* Branco */
+    
+    --accent: 217 91% 60%;            /* Azul Céu */
+    --accent-foreground: 0 0% 100%;   /* Branco */
+
+    --muted: 30 17% 90%;
+    --muted-foreground: 195 10% 40%;
+    
+    --border: 30 17% 88%;
+    --input: 30 17% 92%;
+    --ring: 165 100% 25%;             /* Verde Mata */
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --radius: 0.75rem; /* Bordas mais arredondadas */
+  }
+
+  .dark {
+    /* Paleta "Biomas do Brasil" - Modo Escuro */
+    --background: 195 15% 13%;        /* Terra Escura */
+    --foreground: 30 17% 90%;         /* Texto quase branco */
+    --card: 195 15% 16%;              /* Tom levemente mais claro que o fundo */
+    --card-foreground: 30 17% 90%;
+    
+    --popover: 195 15% 16%;
+    --popover-foreground: 30 17% 90%;
+    
+    --primary: 165 80% 35%;           /* Verde Mata (mais brilhante no escuro) */
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 29 100% 60%;         /* Laranja (mais brilhante no escuro) */
+    --secondary-foreground: 195 15% 13%;
+    
+    --accent: 217 91% 70%;            /* Azul Céu (mais brilhante no escuro) */
+    --accent-foreground: 195 15% 13%;
+
+    --muted: 195 15% 20%;
+    --muted-foreground: 30 17% 65%;
+    
+    --border: 195 15% 22%;
+    --input: 195 15% 20%;
+    --ring: 165 80% 35%;
+    
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 98%;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    /* Transição suave entre temas */
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  /* Utilitários extras para gradientes naturais */
+  .bg-nature-gradient {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+  }
+  
+  .bg-sunset-gradient {
+    background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--primary)) 100%);
+  }
+}
