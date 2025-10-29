@@ -1,3 +1,4 @@
+// lib/types.ts
 export interface Waypoint {
   name: string;
   lat: number;
@@ -40,7 +41,7 @@ export interface Trilhas {
   }>;
   parque_id: string;
   waypoints?: Waypoint[];
-  distancia_usuario?: number; 
+  distancia_usuario?: number;
 }
 
 export interface Review {
@@ -48,6 +49,7 @@ export interface Review {
   user: {
     name: string;
     avatar: string;
+    level?: number | null;
   };
   rating: number;
   date: string;
@@ -64,6 +66,8 @@ export interface Perfil {
   localizacao?: string | null;
   criado_em: string;
   atualizado_em: string;
+  xp?: number | null;
+  nivel?: number | null;
 }
 
 export interface Avaliacao {
@@ -80,5 +84,5 @@ export interface Avaliacao {
 }
 
 export interface AvaliacaoComPerfil extends Avaliacao {
-  perfis: Pick<Perfil, "nome_completo" | "nome_usuario" | "url_avatar"> | null;
+  perfis: Pick<Perfil, "nome_completo" | "nome_usuario" | "url_avatar" | "nivel"> | null;
 }

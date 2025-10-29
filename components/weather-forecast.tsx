@@ -1,111 +1,123 @@
+// components/weather-forecast.tsx
 "use client"
 
-import { useState, useEffect } from "react"
-import { Cloud, CloudRain, CloudSnow, Sun, CloudLightning, CloudFog, Loader2 } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
-import { getWeatherForecast, type WeatherData } from "@/lib/weather-service" // IMPORTADO
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Cloud, CloudFog, CloudLightning, CloudRain, CloudSnow, Sun, Thermometer } from "lucide-react";
+import { cn } from "@/lib/utils";
 
+// Interface EXATA para as props
 interface WeatherForecastProps {
-  location: string
-  refreshInterval?: number // em milissegundos
+  lat: number;
+  lon: number;
 }
 
-// A interface WeatherData local foi removida, usamos a importada.
+// Tipos internos para os dados do clima (simplificado)
+type WeatherCondition = "sunny" | "cloudy" | "rainy" | "snowy" | "stormy" | "foggy" | "partlyCloudy";
+interface WeatherData {
+  temperature: number;
+  condition: WeatherCondition;
+  description: string;
+}
 
-export default function WeatherForecast({ location, refreshInterval = 3600000 /* 1 hora */ }: WeatherForecastProps) {
-  const [forecast, setForecast] = useState<WeatherData[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+const WeatherForecast: React.FC<WeatherForecastProps> = ({ lat, lon }) => {
+  const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchWeatherData = async () => {
-      setLoading(true)
-      setError(null)
+    const fetchWeather = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        const data = await getWeatherForecast(location)
-        setForecast(data)
+        const response = await fetch(`/api/weather?lat=${lat}&lon=${lon}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        // Extrai o primeiro forecast (ou o mais relevante, dependendo da API)
+        const currentForecast = data?.list?.[0];
+
+        if (!currentForecast || !currentForecast.main || !currentForecast.weather?.[0]) {
+             console.warn("Formato inesperado da API de clima:", data);
+             throw new Error("Dados de clima inválidos recebidos.");
+        }
+
+        const conditionCode = currentForecast.weather[0].id;
+        let condition: WeatherCondition = "cloudy"; // Default
+
+        if (conditionCode >= 200 && conditionCode < 300) condition = "stormy";
+        else if (conditionCode >= 300 && conditionCode < 600) condition = "rainy";
+        else if (conditionCode >= 600 && conditionCode < 700) condition = "snowy";
+        else if (conditionCode >= 701 && conditionCode <= 781) condition = "foggy";
+        else if (conditionCode === 800) condition = "sunny";
+        else if (conditionCode === 801 || conditionCode === 802) condition = "partlyCloudy";
+        else if (conditionCode === 803 || conditionCode === 804) condition = "cloudy";
+
+
+        setWeather({
+          temperature: Math.round(currentForecast.main.temp),
+          condition: condition,
+          description: currentForecast.weather[0].description,
+        });
+
       } catch (err: any) {
-        console.error("Erro ao buscar previsão do tempo no componente:", err)
-        setError(err.message || "Não foi possível carregar a previsão do tempo.")
-        // Você pode optar por limpar o forecast ou manter dados antigos/fallback
-        // setForecast(generateFallbackWeatherData(location)); // Se quiser usar o fallback do service
+        console.error("Falha ao buscar previsão do tempo:", err);
+        setError(err.message || "Erro ao buscar clima.");
+        setWeather(null); // Limpa dados antigos em caso de erro
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchWeatherData() // Fetch inicial
+    fetchWeather();
+  }, [lat, lon]); // Refaz a busca se lat/lon mudarem
 
-    // Configurar intervalo para refresh se refreshInterval for fornecido e maior que 0
-    let intervalId: NodeJS.Timeout | undefined;
-    if (refreshInterval && refreshInterval > 0) {
-      intervalId = setInterval(fetchWeatherData, refreshInterval);
-    }
-
-    // Limpar intervalo ao desmontar o componente
-    return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
-    }
-  }, [location, refreshInterval])
-
-  const getWeatherIcon = (condition: WeatherData["condition"]) => {
+  const getWeatherIcon = (condition: WeatherCondition, size = "h-6 w-6") => {
     switch (condition) {
-      case "sunny":
-        return <Sun className="h-8 w-8 text-yellow-500" />
-      case "cloudy":
-        return <Cloud className="h-8 w-8 text-gray-400" />
-      case "rainy":
-        return <CloudRain className="h-8 w-8 text-blue-400" />
-      case "snowy":
-        return <CloudSnow className="h-8 w-8 text-blue-200" />
-      case "stormy":
-        return <CloudLightning className="h-8 w-8 text-purple-500" />
-      case "foggy":
-        return <CloudFog className="h-8 w-8 text-gray-300" />
-      case "partlyCloudy": // Adicionado para cobrir todas as condições do tipo
-        return <Sun className="h-8 w-8 text-yellow-500 opacity-70" /> // Exemplo, pode ser um ícone específico
-      default:
-        return <Cloud className="h-8 w-8 text-gray-400" /> // Fallback
+      case "sunny": return <Sun className={cn(size, "text-yellow-500")} />;
+      case "cloudy": return <Cloud className={cn(size, "text-gray-400")} />;
+      case "rainy": return <CloudRain className={cn(size, "text-blue-400")} />;
+      case "snowy": return <CloudSnow className={cn(size, "text-blue-200")} />;
+      case "stormy": return <CloudLightning className={cn(size, "text-purple-500")} />;
+      case "foggy": return <CloudFog className={cn(size, "text-gray-300")} />;
+      case "partlyCloudy": return <Sun className={cn(size, "text-yellow-500 opacity-70")} />; // Ícone temporário
+      default: return <Thermometer className={cn(size, "text-muted-foreground")} />;
     }
-  }
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="text-center p-4 text-red-600">
-        <p>Erro ao carregar previsão:</p>
-        <p className="text-sm">{error}</p>
-      </div>
-    )
-  }
-
-  if (forecast.length === 0) {
-    return <div className="text-center p-4 text-muted-foreground">Nenhuma previsão disponível.</div>;
-  }
+  };
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2"> {/* Ajustado para melhor responsividade */}
-      {forecast.map((day, i) => (
-        <Card key={i} className={i === 0 ? "bg-primary/5 border-primary/20" : ""}> {/* Destaque melhorado */}
-          <CardContent className="p-3 text-center">
-            <div className="font-medium text-sm mb-1">{day.date}</div>
-            <div className="flex justify-center mb-1 h-8 w-8 mx-auto">{getWeatherIcon(day.condition)}</div>
-            <div className="text-lg font-bold">{day.temperature}°C</div> {/* Usando temperature */}
-            {day.precipitation !== undefined && ( // Mostrar precipitação apenas se disponível
-              <div className="text-xs text-muted-foreground">{day.precipitation}% chuva</div>
-            )}
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  )
-}
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-lg">Previsão do Tempo</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {loading && (
+          <div className="flex items-center space-x-4">
+            <Skeleton className="h-12 w-12 rounded-full" />
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-[150px]" />
+              <Skeleton className="h-4 w-[100px]" />
+            </div>
+          </div>
+        )}
+        {error && !loading && (
+          <p className="text-sm text-destructive">Falha ao carregar previsão: {error}</p>
+        )}
+        {weather && !loading && !error && (
+          <div className="flex items-center space-x-4">
+            {getWeatherIcon(weather.condition, "h-10 w-10")}
+            <div>
+              <p className="text-2xl font-bold">{weather.temperature}°C</p>
+              <p className="text-sm text-muted-foreground capitalize">{weather.description}</p>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
+
+export default WeatherForecast;

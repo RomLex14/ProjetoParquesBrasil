@@ -1,10 +1,8 @@
-// next.config.mjs
-
 import withPWAInit from "next-pwa";
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  // ... suas outras configurações do next.config.mjs
+const baseConfig = {
+  reactStrictMode: process.env.NODE_ENV === "production", // ✅ Desativa apenas no dev
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -18,9 +16,11 @@ const nextConfig = {
 
 const withPWA = withPWAInit({
   dest: "public",
-  disable: process.env.NODE_ENV === "development", // Desativa o PWA em modo de desenvolvimento
+  disable: process.env.NODE_ENV === "development", // 🔹 PWA desativado no dev
   register: true,
   skipWaiting: true,
 });
 
-export default withPWA(nextConfig);
+const nextConfig = withPWA(baseConfig);
+
+export default nextConfig;

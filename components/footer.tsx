@@ -1,10 +1,10 @@
 // components/footer.tsx
 
-import Link from "next/link"
-import Image from "next/image" // <<< 1. IMPORTE O COMPONENTE DE IMAGEM
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import {
   Mail,
   Phone,
@@ -15,15 +15,14 @@ import {
   Youtube,
   Shield,
   Globe,
-} from "lucide-react"
+} from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-white dark:bg-slate-950">
+    <footer className="bg-gray-900 text-white dark:bg-slate-950 relative z-50"> 
       <div className="container mx-auto px-4 py-12">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           <div className="space-y-4">
-            {/* <<< 2. ALTERAÇÃO DO ÍCONE >>> */}
             <div className="flex items-center gap-2">
               <Image src="/icon.png" alt="Logo Trilhas Brasil" width={32} height={32} />
               <span className="text-xl font-bold">Trilhas Brasil</span>
