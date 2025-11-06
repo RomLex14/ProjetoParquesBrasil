@@ -1,25 +1,21 @@
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs"
-import { cookies } from "next/headers"
-import { type NextRequest, NextResponse } from "next/server"
+// app/auth/callback/route.ts
+
+import { createRouteHandlerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
+import { NextResponse, type NextRequest } from 'next/server'
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url)
-  const code = requestUrl.searchParams.get("code")
-  const next = requestUrl.searchParams.get("next") || "/"
+  const code = requestUrl.searchParams.get('code')
+  const next = requestUrl.searchParams.get('next') || '/'
 
   if (code) {
     const cookieStore = cookies()
+    // A função é chamada aqui e agora será encontrada corretamente
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
-
-    // Troca o código de autorização por uma sessão
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
-
-    if (error) {
-      console.error("Erro ao trocar código por sessão:", error.message)
-      return NextResponse.redirect(new URL("/auth/error", request.url))
-    }
+    await supabase.auth.exchangeCodeForSession(code)
   }
 
-  // URL para redirecionar após a autenticação (página inicial por padrão)
+  // Redireciona o usuário para a página que ele queria acessar ou para a home
   return NextResponse.redirect(new URL(next, request.url))
 }

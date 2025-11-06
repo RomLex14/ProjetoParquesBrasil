@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-  "build": "next build",
-  "start": "next start -H 0.0.0.0",
-  "lint": "next lint"
+    "build": "next build",
+    "start": "next start -H 0.0.0.0",
+    "lint": "next lint"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -37,7 +37,6 @@
     "@radix-ui/react-toggle": "1.1.1",
     "@radix-ui/react-toggle-group": "1.1.1",
     "@radix-ui/react-tooltip": "latest",
-    "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.49.9",
     "autoprefixer": "^10.4.20",
