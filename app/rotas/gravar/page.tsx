@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import dynamic from "next/dynamic";
-import L from "leaflet";
+import LeafletMap from "@/components/leaflet-map";
 import { 
   ArrowLeft, Play, Pause, StopCircle, Clock, TrendingUp, 
   Loader2, Save, PlayCircle, Trash2
