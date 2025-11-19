@@ -1,8 +1,8 @@
 "use client"
 
-import type React from "react" // Adicionado 'type'
+import type React from "react" 
 import { useState, useEffect } from "react"
-import Link from "next/link" // Garantida a importação
+import Link from "next/link"
 import { supabase } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -46,8 +46,7 @@ export default function LoginPage() {
         email,
         password,
         options: {
-          // persistSession: true, // <-- LINHA REMOVIDA
-          // Adicione outras opções válidas aqui se necessário, ex: captchaToken
+
         },
       })
 
@@ -138,6 +137,11 @@ export default function LoginPage() {
               Não tem uma conta?{" "}
               <Link href="/signup" className="text-primary hover:underline">
                 Cadastre-se
+              </Link>
+            </div>
+            <div className="mt-2 text-center text-sm">
+              <Link href="/forgot-password" className="text-sm underline text-muted-foreground hover:text-primary">
+                Esqueceu sua senha?
               </Link>
             </div>
           </form>
