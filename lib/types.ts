@@ -1,12 +1,14 @@
 // lib/types.ts
+
 export interface Waypoint {
   name: string;
   lat: number;
   lng: number;
 }
+
 export interface Parque {
   id: string;
-  uuid: string;
+  uuid?: string; // Opcional para compatibilidade com dados antigos ou IDs externos
   nome: string;
   estado: string;
   localizacao: string;
@@ -19,37 +21,11 @@ export interface Parque {
   destaque: boolean;
 }
 
-export interface Trilhas {
-  id: string;
-  name: string;
-  location: string;
-  description: string;
-  imageUrl: string;
-  difficulty: "Fácil" | "Moderado" | "Difícil" | "Extrema";
-  distance: number;
-  duration: string;
-  elevation: number;
-  rating: number;
-  reviews: Review[];
-  coordinates?: {
-    lat: number;
-    lng: number;
-  };
-  path?: Array<{
-    lat: number;
-    lng: number;
-  }>;
-  parque_id: string;
-  waypoints?: Waypoint[];
-  distancia_usuario?: number;
-}
-
 export interface Review {
   id: string;
   user: {
     name: string;
     avatar: string;
-    level?: number | null;
   };
   rating: number;
   date: string;
@@ -57,6 +33,55 @@ export interface Review {
   photos?: string[];
 }
 
+export interface Trilhas {
+  id: string;
+  parque_id: string; // Identificador do parque
+  name: string;
+  location: string;
+  description: string;
+  imageUrl: string;     // Imagem de capa principal
+  
+  // Nova propriedade para o carrossel de imagens
+  // Opcional (?) para não quebrar dados antigos imediatamente, 
+  // mas recomendado preencher em todas.
+  images?: string[];    
+
+  difficulty: "Fácil" | "Moderado" | "Difícil" | "Extrema"; 
+  distance: number;
+  duration: string;
+  elevation: number;
+  rating: number;
+  
+  // Lista de avaliações. 
+  // No data.ts, você deve passar um array vazio [] se não houver reviews ainda.
+  reviews: Review[];
+  
+  // Coordenadas para ponto único (marcador no mapa)
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
+  
+  // Caminho para desenhar a linha da trilha (array de pontos)
+  path?: Array<{
+    lat: number;
+    lng: number;
+  }>;
+  
+  waypoints?: Waypoint[];
+  
+  // Propriedade calculada dinamicamente (não precisa estar no data.ts)
+  distancia_usuario?: number; 
+
+  // --- NOVOS CAMPOS PARA INFORMAÇÕES DETALHADAS ---
+  // Adicionados para enriquecer a página de detalhes da trilha
+  bestSeason?: string;      // Melhor época (ex: "Maio a Setembro")
+  terrainType?: string;     // Tipo de terreno (ex: "Pedregoso")
+  mobileSignal?: "Excelente" | "Bom" | "Parcial" | "Ruim" | "Inexistente";
+  tips?: string;            // Dicas específicas (ex: "Leve dinheiro em espécie")
+}
+
+// Tipos para o Banco de Dados (Supabase) - Opcional se você usar direto no componente
 export interface Perfil {
   id: string;
   nome_usuario?: string | null;
@@ -66,8 +91,6 @@ export interface Perfil {
   localizacao?: string | null;
   criado_em: string;
   atualizado_em: string;
-  xp?: number | null;
-  nivel?: number | null;
 }
 
 export interface Avaliacao {
@@ -83,6 +106,7 @@ export interface Avaliacao {
   atualizado_em: string;
 }
 
+// Tipo composto para avaliações com dados do perfil (join)
 export interface AvaliacaoComPerfil extends Avaliacao {
-  perfis: Pick<Perfil, "nome_completo" | "nome_usuario" | "url_avatar" | "nivel"> | null;
+  perfis: Pick<Perfil, "nome_completo" | "nome_usuario" | "url_avatar"> | null;
 }

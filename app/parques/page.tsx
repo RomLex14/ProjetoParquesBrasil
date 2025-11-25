@@ -1,163 +1,96 @@
-// app/parques/page.tsx
-
 "use client"
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { supabase } from "@/lib/supabase";
-import type { Parque } from "@/lib/types";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { MapPin, Search, Star, Users, Mountain, Loader2 } from "lucide-react";
+import Image from "next/image";
+import { MapPin, Search, Trees } from "lucide-react";
+
 import Navbar from "@/components/navbar";
-import { cn } from "@/lib/utils";
-
-// Card do Parque com a lógica de "Em breve"
-function ParqueCard({ parque }: { parque: Parque }) {
-  const isInactive = parque.nome !== "Parque Nacional de Brasília";
-
-  return (
-    <Card className={cn(
-      "overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full rounded-xl",
-      isInactive && "bg-muted/50"
-    )}>
-      <Link href={!isInactive ? `/parques/${parque.id}` : '#'} className={cn("block", isInactive && "pointer-events-none")}>
-        <div className="relative aspect-video overflow-hidden">
-          <img
-            src={parque.imagem || "/images/parques/chapada.jpg"}
-            alt={parque.nome}
-            className={cn(
-              "w-full h-full object-cover transition-transform duration-300 hover:scale-105",
-              isInactive && "grayscale"
-            )}
-          />
-          {parque.destaque && (
-            <div className="absolute top-2 left-2">
-              <Badge className="bg-amber-500 text-white border-amber-600">Destaque</Badge>
-            </div>
-          )}
-          {parque.rating && (
-            <div className="absolute top-2 right-2 flex items-center bg-black/60 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs font-medium">
-              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
-              <span>{parque.rating.toFixed(1)}</span>
-            </div>
-          )}
-        </div>
-      </Link>
-      <CardHeader className="p-4">
-          <h3 className="font-bold text-lg line-clamp-1">{parque.nome}</h3>
-          <div className="flex items-center text-sm text-muted-foreground">
-            <MapPin className="h-4 w-4 mr-1.5 flex-shrink-0" />
-            <span>{parque.localizacao}</span>
-          </div>
-      </CardHeader>
-      <CardContent className="p-4 pt-0 flex-grow flex flex-col">
-        <p className="text-sm text-muted-foreground line-clamp-2 flex-grow">{parque.descricao}</p>
-        <div className="border-t pt-3 mt-3 grid grid-cols-2 gap-2 text-sm">
-          <div className="flex items-center">
-            <Mountain className="h-4 w-4 mr-1.5 text-muted-foreground" />
-            <span>{parque.trilhas} trilhas</span>
-          </div>
-          <div className="flex items-center">
-            <Users className="h-4 w-4 mr-1.5 text-muted-foreground" />
-            <span>{parque.visitantes}</span>
-          </div>
-        </div>
-        
-        {isInactive ? (
-          <Button className="w-full mt-4" disabled>
-            Em breve
-          </Button>
-        ) : (
-          <Button asChild className="w-full mt-4">
-            <Link href={`/parques/${parque.id}`}>Explorar Parque</Link>
-          </Button>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { parques } from "@/lib/data"; // Importa a lista atualizada
 
 export default function ParquesPage() {
-  const [allParques, setAllParques] = useState<Parque[]>([]);
-  const [filteredParques, setFilteredParques] = useState<Parque[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchParques = async () => {
-      setLoading(true);
-      try {
-        const { data, error } = await supabase.from("parques").select("*").order("nome");
-        if (error) throw error;
-        
-        setAllParques(data as Parque[]);
-        setFilteredParques(data as Parque[]);
-      } catch (error) {
-        console.error("Erro ao buscar parques:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchParques();
-  }, []);
-
-  useEffect(() => {
-    if (!searchTerm) {
-      setFilteredParques(allParques);
-      return;
-    }
-    const lowercasedFilter = searchTerm.toLowerCase();
-    const filtered = allParques.filter((parque) => {
-      return (
-        parque.nome.toLowerCase().includes(lowercasedFilter) ||
-        parque.localizacao.toLowerCase().includes(lowercasedFilter)
-      );
-    });
-    setFilteredParques(filtered);
-  }, [searchTerm, allParques]);
+  const filteredParques = parques.filter((parque) =>
+    parque.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    parque.localizacao.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-slate-900 dark:to-slate-800">
+    // ✅ Fundo padrão do site (bg-background)
+    <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
-      <main className="container mx-auto px-4 py-16">
-        <section className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-            Parques <span className="text-green-600 dark:text-green-400">Nacionais</span> do Brasil
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-            Descubra a diversidade e beleza dos parques nacionais brasileiros.
-          </p>
-          <div className="max-w-md mx-auto">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input 
-                type="search" 
-                placeholder="Buscar por nome ou localização..." 
-                className="pl-10"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
+      
+      <main className="flex-1 container py-8">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+          <div>
+            <h1 className="text-3xl font-bold flex items-center gap-2">
+              <Trees className="h-8 w-8 text-primary" />
+              Parques Nacionais e Reservas
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              Explore as áreas de preservação mais incríveis da região.
+            </p>
           </div>
-        </section>
+          
+          <div className="relative w-full md:w-72">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder="Buscar parque..."
+              className="pl-9 bg-card"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </div>
 
-        <section>
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">Nossos Parques</h2>
-          {loading ? (
-             <div className="flex justify-center py-16">
-                <Loader2 className="h-12 w-12 animate-spin text-primary" />
-             </div>
-          ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredParques.map((parque) => (
-                <ParqueCard key={parque.id} parque={parque} />
-              ))}
-            </div>
-          )}
-        </section>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredParques.map((parque) => (
+            <Link href={`/parques/${parque.id}`} key={parque.id}>
+              <Card className="h-full hover:shadow-lg transition-all duration-300 border-none shadow-md overflow-hidden group">
+                <div className="relative h-48 w-full">
+                  <Image
+                    src={parque.imagem}
+                    alt={parque.nome}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute bottom-3 left-3 text-white">
+                    <Badge variant="secondary" className="mb-1 bg-primary/90 text-white hover:bg-primary border-none">
+                      {parque.estado}
+                    </Badge>
+                    <h3 className="font-bold text-lg leading-tight">{parque.nome}</h3>
+                  </div>
+                </div>
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <MapPin className="h-3.5 w-3.5 mr-1 text-primary" />
+                      {parque.localizacao}
+                    </div>
+                    <div className="text-xs font-medium bg-muted px-2 py-1 rounded-full">
+                      {parque.trilhas} trilhas
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground line-clamp-3">
+                    {parque.descricao}
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+
+        {filteredParques.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground text-lg">Nenhum parque encontrado.</p>
+          </div>
+        )}
       </main>
     </div>
   );

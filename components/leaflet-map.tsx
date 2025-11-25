@@ -1,45 +1,29 @@
-"use client";
+"use client"
 
-import React, { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
-import { MapContainerProps } from "react-leaflet";
-import { LatLngExpression, Map as LeafletMapInstance } from "leaflet";
-import "leaflet/dist/leaflet.css";
+import dynamic from "next/dynamic"
+import { Loader2 } from "lucide-react"
+import type { Trilhas } from "@/lib/types";
 
-interface LeafletMapProps extends MapContainerProps {
-  paths?: Array<Array<[number, number]>>;
-  waypoints?: Array<{ position: [number, number]; name: string; description?: string }>;
-  onMapReady?: (map: LeafletMapInstance) => void;
-}
-
-const LeafletMapClient = dynamic(() => import("./leaflet-map-client"), {
+// Importação dinâmica com SSR desligado
+const LeafletMapComponent = dynamic(() => import("@/components/leaflet-map-client"), {
   ssr: false,
   loading: () => (
-    <div
-      style={{
-        height: "400px",
-        background: "#eee",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      Carregando Mapa...
+    <div className="w-full h-full flex flex-col items-center justify-center bg-muted/50 min-h-[300px]">
+      <Loader2 className="h-10 w-10 animate-spin text-primary mb-2" />
+      <span className="text-sm text-muted-foreground font-medium">Carregando mapa...</span>
     </div>
   ),
-});
+})
 
-const LeafletMap = (props: LeafletMapProps) => {
-  const [mounted, setMounted] = useState(false);
+interface LeafletMapProps {
+  trailId?: string
+  fullscreen?: boolean
+  recording?: boolean
+  showAllTrails?: boolean
+  selectedTrailId?: string
+  trailsToDisplay?: Trilhas[]
+}
 
-  // ⚙️ Este guard garante que o mapa só é montado no cliente
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null; // Evita renderização duplicada no React 18 (dev)
-
-  return <LeafletMapClient {...props} />;
-};
-
-export default LeafletMap;
+export default function LeafletMap(props: LeafletMapProps) {
+  return <LeafletMapComponent {...props} />
+}

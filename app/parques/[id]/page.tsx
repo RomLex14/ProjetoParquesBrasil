@@ -1,202 +1,280 @@
-// app/parques/[id]/page.tsx
-
+// app/trilhas/[id]/page.tsx
 "use client"
 
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
-import type { Parque, Trilhas } from '@/lib/types';
-import { ArrowLeft, Loader2, MapPin, Star } from 'lucide-react';
-import Navbar from '@/components/navbar';
-import WeatherForecast from '@/components/weather-forecast';
-import TrailCard from '@/components/trail-card';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { AspectRatio } from '@/components/ui/aspect-ratio';
-import LeafletMap from '@/components/leaflet-map';
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { 
+  ArrowLeft, MapPin, Clock, TrendingUp, Star, 
+  Share2, Heart, Navigation, Info, Map as MapIcon
+} from "lucide-react";
 
-const adaptTrilhaData = (data: any): Trilhas => ({
-    id: data.id,
-    name: data.nome,
-    location: data.parques?.localizacao || data.location || 'Localização não informada',
-    description: data.descricao,
-    imageUrl: data.url_imagem,
-    difficulty: data.dificuldade,
-    distance: data.distancia,
-    duration: `${data.duracao}h`,
-    elevation: data.ganho_elevacao || 0,
-    rating: data.avaliacao_media || 0,
-    reviews: [],
-    parque_id: data.parque_id,
-    coordinates: data.coordinates,
-    path: data.path,
+import Navbar from "@/components/navbar";
+// Footer removido para evitar duplicação com o layout global
+// import Footer from "@/components/footer";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  Carousel, 
+  CarouselContent, 
+  CarouselItem, 
+  CarouselNext, 
+  CarouselPrevious 
+} from "@/components/ui/carousel";
+import { getTrailById } from "@/lib/data";
+import type { Trilhas } from "@/lib/types";
+import dynamic from "next/dynamic";
+
+const LeafletMap = dynamic(() => import("@/components/leaflet-map"), { 
+  ssr: false,
+  loading: () => <div className="h-full w-full bg-muted animate-pulse rounded-lg" />
 });
 
-export default function ParqueDetailPage() {
+export default function TrailDetailsPage() {
   const params = useParams();
-  const parqueId = typeof params.id === 'string' ? params.id : undefined;
-
-  const [parque, setParque] = useState<Parque | null>(null);
-  const [trilhasDoParque, setTrilhasDoParque] = useState<Trilhas[]>([]);
+  const [trail, setTrail] = useState<Trilhas | undefined>(undefined);
   const [loading, setLoading] = useState(true);
 
-  const sobreParqueNacionalBrasilia = `
-O Parque Nacional de Brasília, conhecido como "Água Mineral", é uma unidade de conservação essencial para a capital. Criado em 1961, protege ecossistemas do Cerrado e os mananciais que abastecem parte do DF.
-
-O parque é um refúgio para a fauna e flora nativas e oferece aos visitantes famosas piscinas de águas minerais, além de duas trilhas ecológicas bem demarcadas, sendo um local perfeito para lazer e contato com a natureza do Cerrado.
-  `.trim();
-
   useEffect(() => {
-    const fetchParqueData = async () => {
-      if (!parqueId) {
-        setLoading(false);
-        return;
+    if (params.id) {
+      const foundTrail = getTrailById(params.id as string);
+      setTrail(foundTrail);
+      setLoading(false);
+    }
+  }, [params.id]);
+
+  const handleGetDirections = () => {
+    if (trail) {
+      if (trail.coordinates) {
+        const { lat, lng } = trail.coordinates;
+        const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`;
+        window.open(url, '_blank');
+      } else {
+        const destinationName = encodeURIComponent(trail.name + ", " + trail.location);
+        const url = `https://www.google.com/maps/dir/?api=1&destination=${destinationName}&travelmode=driving`;
+        window.open(url, '_blank');
       }
-
-      setLoading(true);
-      try {
-        const [parqueResponse, trilhasResponse] = await Promise.all([
-          supabase.from('parques').select('*').eq('id', parqueId).single(),
-          supabase.from('trilhas').select('*, parques(localizacao)').eq('parque_id', parqueId)
-        ]);
-        
-        const { data: parqueData, error: parqueError } = parqueResponse;
-        if (parqueError) throw parqueError;
-        setParque(parqueData as Parque);
-
-        const { data: trilhasData, error: trilhasError } = trilhasResponse;
-        if (trilhasError) throw trilhasError;
-
-        const adaptedTrilhas = trilhasData.map(adaptTrilhaData);
-        setTrilhasDoParque(adaptedTrilhas);
-
-      } catch (error) {
-        console.error("Erro ao buscar dados do parque:", error);
-        setParque(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchParqueData();
-  }, [parqueId]);
+    }
+  };
 
   if (loading) {
-    return (
-        <div className="flex flex-col min-h-screen">
-            <Navbar />
-            <div className="flex-1 flex justify-center items-center">
-                <Loader2 className="h-12 w-12 animate-spin text-primary" />
-            </div>
-        </div>
-    );
+    return <div className="h-screen flex items-center justify-center">Carregando...</div>;
   }
 
-  if (!parque) {
-    return (
-      <>
-        <Navbar />
-        <div className="container text-center py-10">
-          <h1 className="text-2xl font-bold">Parque não encontrado</h1>
-          <Link href="/parques">
-            <Button variant="outline" className="mt-4">
-              <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para Parques
-            </Button>
-          </Link>
-        </div>
-      </>
-    );
+  if (!trail) {
+    return <div className="h-screen flex items-center justify-center">Trilha não encontrada.</div>;
   }
+
+  // Garante que temos um array de imagens para o carrossel
+  const carouselImages = trail.images && trail.images.length > 0 
+    ? trail.images 
+    : [trail.imageUrl, trail.imageUrl, trail.imageUrl]; // Fallback para 3 imagens iguais
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
-      <main className="container mx-auto py-6 sm:py-8 px-4">
-        <div className="mb-6">
-          <Link href="/parques" className="inline-flex items-center text-sm text-primary hover:underline font-medium">
-            <ArrowLeft className="h-4 w-4 mr-1" />
-            Voltar para Todos os Parques
-          </Link>
-        </div>
+      
+      <main className="flex-1 pb-10">
+        {/* --- CARROSSEL DE IMAGENS (SUBSTITUI A HERO IMAGE ÚNICA) --- */}
+        <div className="relative w-full h-[300px] md:h-[400px] lg:h-[450px] bg-black">
+          <Carousel className="w-full h-full">
+            <CarouselContent>
+              {carouselImages.map((imgSrc, index) => (
+                <CarouselItem key={index} className="relative w-full h-[300px] md:h-[400px] lg:h-[450px]">
+                  <Image
+                    src={imgSrc}
+                    alt={`${trail.name} - Imagem ${index + 1}`}
+                    fill
+                    className="object-cover opacity-80"
+                    priority={index === 0}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            
+            {/* Controles do Carrossel (Visíveis apenas em telas maiores ou ao passar o mouse) */}
+            <div className="absolute inset-0 flex items-center justify-between p-4 pointer-events-none">
+               <div className="pointer-events-auto">
+                 <CarouselPrevious className="relative left-0 translate-x-0 bg-white/20 hover:bg-white/40 border-none text-white" />
+               </div>
+               <div className="pointer-events-auto">
+                 <CarouselNext className="relative right-0 translate-x-0 bg-white/20 hover:bg-white/40 border-none text-white" />
+               </div>
+            </div>
+          </Carousel>
 
-        <section className="mb-8">
-          <div className="relative w-full h-[40vh] min-h-[300px] md:h-[60vh] max-h-[550px] rounded-lg overflow-hidden shadow-xl group">
-            <img 
-              src={parque.nome === "Parque Nacional de Brasília" ? "/images/parques/parquenacional.jpg" : (parque.imagem || '/placeholder.svg')} 
-              alt={`Paisagem do ${parque.nome}`} 
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 sm:p-6 md:p-8 flex flex-col justify-end">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-1 sm:mb-2 shadow-text leading-tight">{parque.nome}</h1>
-              <div className="flex items-center text-gray-200 text-sm sm:text-base">
-                <MapPin className="h-4 w-4 sm:h-5 sm:w-5 mr-2 flex-shrink-0" />
-                <span className="truncate">{parque.localizacao}</span>
+          {/* Gradiente para texto legível */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none" />
+          
+          <div className="absolute top-4 left-4 z-10">
+            <Link href="/trilhas">
+              <Button variant="secondary" size="icon" className="rounded-full bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border-none">
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
+
+          <div className="absolute bottom-0 left-0 w-full p-6 md:p-8 text-white z-20">
+            <div className="container mx-auto">
+              <div className="flex flex-col md:flex-row justify-between items-end gap-4">
+                <div>
+                  <Badge className="mb-2 bg-primary hover:bg-primary/90 text-white border-none">
+                    {trail.difficulty}
+                  </Badge>
+                  <h1 className="text-2xl md:text-4xl font-bold mb-2 shadow-sm">{trail.name}</h1>
+                  <div className="flex items-center gap-2 text-gray-200 text-sm md:text-base">
+                    <MapPin className="h-4 w-4" />
+                    <span>{trail.location}</span>
+                  </div>
+                </div>
+                
+                <div className="flex gap-3">
+                  <Button variant="secondary" size="sm" className="gap-2 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 border-none">
+                    <Share2 className="h-4 w-4" /> <span className="hidden sm:inline">Compartilhar</span>
+                  </Button>
+                  <Button variant="secondary" size="sm" className="gap-2 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 border-none">
+                    <Heart className="h-4 w-4" /> <span className="hidden sm:inline">Salvar</span>
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
-        </section>
-        
-        <section className="grid md:grid-cols-3 gap-6 lg:gap-8">
-          <div className="md:col-span-2 space-y-6 lg:space-y-8">
-            <Card>
-              <CardHeader><CardTitle className="text-2xl font-semibold">Sobre o Parque</CardTitle></CardHeader>
-              <CardContent>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                  {parque.nome === "Parque Nacional de Brasília" ? sobreParqueNacionalBrasilia : parque.descricao}
-                </p>
-              </CardContent>
-            </Card>
+        </div>
 
-            <Card>
-              <CardHeader><CardTitle className="text-xl font-semibold">Trilhas em {parque.nome}</CardTitle></CardHeader>
-              <CardContent>
-                {trilhasDoParque.length > 0 ? (
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    {trilhasDoParque.map(trilha => (
-                      <TrailCard key={trilha.id} trail={trilha} />
-                    ))}
+        <div className="container mx-auto mt-8 px-4 md:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div className="lg:col-span-2 space-y-8">
+              {/* Stats Cards */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-card border rounded-xl p-4 flex flex-col items-center justify-center text-center shadow-sm">
+                  <TrendingUp className="h-5 w-5 text-primary mb-2" />
+                  <span className="text-xs text-muted-foreground uppercase font-semibold">Distância</span>
+                  <span className="text-lg font-bold">{trail.distance} km</span>
+                </div>
+                <div className="bg-card border rounded-xl p-4 flex flex-col items-center justify-center text-center shadow-sm">
+                  <Clock className="h-5 w-5 text-primary mb-2" />
+                  <span className="text-xs text-muted-foreground uppercase font-semibold">Duração</span>
+                  <span className="text-lg font-bold">{trail.duration}</span>
+                </div>
+                <div className="bg-card border rounded-xl p-4 flex flex-col items-center justify-center text-center shadow-sm">
+                  <TrendingUp className="h-5 w-5 text-primary mb-2" />
+                  <span className="text-xs text-muted-foreground uppercase font-semibold">Elevação</span>
+                  <span className="text-lg font-bold">{trail.elevation}m</span>
+                </div>
+                <div className="bg-card border rounded-xl p-4 flex flex-col items-center justify-center text-center shadow-sm">
+                  <Star className="h-5 w-5 text-yellow-500 mb-2 fill-current" />
+                  <span className="text-xs text-muted-foreground uppercase font-semibold">Avaliação</span>
+                  <span className="text-lg font-bold">{trail.rating}</span>
+                </div>
+              </div>
+
+              {/* Tabs: Sobre, Mapa, Avaliações */}
+              <Tabs defaultValue="about" className="w-full">
+                <TabsList className="w-full justify-start border-b rounded-none bg-transparent p-0 h-auto">
+                  <TabsTrigger value="about" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:shadow-none py-3 px-6">
+                    Sobre
+                  </TabsTrigger>
+                  <TabsTrigger value="map" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:shadow-none py-3 px-6">
+                    Mapa
+                  </TabsTrigger>
+                  <TabsTrigger value="reviews" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:shadow-none py-3 px-6">
+                    Avaliações
+                  </TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="about" className="pt-6">
+                  <h3 className="text-xl font-bold mb-4">Descrição</h3>
+                  <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                    {trail.description}
+                  </p>
+                  
+                  <h3 className="text-xl font-bold mt-8 mb-4">O que esperar</h3>
+                  <ul className="space-y-2 text-muted-foreground">
+                    <li className="flex items-center gap-2">
+                      <Info className="h-4 w-4 text-primary" /> Visual panorâmico incrível
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Info className="h-4 w-4 text-primary" /> Trechos de mata fechada e campo aberto
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Info className="h-4 w-4 text-primary" /> Possibilidade de avistar fauna local
+                    </li>
+                  </ul>
+                </TabsContent>
+                
+                <TabsContent value="map" className="pt-6">
+                  <div className="h-[400px] w-full rounded-xl overflow-hidden border shadow-sm">
+                    <LeafletMap trailId={trail.id} />
                   </div>
-                ) : (
-                  <p className="text-muted-foreground text-center py-4">Nenhuma trilha encontrada para este parque.</p>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader><CardTitle className="text-xl font-semibold">Previsão do Tempo</CardTitle><CardDescription>Para {parque.localizacao.split(",")[0]}</CardDescription></CardHeader>
-                <CardContent><WeatherForecast location={parque.localizacao.split(",")[0]} /></CardContent>
-            </Card>
-          </div>
-
-          <div className="space-y-6 md:sticky md:top-24 self-start">
-             <Card>
-              <CardHeader><CardTitle className="text-xl font-semibold">Detalhes</CardTitle></CardHeader>
-              <CardContent className="grid grid-cols-2 gap-x-4 gap-y-5 text-sm">
-                <div><p className="text-muted-foreground text-xs uppercase tracking-wider">Estado</p><p className="font-semibold text-base mt-0.5">{parque.estado}</p></div>
-                <div><p className="text-muted-foreground text-xs uppercase tracking-wider">Área</p><p className="font-semibold text-base mt-0.5">{parque.area}</p></div>
-                <div><p className="text-muted-foreground text-xs uppercase tracking-wider">Visitantes (aprox.)</p><p className="font-semibold text-base mt-0.5">{parque.visitantes}</p></div>
-                {parque.rating && <div>
-                  <p className="text-muted-foreground text-xs uppercase tracking-wider">Avaliação</p>
-                  <div className="flex items-center font-semibold text-base mt-0.5">
-                    <Star className="h-5 w-5 fill-yellow-400 text-yellow-400 mr-1" />{parque.rating.toFixed(1)}
+                </TabsContent>
+                
+                <TabsContent value="reviews" className="pt-6">
+                  <div className="text-center py-10 text-muted-foreground">
+                    <p>Ainda não há avaliações para esta trilha.</p>
+                    <Button variant="link">Seja o primeiro a avaliar</Button>
                   </div>
-                </div>}
-              </CardContent>
-            </Card>
-            <Card className="overflow-hidden shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold">Mapa do Parque</CardTitle>
-                <CardDescription>Visualize o parque e suas trilhas.</CardDescription>
-              </CardHeader>
-              <CardContent className="p-0">
-                <AspectRatio ratio={4/3} className="bg-muted dark:bg-slate-800 border-t dark:border-slate-700">
-                  <LeafletMap trailsToDisplay={trilhasDoParque} />
-                </AspectRatio>
-              </CardContent>
-            </Card>
+                </TabsContent>
+              </Tabs>
+
+            </div>
+
+            <div className="lg:col-span-1 space-y-6">
+              <div className="bg-card border rounded-xl p-6 shadow-sm sticky top-24">
+                <h3 className="font-bold text-lg mb-4">Sua Aventura</h3>
+                
+                <div className="flex flex-col gap-3 mb-6">
+                    <Link href={`/trilhas/${trail.id}/start`}>
+                    <Button size="lg" className="w-full gap-2 shadow-lg shadow-primary/20 h-12 text-base">
+                        <Navigation className="h-5 w-5" /> Iniciar Trilha Agora
+                    </Button>
+                    </Link>
+
+                    <Button 
+                        variant="outline" 
+                        size="lg" 
+                        className="w-full gap-2 h-12 text-base border-primary/20 hover:bg-primary/5 text-primary hover:text-primary"
+                        onClick={handleGetDirections}
+                        disabled={!trail.coordinates}
+                    >
+                        <MapIcon className="h-5 w-5" /> Como Chegar
+                    </Button>
+                </div>
+                
+                <Separator className="my-6" />
+                
+                <div className="space-y-4">
+                    <div className="bg-muted/30 p-3 rounded-lg">
+                        <p className="text-sm text-muted-foreground mb-1 flex items-center gap-2">
+                            <Info className="h-3 w-3" /> Dica
+                        </p>
+                        <p className="text-sm">
+                            Lembre-se de levar água, protetor solar e usar calçados adequados. 
+                            Verifique a previsão do tempo antes de sair.
+                        </p>
+                    </div>
+
+                  <div className="flex justify-between text-sm pt-2">
+                    <span className="text-muted-foreground">Melhor época</span>
+                    <span className="font-medium">Maio a Setembro</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Tipo de terreno</span>
+                    <span className="font-medium">Misto (Terra/Pedra)</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Sinal de celular</span>
+                    <span className="font-medium text-yellow-600">Parcial</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
-        </section>
+        </div>
       </main>
     </div>
   );

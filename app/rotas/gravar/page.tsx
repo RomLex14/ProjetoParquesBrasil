@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import dynamic from "next/dynamic";
+// ❌ NÃO IMPORTAR LEAFLET AQUI. ISSO CAUSA O ERRO "WINDOW IS NOT DEFINED"
+// import L from "leaflet"; 
 
 import { 
   ArrowLeft, Play, Pause, StopCircle, Clock, TrendingUp, 
@@ -14,18 +16,25 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useGeolocation } from "@/hooks/use-geolocation";
 
+// Importamos apenas o TIPO das props para usar no dynamic
 import type { MapComponentProps } from "@/components/map-component-for-recorder";
 
-// Componente carregado dinamicamente com SSR desligado
+// Carregamento dinâmico com SSR desativado
 const MapForRecorder = dynamic<MapComponentProps>(() => import("@/components/map-component-for-recorder"), {
     ssr: false,
-    loading: () => <div className="h-full w-full bg-muted flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>
+    loading: () => (
+      <div className="h-full w-full bg-muted flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <span className="ml-2 text-muted-foreground">Carregando mapa...</span>
+      </div>
+    )
 });
 
 type RecordingStatus = 'idle' | 'recording' | 'paused' | 'finished';
 
 export default function GravarRotaPage() {
   const router = useRouter();
+  
   const [status, setStatus] = useState<RecordingStatus>('idle'); 
   const [elapsedTime, setElapsedTime] = useState(0);
   const [distance, setDistance] = useState(0);
@@ -35,10 +44,10 @@ export default function GravarRotaPage() {
     maximumAge: 0,
   });
 
-  // ✅ ALTERAÇÃO: Estado agora guarda objetos simples, sem depender de tipos do Leaflet
+  // ✅ CORREÇÃO 1: Usar objetos simples { lat, lng } em vez de tipos do Leaflet
   const [recordedPath, setRecordedPath] = useState<{ lat: number; lng: number }[]>([]);
   
-  // ✅ ALTERAÇÃO: Ref também guarda objeto simples
+  // ✅ CORREÇÃO 2: Ref também guarda objeto simples
   const lastPosition = useRef<{ lat: number; lng: number } | null>(null);
 
   // Timer
@@ -61,14 +70,17 @@ export default function GravarRotaPage() {
         setRecordedPath(prevPath => [...prevPath, newPoint]);
 
         if (lastPosition.current) {
-          // ✅ Importamos o Leaflet dinamicamente SÓ para calcular a distância
-          // Isso evita o erro "window is not defined" no servidor
-          const L = (await import('leaflet')).default;
-          
-          const from = L.latLng(lastPosition.current.lat, lastPosition.current.lng);
-          const to = L.latLng(newPoint.lat, newPoint.lng);
-          
-          setDistance(prev => prev + from.distanceTo(to));
+          // ✅ CORREÇÃO 3: Importamos o Leaflet dinamicamente SÓ aqui dentro
+          // Isso evita que o servidor tente carregar o Leaflet e acesse 'window'
+          try {
+            const L = (await import('leaflet')).default;
+            const from = L.latLng(lastPosition.current.lat, lastPosition.current.lng);
+            const to = L.latLng(newPoint.lat, newPoint.lng);
+            
+            setDistance(prev => prev + from.distanceTo(to));
+          } catch (error) {
+            console.error("Erro ao calcular distância:", error);
+          }
         }
         lastPosition.current = newPoint;
       }
@@ -77,7 +89,6 @@ export default function GravarRotaPage() {
     processPosition();
   }, [latitude, longitude, status]);
 
-  // ... Restante das funções (formatTime, handleStart, etc) continuam iguais ...
   const formatTime = (seconds: number) => {
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
@@ -143,13 +154,13 @@ export default function GravarRotaPage() {
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col">
-        <div className="flex-1 relative">
-          {/* O mapa agora aceita nosso array de objetos simples */}
+      <main className="flex-1 flex flex-col relative">
+        <div className="flex-1 relative w-full h-full">
+          {/* O mapa agora aceita nosso array de objetos simples e tem z-index baixo */}
           <MapForRecorder userPath={recordedPath} />
         </div>
 
-        <div className="bg-background border-t">
+        <div className="bg-background border-t z-20 relative">
           <div className="container py-4">
             <div className="grid grid-cols-2 gap-4 mb-4">
               <Card><CardContent className="p-4 flex flex-col items-center justify-center"><Clock className="h-5 w-5 text-muted-foreground mb-1" /><div className="text-xl font-bold">{formatTime(elapsedTime)}</div><div className="text-xs text-muted-foreground">Tempo</div></CardContent></Card>

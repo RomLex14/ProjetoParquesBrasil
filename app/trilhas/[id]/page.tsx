@@ -1,467 +1,349 @@
+// app/trilhas/[id]/page.tsx
 "use client"
 
-import React, { useEffect, useState, useCallback } from 'react';
-import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
-import {
-  ArrowLeft, MapPin, Star, Clock, TrendingUp, Mountain, Maximize, PlayCircle,
-  MessageSquare, Loader2, Heart as HeartIcon, Share2, AlertCircle
-} from 'lucide-react';
-import Navbar from '@/components/navbar';
-import LeafletMap from '@/components/leaflet-map';
-import ReviewCard from '@/components/review-card';
-import WeatherForecast from '@/components/weather-forecast';
-import CommentForm from '@/components/comment-form';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
-import { Separator } from '@/components/ui/separator';
-import {
-  Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter, SheetClose
-} from "@/components/ui/sheet";
-import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Label } from "@/components/ui/label";
-import { getTrailById } from '@/lib/data';
-import { supabase } from '@/lib/supabase';
-import type { Trilhas, Review as DisplayReview, AvaliacaoComPerfil as DbReview } from '@/lib/types';
-import type { User } from "@supabase/supabase-js";
-import { useToast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
-import { LatLngExpression } from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import { useState, useEffect } from "react"; 
+import Image from "next/image";
+import Link from "next/link";
+import { useParams, usePathname } from "next/navigation"; // Adicionado usePathname se for necessário, mas provavelmente não é
+import { 
+  ArrowLeft, MapPin, Clock, TrendingUp, Star, 
+  Share2, Heart, Navigation, Info, Map as MapIcon,
+  Calendar, Signal, Footprints
+} from "lucide-react";
+import Autoplay from "embla-carousel-autoplay"; 
 
+import Navbar from "@/components/navbar";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  Carousel, 
+  CarouselContent, 
+  CarouselItem, 
+  CarouselNext, 
+  CarouselPrevious 
+} from "@/components/ui/carousel";
+import { getTrailById } from "@/lib/data";
+import type { Trilhas } from "@/lib/types";
+import dynamic from "next/dynamic";
 
-const LoaderComponent = ({ message }: { message?: string }) => (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
-      <div className="flex-1 flex justify-center items-center p-4">
-        <div className="flex flex-col items-center gap-2">
-          <Loader2 className="h-12 w-12 animate-spin text-primary" />
-          {message && <p className="text-muted-foreground">{message}</p>}
-        </div>
-      </div>
-    </div>
-);
+const LeafletMap = dynamic(() => import("@/components/leaflet-map"), { 
+  ssr: false,
+  loading: () => <div className="h-full w-full bg-muted animate-pulse rounded-lg" />
+});
 
-
-export default function TrailDetailPage() {
-  const paramsHook = useParams();
-  const router = useRouter();
-  const { toast } = useToast();
-
-  const trilhaId = typeof paramsHook.id === 'string' ? paramsHook.id : undefined;
-
-  const [trail, setTrail] = useState<Trilhas | null>(null);
-  const [loadingTrail, setLoadingTrail] = useState(true);
-  const [comments, setComments] = useState<DbReview[]>([]);
-  const [loadingComments, setLoadingComments] = useState(true);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [averageRating, setAverageRating] = useState<number | null>(null);
-  const [totalReviews, setTotalReviews] = useState<number>(0);
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [loadingFavorite, setLoadingFavorite] = useState(false);
-  const [parqueNome, setParqueNome] = useState<string | null>(null);
-  const [showShareSheet, setShowShareSheet] = useState(false);
-  const [pageUrl, setPageUrl] = useState("");
-
-  const defaultMapCenter: LatLngExpression = [-15.7942, -47.8825];
-  const defaultMapZoom = 4;
+export default function TrailDetailsPage() {
+  const params = useParams();
+  // const pathname = usePathname(); // Se precisar usar pathname, descomente esta linha
+  const [trail, setTrail] = useState<Trilhas | undefined>(undefined);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setPageUrl(window.location.href);
+    if (params.id) {
+      const foundTrail = getTrailById(params.id as string);
+      setTrail(foundTrail);
+      setLoading(false);
     }
-  }, []);
+  }, [params.id]);
 
-  const fetchTrailData = useCallback(async () => {
-    if (!trilhaId) {
-      setLoadingTrail(false); setTrail(null); return;
-    }
-    setLoadingTrail(true);
-    const trailDataFromMock = getTrailById(trilhaId);
-
-    if (trailDataFromMock) {
-        setTrail(trailDataFromMock);
-        if (trailDataFromMock.parque_id && !trailDataFromMock.location?.includes(',')) {
-             try {
-                const { data: parqueData, error } = await supabase
-                    .from('parques')
-                    .select('nome')
-                    .eq('id', trailDataFromMock.parque_id)
-                    .single();
-                 if (!error && parqueData) {
-                    setParqueNome(parqueData.nome);
-                 }
-             } catch(e) { console.error("Erro ao buscar nome do parque:", e); }
-        }
-    } else {
-      setTrail(null);
-      toast({ title: "Trilha não encontrada", description: "Não foi possível carregar os dados desta trilha.", variant: "destructive" });
-    }
-    setLoadingTrail(false);
-  }, [trilhaId, toast]);
-
-  const fetchComments = useCallback(async () => {
-    if (!trilhaId) {
-      setLoadingComments(false); setComments([]); return;
-    }
-    setLoadingComments(true);
-    try {
-      const { data: commentsData, error: commentsError } = await supabase
-        .from('avaliacoes')
-        .select(`*, perfis (nome_completo, nome_usuario, url_avatar, nivel)`)
-        .eq('trilha_id', trilhaId)
-        .order('criado_em', { ascending: false });
-
-      if (commentsError) {
-        console.error("Supabase error object (fetchComments):", JSON.stringify(commentsError, null, 2));
-        throw commentsError;
-      }
-
-      const validCommentsData = (commentsData || []) as DbReview[];
-      setComments(validCommentsData);
-
-      if (validCommentsData.length > 0) {
-        const sum = validCommentsData.reduce((acc, comment) => acc + (comment.avaliacao || 0), 0);
-        setAverageRating(sum / validCommentsData.length);
-        setTotalReviews(validCommentsData.length);
+  const handleGetDirections = () => {
+    if (trail) {
+      if (trail.coordinates) {
+        const { lat, lng } = trail.coordinates;
+        const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`;
+        window.open(url, '_blank');
       } else {
-        setAverageRating(0);
-        setTotalReviews(0);
+        const destinationName = encodeURIComponent(trail.name + ", " + trail.location);
+        const url = `https://www.google.com/maps/dir/?api=1&destination=${destinationName}&travelmode=driving`;
+        window.open(url, '_blank');
       }
-    } catch (error: any) {
-      console.error("Erro ao carregar comentários:", error.message);
-      setComments([]);
-      setAverageRating(0);
-      setTotalReviews(0);
-      toast({ title: "Erro ao carregar comentários", description: error.message, variant: "destructive" });
-    } finally {
-      setLoadingComments(false);
-    }
-  }, [trilhaId, toast]);
-
-  const checkFavoriteStatus = useCallback(async (userId: string) => {
-    if (!trilhaId) return;
-    setLoadingFavorite(true);
-    try {
-      const { data, error } = await supabase
-        .from('favoritos')
-        .select('id')
-        .eq('usuario_id', userId)
-        .eq('trilha_id', trilhaId)
-        .limit(1);
-
-      if (error) throw error;
-      setIsFavorite(data && data.length > 0);
-    } catch (error: any) {
-      console.error("Erro ao checar favorito:", error.message);
-    } finally {
-      setLoadingFavorite(false);
-    }
-  }, [trilhaId]);
-
-  useEffect(() => {
-    const initPage = async () => {
-      if (trilhaId) {
-        await Promise.all([
-          fetchTrailData(),
-          fetchComments()
-        ]);
-
-         const { data: { user } } = await supabase.auth.getUser();
-        setCurrentUser(user);
-        if (user) {
-          await checkFavoriteStatus(user.id);
-        }
-      } else {
-        setLoadingTrail(false);
-        setLoadingComments(false);
-        setTrail(null);
-      }
-    };
-
-    initPage();
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, session) => {
-       const newAuthUser = session?.user ?? null;
-      setCurrentUser(newAuthUser);
-      if (trilhaId) {
-        if (newAuthUser) {
-          await checkFavoriteStatus(newAuthUser.id);
-        } else {
-          setIsFavorite(false);
-        }
-      }
-    });
-
-    return () => {
-      authListener?.subscription?.unsubscribe();
-    };
-  }, [trilhaId, fetchTrailData, fetchComments, checkFavoriteStatus]);
-
-  const handleToggleFavorite = async () => {
-    if (!currentUser) {
-      toast({ title: "Ação necessária", description: "Você precisa estar logado para favoritar.", variant: "default" });
-      router.push('/login');
-      return;
-    }
-    if (!trilhaId) return;
-
-    setLoadingFavorite(true);
-    try {
-      if (isFavorite) {
-        const { error } = await supabase
-          .from('favoritos')
-          .delete()
-          .eq('usuario_id', currentUser.id)
-          .eq('trilha_id', trilhaId);
-        if (error) throw error;
-        setIsFavorite(false);
-        toast({ title: "Removido dos Favoritos", variant: "default" });
-      } else {
-        const { error } = await supabase
-          .from('favoritos')
-          .insert({ usuario_id: currentUser.id, trilha_id: trilhaId });
-        if (error) throw error;
-        setIsFavorite(true);
-        toast({ title: "Adicionado aos Favoritos!", variant: "default" });
-      }
-    } catch (error: any) {
-      console.error("Erro ao favoritar:", error.message);
-      toast({ title: "Erro", description: error.message, variant: "destructive" });
-    } finally {
-      setLoadingFavorite(false);
     }
   };
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(pageUrl);
-    toast({ title: "Link Copiado!", description: "URL da trilha copiada para a área de transferência." });
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+        case "Fácil": return "bg-emerald-500 hover:bg-emerald-600";
+        case "Moderado": return "bg-amber-500 hover:bg-amber-600";
+        case "Difícil": return "bg-red-500 hover:bg-red-600";
+        case "Extrema": return "bg-purple-500 hover:bg-purple-600";
+        default: return "bg-blue-500 hover:bg-blue-600";
+    }
   };
 
-  if (loadingTrail || trilhaId === undefined) {
-      return <LoaderComponent message="A carregar detalhes da trilha..." />;
+  if (loading) {
+    return <div className="h-screen flex items-center justify-center">Carregando...</div>;
   }
 
   if (!trail) {
-       return (
-         <>
-           <Navbar />
-            <div className="container mx-auto py-8 px-4 text-center">
-                <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
-                <h1 className="text-2xl font-bold mb-2">Trilha não encontrada</h1>
-                <p className="text-muted-foreground mb-6">A trilha que você está procurando não existe ou foi removida.</p>
-                <Button asChild variant="outline">
-                    <Link href="/trilhas">Voltar para Trilhas</Link>
-                </Button>
-            </div>
-         </>
-       );
+    return (
+      <div className="h-screen flex flex-col items-center justify-center gap-4">
+        <h2 className="text-2xl font-bold">Trilha não encontrada</h2>
+        <p className="text-muted-foreground">Parece que o link que você tentou acessar não existe.</p>
+        <Link href="/trilhas">
+          <Button>Voltar para Trilhas</Button>
+        </Link>
+      </div>
+    );
   }
 
-  const displayReviews: DisplayReview[] = comments.map(comment => ({
-    id: comment.id,
-    user: {
-      name: comment.perfis?.nome_completo || comment.perfis?.nome_usuario || "Aventureiro(a)",
-      avatar: comment.perfis?.url_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.perfis?.nome_completo || comment.perfis?.nome_usuario || "A")}&background=random&color=fff`,
-      level: comment.perfis?.nivel ?? 1,
-    },
-    rating: comment.avaliacao,
-    date: new Date(comment.criado_em).toLocaleDateString("pt-BR", { year: 'numeric', month: 'long', day: 'numeric' }),
-    content: comment.comentario || "",
-    photos: comment.imagens || undefined,
-  }));
-
-  const mapCenterCoords = trail.coordinates ? [trail.coordinates.lat, trail.coordinates.lng] as LatLngExpression : defaultMapCenter;
-  const mapZoom = trail.coordinates ? 14 : defaultMapZoom;
-  const trailPathCoords = trail.path ? [trail.path.map(p => [p.lat, p.lng] as [number, number])] : undefined;
-  const trailWaypointsData = trail.waypoints ? trail.waypoints.map(wp => ({ ...wp, position: [wp.lat, wp.lng] as [number, number] })) : undefined;
+  // Garante array de imagens
+  const carouselImages = trail.images && trail.images.length > 0 
+    ? trail.images 
+    : [trail.imageUrl, trail.imageUrl]; 
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
-      <main className="container mx-auto py-6 sm:py-8 px-4">
-        <div className="mb-4">
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/trilhas" className="text-muted-foreground">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Voltar para trilhas
+      
+      <main className="flex-1 pb-10">
+        {/* --- CARROSSEL DE IMAGENS --- */}
+        <div className="relative w-full h-[300px] md:h-[400px] lg:h-[450px] bg-black">
+          <Carousel 
+            className="w-full h-full"
+            plugins={[
+              Autoplay({
+                delay: 5000,
+                stopOnInteraction: true,
+              }) as any, 
+            ]}
+            opts={{
+              loop: true,
+            }}
+          >
+            <CarouselContent>
+              {carouselImages.map((imgSrc, index) => (
+                <CarouselItem key={index} className="relative w-full h-[300px] md:h-[400px] lg:h-[450px]">
+                  <Image
+                    src={imgSrc}
+                    alt={`${trail.name} - Imagem ${index + 1}`}
+                    fill
+                    className="object-cover opacity-90"
+                    priority={index === 0}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            
+            <div className="absolute inset-0 flex items-center justify-between p-4 pointer-events-none">
+               <div className="pointer-events-auto">
+                 <CarouselPrevious className="relative left-0 translate-x-0 bg-white/20 hover:bg-white/40 border-none text-white" />
+               </div>
+               <div className="pointer-events-auto">
+                 <CarouselNext className="relative right-0 translate-x-0 bg-white/20 hover:bg-white/40 border-none text-white" />
+               </div>
+            </div>
+          </Carousel>
+
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none" />
+          
+          <div className="absolute top-4 left-4 z-10">
+            <Link href="/trilhas">
+              <Button variant="secondary" size="icon" className="rounded-full bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border-none">
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
             </Link>
-          </Button>
+          </div>
+
+          <div className="absolute bottom-0 left-0 w-full p-6 md:p-8 text-white z-20">
+            <div className="container mx-auto">
+              <div className="flex flex-col md:flex-row justify-between items-end gap-4">
+                <div>
+                  <Badge className={`mb-2 text-white border-none ${getDifficultyColor(trail.difficulty)}`}>
+                    {trail.difficulty}
+                  </Badge>
+                  <h1 className="text-2xl md:text-4xl font-bold mb-2 shadow-sm">{trail.name}</h1>
+                  <div className="flex items-center gap-2 text-gray-200 text-sm md:text-base">
+                    <MapPin className="h-4 w-4" />
+                    <span>{trail.location}</span>
+                  </div>
+                </div>
+                
+                <div className="flex gap-3">
+                  <Button variant="secondary" size="sm" className="gap-2 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 border-none">
+                    <Share2 className="h-4 w-4" /> <span className="hidden sm:inline">Compartilhar</span>
+                  </Button>
+                  <Button variant="secondary" size="sm" className="gap-2 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 border-none">
+                    <Heart className="h-4 w-4" /> <span className="hidden sm:inline">Salvar</span>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <section className="mb-6">
-          <Card className="overflow-hidden">
-            <AspectRatio ratio={16 / 9} className="bg-muted">
-              <img
-                src={trail.imageUrl || '/placeholder.jpg'}
-                alt={`Imagem da ${trail.name}`}
-                className="w-full h-full object-cover"
-              />
-            </AspectRatio>
-          </Card>
-        </section>
-
-        <section className="grid md:grid-cols-3 gap-6 lg:gap-8">
-          <div className="md:col-span-2 space-y-6 lg:space-y-8">
-            <Card>
-              <CardHeader>
-                <div className="flex justify-between items-start gap-4">
-                  <div>
-                    <CardTitle className="text-3xl font-bold">{trail.name}</CardTitle>
-                    <CardDescription className="text-base text-muted-foreground flex items-center gap-2 mt-1">
-                      <MapPin className="h-4 w-4" />
-                      {parqueNome ? `${parqueNome}, ` : ''}{trail.location}
-                    </CardDescription>
-                  </div>
-                  <div className="flex gap-2 flex-shrink-0">
-                    <Button variant="outline" size="icon" onClick={() => setShowShareSheet(true)} title="Compartilhar">
-                      <Share2 className="h-4 w-4" />
-                    </Button>
-                    <Button variant={isFavorite ? "default" : "outline"} size="icon" onClick={handleToggleFavorite} disabled={loadingFavorite} title={isFavorite ? "Remover favorito" : "Adicionar favorito"}>
-                      {loadingFavorite ? <Loader2 className="h-4 w-4 animate-spin"/> : <HeartIcon className={cn("h-4 w-4", isFavorite && "fill-current")} />}
-                    </Button>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 pt-4">
-                  <Badge variant="outline" className="text-sm capitalize">{trail.difficulty}</Badge>
-                  <div className="flex items-center gap-1 text-sm">
-                    <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                    <span className="font-medium">{averageRating ? averageRating.toFixed(1) : "N/A"}</span>
-                    <span className="text-muted-foreground">({totalReviews} reviews)</span>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-base text-muted-foreground">{trail.description}</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl font-semibold">Detalhes da Trilha</CardTitle>
-              </CardHeader>
-              <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-                <div className="p-3 bg-muted/50 rounded-lg">
-                  <Clock className="h-6 w-6 mx-auto text-primary mb-1" />
-                  <p className="text-sm font-medium">Duração</p>
-                  <p className="text-lg font-bold">{trail.duration}</p>
-                </div>
-                <div className="p-3 bg-muted/50 rounded-lg">
-                  <Maximize className="h-6 w-6 mx-auto text-primary mb-1" />
-                  <p className="text-sm font-medium">Distância</p>
-                  <p className="text-lg font-bold">{trail.distance} km</p>
-                </div>
-                <div className="p-3 bg-muted/50 rounded-lg">
-                  <TrendingUp className="h-6 w-6 mx-auto text-primary mb-1" />
-                  <p className="text-sm font-medium">Elevação</p>
-                  <p className="text-lg font-bold">{trail.elevation} m</p>
-                </div>
-                <div className="p-3 bg-muted/50 rounded-lg">
-                  <Mountain className="h-6 w-6 mx-auto text-primary mb-1" />
-                  <p className="text-sm font-medium">Tipo</p>
-                  <p className="text-lg font-bold capitalize">{trail.waypoints?.length ? 'Waypoints' : 'N/A'}</p>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-xl font-semibold">
-                  <MessageSquare className="h-5 w-5" />
-                  Avaliações ({totalReviews})
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {trilhaId && (
-                  <CommentForm
-                    trilhaId={trilhaId}
-                    user={currentUser}
-                    onCommentSubmitted={fetchComments}
-                  />
-                )}
-                <Separator />
-                {loadingComments ? (
-                  <div className="flex justify-center py-6"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
-                ) : displayReviews.length > 0 ? (
-                  <div className="space-y-8">
-                    {displayReviews.map(review => (
-                      <ReviewCard key={review.id} review={review} expanded={true} />
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-muted-foreground text-center py-6">Nenhuma avaliação ainda. Seja o primeiro!</p>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="space-y-6 md:sticky md:top-24 self-start">
-            <Card>
-              <CardContent className="p-4 space-y-3">
-                <Button size="lg" className="w-full text-lg" asChild>
-                  <Link href={`/trilhas/${trilhaId}/start`}>
-                    <PlayCircle className="h-5 w-5 mr-2" />
-                    Iniciar Percurso
-                  </Link>
-                </Button>
-                <Button size="lg" variant="outline" className="w-full text-lg" asChild>
-                  <Link href={`/trilhas/${trilhaId}/map`}>
-                    <MapPin className="h-5 w-5 mr-2" />
-                    Ver Mapa Completo
-                  </Link>
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card>
-  <CardHeader><CardTitle>Mapa</CardTitle></CardHeader>
-  <CardContent className="h-[300px] p-0 overflow-hidden rounded-b-lg">
-    {/* ⚙️ Força o React a destruir e recriar o container do mapa apenas se mudar de trilha */}
-    <LeafletMap
-      key={trilhaId} 
-      center={mapCenterCoords}
-      zoom={mapZoom}
-      paths={trailPathCoords}
-      waypoints={trailWaypointsData}
-      style={{ height: "100%", width: "100%" }}
-      scrollWheelZoom={false}
-    />
-  </CardContent>
-</Card>
+        <div className="container mx-auto mt-8 px-4 md:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            {trail.coordinates && (
-              <WeatherForecast 
-                lat={trail.coordinates.lat} 
-                lon={trail.coordinates.lng} 
-              />
-            )}
-          </div>
-        </section>
-      </main>
+            {/* COLUNA PRINCIPAL */}
+            <div className="lg:col-span-2 space-y-8">
+              
+              {/* Status Cards */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-card border rounded-xl p-4 flex flex-col items-center justify-center text-center shadow-sm">
+                  <TrendingUp className="h-5 w-5 text-primary mb-2" />
+                  <span className="text-xs text-muted-foreground uppercase font-semibold">Distância</span>
+                  <span className="text-lg font-bold">{trail.distance} km</span>
+                </div>
+                <div className="bg-card border rounded-xl p-4 flex flex-col items-center justify-center text-center shadow-sm">
+                  <Clock className="h-5 w-5 text-primary mb-2" />
+                  <span className="text-xs text-muted-foreground uppercase font-semibold">Duração</span>
+                  <span className="text-lg font-bold">{trail.duration}</span>
+                </div>
+                <div className="bg-card border rounded-xl p-4 flex flex-col items-center justify-center text-center shadow-sm">
+                  <TrendingUp className="h-5 w-5 text-primary mb-2" />
+                  <span className="text-xs text-muted-foreground uppercase font-semibold">Elevação</span>
+                  <span className="text-lg font-bold">{trail.elevation}m</span>
+                </div>
+                <div className="bg-card border rounded-xl p-4 flex flex-col items-center justify-center text-center shadow-sm">
+                  <Star className="h-5 w-5 text-yellow-500 mb-2 fill-current" />
+                  <span className="text-xs text-muted-foreground uppercase font-semibold">Avaliação</span>
+                  <span className="text-lg font-bold">{trail.rating}</span>
+                </div>
+              </div>
 
-      <Sheet open={showShareSheet} onOpenChange={setShowShareSheet}>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>Compartilhar Trilha</SheetTitle>
-            <SheetDescription>
-              Compartilhe esta trilha com seus amigos aventureiros!
-            </SheetDescription>
-          </SheetHeader>
-          <div className="py-4 space-y-4">
-             <Label htmlFor="share-link">Link da Trilha</Label>
-             <Input id="share-link" value={pageUrl} readOnly />
-             <Button onClick={handleCopyLink} className="w-full">Copiar Link</Button>
+              <Tabs defaultValue="about" className="w-full">
+                <TabsList className="w-full justify-start border-b rounded-none bg-transparent p-0 h-auto">
+                  <TabsTrigger value="about" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:shadow-none py-3 px-6">
+                    Sobre
+                  </TabsTrigger>
+                  <TabsTrigger value="map" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:shadow-none py-3 px-6">
+                    Mapa
+                  </TabsTrigger>
+                  <TabsTrigger value="reviews" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:shadow-none py-3 px-6">
+                    Avaliações
+                  </TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="about" className="pt-6 space-y-8">
+                  <div>
+                    <h3 className="text-xl font-bold mb-4">Descrição</h3>
+                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                      {trail.description}
+                    </p>
+                  </div>
+
+                  {/* Exibe Dicas e Detalhes Extras se existirem */}
+                  {(trail.tips || trail.bestSeason || trail.mobileSignal) && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {trail.tips && (
+                        <div className="bg-muted/30 p-4 rounded-xl border">
+                           <h4 className="font-bold flex items-center gap-2 mb-2">
+                             <Info className="h-4 w-4 text-primary" /> Dica Importante
+                           </h4>
+                           <p className="text-sm text-muted-foreground">{trail.tips}</p>
+                        </div>
+                      )}
+                      
+                      <div className="space-y-4">
+                        {trail.bestSeason && (
+                          <div className="flex items-start gap-3">
+                            <div className="bg-primary/10 p-2 rounded-lg text-primary">
+                              <Calendar className="h-4 w-4" />
+                            </div>
+                            <div>
+                              <p className="font-medium text-sm">Melhor Época</p>
+                              <p className="text-sm text-muted-foreground">{trail.bestSeason}</p>
+                            </div>
+                          </div>
+                        )}
+                        {trail.mobileSignal && (
+                          <div className="flex items-start gap-3">
+                            <div className="bg-primary/10 p-2 rounded-lg text-primary">
+                              <Signal className="h-4 w-4" />
+                            </div>
+                            <div>
+                              <p className="font-medium text-sm">Sinal de Celular</p>
+                              <p className="text-sm text-muted-foreground">{trail.mobileSignal}</p>
+                            </div>
+                          </div>
+                        )}
+                        {trail.terrainType && (
+                          <div className="flex items-start gap-3">
+                            <div className="bg-primary/10 p-2 rounded-lg text-primary">
+                              <Footprints className="h-4 w-4" />
+                            </div>
+                            <div>
+                              <p className="font-medium text-sm">Tipo de Terreno</p>
+                              <p className="text-sm text-muted-foreground">{trail.terrainType}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </TabsContent>
+                
+                <TabsContent value="map" className="pt-6">
+                  <div className="h-[400px] w-full rounded-xl overflow-hidden border shadow-sm bg-slate-100">
+                    <LeafletMap trailId={trail.id} />
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="reviews" className="pt-6">
+                  <div className="text-center py-10 text-muted-foreground bg-muted/20 rounded-xl border border-dashed">
+                    <p>Ainda não há avaliações para esta trilha.</p>
+                    <Button variant="link" className="mt-2">Seja o primeiro a avaliar</Button>
+                  </div>
+                </TabsContent>
+              </Tabs>
+
+            </div>
+
+            {/* SIDEBAR (DIREITA) */}
+            <div className="lg:col-span-1 space-y-6">
+              <div className="bg-card border rounded-xl p-6 shadow-sm sticky top-24">
+                <h3 className="font-bold text-lg mb-4">Sua Aventura</h3>
+                
+                <div className="flex flex-col gap-3 mb-6">
+                    <Link href={`/trilhas/${trail.id}/start`} className="w-full">
+                      <Button size="lg" className="w-full gap-2 shadow-lg shadow-primary/20 h-12 text-base">
+                          <Navigation className="h-5 w-5" /> Iniciar Trilha Agora
+                      </Button>
+                    </Link>
+
+                    <Button 
+                        variant="outline" 
+                        size="lg" 
+                        className="w-full gap-2 h-12 text-base border-primary/20 hover:bg-primary/5 text-primary hover:text-primary"
+                        onClick={handleGetDirections}
+                        disabled={!trail.coordinates}
+                    >
+                        <MapIcon className="h-5 w-5" /> Como Chegar
+                    </Button>
+                </div>
+                
+                <Separator className="my-6" />
+                
+                <div className="space-y-4">
+                    <div className="bg-muted/30 p-3 rounded-lg border border-muted">
+                        <p className="text-xs font-medium text-muted-foreground mb-1 flex items-center gap-1.5">
+                            <Info className="h-3 w-3" /> Preparação
+                        </p>
+                        <p className="text-sm leading-snug text-foreground/80">
+                            Leve água (min. 1.5L), protetor solar e use calçados fechados. Verifique a previsão do tempo.
+                        </p>
+                    </div>
+
+                  <div className="flex justify-between text-sm pt-2">
+                    <span className="text-muted-foreground">Melhor época</span>
+                    <span className="font-medium">Maio a Setembro</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Tipo de terreno</span>
+                    <span className="font-medium">Misto (Terra/Pedra)</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Sinal de celular</span>
+                    <span className="font-medium text-yellow-600">Parcial</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
-          <SheetFooter>
-            <SheetClose asChild>
-              <Button variant="outline">Fechar</Button>
-            </SheetClose>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
+        </div>
+      </main>
     </div>
   );
 }

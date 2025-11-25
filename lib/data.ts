@@ -1,11 +1,25 @@
 // lib/data.ts
-import type { Trilhas, Review, Parque } from "./types";
+import type { Trilhas, Parque } from "./types";
 import { calculateDistance } from "./weather-service";
 
-// --- IDs ÚNICOS PARA OS PARQUES ---
+// --- IDs DOS PARQUES ---
 const PARQUE_NACIONAL_BRASILIA_ID = "7a103b3b-d434-4da6-88df-687df60043da";
-const PARQUE_ESTADUAL_PIRENEUS_ID = "33d94de9-008d-4337-a300-62637c8ba278";
 const PARQUE_NACIONAL_CHAPADA_VEADEIROS_ID = "f99ad11e-4242-4024-86b6-1ba840b55c25";
+const PARQUE_ESTADUAL_PIRENEUS_ID = "33d94de9-008d-4337-a300-62637c8ba278";
+const PARQUE_ECOLOGICO_BERNARDO_SAYAO_ID = "b1234567-d434-4da6-88df-687df60043da";
+const JARDIM_BOTANICO_BRASILIA_ID = "c9876543-d434-4da6-88df-687df60043db";
+const RESERVA_CHAPADA_IMPERIAL_ID = "d5678901-d434-4da6-88df-687df60043dc";
+const RESERVA_BIOLOGICA_CONTAGEM_ID = "e2345678-d434-4da6-88df-687df60043dd";
+const PARQUE_MUNICIPAL_ITIQUIRA_ID = "f3456789-d434-4da6-88df-687df60043de"; 
+const RESERVA_PICO_RONCADOR_ID = "a4567890-d434-4da6-88df-687df60043df"; 
+const PARQUE_DA_CIDADE_SARAH_KUBITSCHEK_ID = "parque-da-cidade-sarah-kubitschek";
+const PARQUE_ECOLOGICO_AGUAS_CLARAS_ID = "parque-ecologico-aguas-claras";
+const PARQUE_BURLE_MARX_ID = "parque-burle-marx";
+const PARQUE_BOSQUE_SUDOESTE_ID = "parque-bosque-sudoeste";
+const PARQUE_CHICO_MENDES_ID = "parque-chico-mendes";
+const LAGO_DO_DESCOBERTO_ID = "lago-do-descoberto";
+const LAGO_PARANOA_ID = "lago-paranoa";
+const PARQUE_ESTADUAL_TERRA_RONCA_ID = "terra-ronca-id";
 
 // --- DADOS DOS PARQUES ---
 export const parques: Parque[] = [
@@ -16,277 +30,1112 @@ export const parques: Parque[] = [
         estado: "Distrito Federal",
         localizacao: "Brasília, DF",
         area: "42.389 hectares",
-        trilhas: 2,
+        trilhas: 6,
         visitantes: "150k/ano",
         rating: 4.7,
         imagem: "/images/parques/parquenacional.jpg",
-        descricao: "Conhecido como Água Mineral, o parque protege ecossistemas do Cerrado e abriga as famosas piscinas de água corrente, além de duas trilhas para caminhada.",
+        descricao: "Conhecido como Água Mineral, protege ecossistemas do Cerrado e abriga piscinas de água corrente e trilhas como a Cristal Água e Capivara.",
         destaque: true,
     },
-    // ... outros parques
+    {
+        id: "2",
+        uuid: PARQUE_NACIONAL_CHAPADA_VEADEIROS_ID,
+        nome: "Parque Nacional da Chapada dos Veadeiros",
+        estado: "Goiás",
+        localizacao: "Alto Paraíso de Goiás, GO",
+        area: "240.611 hectares",
+        trilhas: 8,
+        visitantes: "70k/ano",
+        rating: 4.9,
+        imagem: "/images/parques/chapada.jpg",
+        descricao: "Patrimônio Mundial Natural da UNESCO. Lar de cânions, cachoeiras impressionantes e trilhas desafiadoras como as Sete Quedas.",
+        destaque: true,
+    },
+    {
+        id: "3",
+        uuid: PARQUE_ECOLOGICO_BERNARDO_SAYAO_ID,
+        nome: "Parque Ecológico Bernardo Sayão",
+        estado: "Distrito Federal",
+        localizacao: "Lago Sul, DF",
+        area: "1.600 hectares",
+        trilhas: 1,
+        visitantes: "20k/ano",
+        rating: 4.5,
+        imagem: "/images/trilhas/aguamineral.jpg", // Placeholder realista
+        descricao: "Localizado no Lago Sul, oferece trilhas em meio à mata de galeria e cerrado, com nascentes e fauna local preservada.",
+        destaque: false,
+    },
+    {
+        id: "4",
+        uuid: JARDIM_BOTANICO_BRASILIA_ID,
+        nome: "Jardim Botânico de Brasília",
+        estado: "Distrito Federal",
+        localizacao: "Lago Sul, DF",
+        area: "5.000 hectares",
+        trilhas: 1,
+        visitantes: "100k/ano",
+        rating: 4.8,
+        imagem: "/images/trilhas/aguamineral.jpg", 
+        descricao: "Área preservada com jardins temáticos e trilhas ecológicas educativas. Excelente para caminhadas leves e piqueniques.",
+        destaque: false,
+    },
+    {
+        id: "5",
+        uuid: RESERVA_CHAPADA_IMPERIAL_ID,
+        nome: "Reserva Chapada Imperial",
+        estado: "Distrito Federal",
+        localizacao: "Brazlândia, DF",
+        area: "Reserva Particular",
+        trilhas: 1,
+        visitantes: "Limitado",
+        rating: 4.8,
+        imagem: "/images/trilhas/imperial.jpg",
+        descricao: "Santuário ecológico particular com mais de 30 cachoeiras e trilhas que passam por diversos biomas do cerrado.",
+        destaque: true,
+    },
+    {
+        id: "6",
+        uuid: PARQUE_ESTADUAL_PIRENEUS_ID,
+        nome: "Parque Estadual dos Pireneus",
+        estado: "Goiás",
+        localizacao: "Pirenópolis, GO",
+        area: "2.833 hectares",
+        trilhas: 1,
+        visitantes: "High season",
+        rating: 4.9,
+        imagem: "/images/trilhas/pirineus.jpg",
+        descricao: "Abriga o Pico dos Pireneus, ponto culminante da região, com formações rochosas de quartzito e vegetação rupestre.",
+        destaque: false,
+    },
+    {
+        id: "7",
+        uuid: RESERVA_BIOLOGICA_CONTAGEM_ID,
+        nome: "Reserva Biológica da Contagem",
+        estado: "Distrito Federal",
+        localizacao: "Sobradinho/Fercal, DF",
+        area: "3.460 hectares",
+        trilhas: 1, 
+        visitantes: "Moderado",
+        rating: 4.5,
+        imagem: "/images/trilhas/pocoazul.jpg",
+        descricao: "Região de relevo acidentado e grande beleza cênica, onde se localiza o atrativo do Poço Azul.",
+        destaque: false,
+    },
+    {
+        id: "8",
+        uuid: PARQUE_MUNICIPAL_ITIQUIRA_ID,
+        nome: "Região do Itiquira / Formosa",
+        estado: "Goiás",
+        localizacao: "Formosa, GO",
+        area: "Vasta",
+        trilhas: 1,
+        visitantes: "Alto",
+        rating: 4.7,
+        imagem: "/images/trilhas/aguamineral.jpg", 
+        descricao: "Região famosa pelo Salto do Itiquira e diversas outras cachoeiras como a do Indaiá, com trilhas para todos os níveis.",
+        destaque: false,
+    },
+    {
+        id: "9",
+        uuid: PARQUE_DA_CIDADE_SARAH_KUBITSCHEK_ID,
+        nome: "Parque da Cidade Sarah Kubitschek",
+        estado: "Distrito Federal",
+        localizacao: "Asa Sul, Brasília",
+        area: "420 hectares",
+        trilhas: 2,
+        visitantes: "Muito Alto",
+        rating: 4.8,
+        imagem: "/images/trilhas/aguamineral.jpg",
+        descricao: "Um dos maiores parques urbanos do mundo, ideal para lazer, esportes e caminhadas.",
+        destaque: false,
+    }
 ];
 
-// --- DADOS DAS TRILHAS ---
+// --- DADOS DAS TRILHAS (CATÁLOGO COMPLETO ATUALIZADO) ---
 export const featuredTrails: Trilhas[] = [
+  // --- NÍVEL FÁCIL ---
+
+  // 1. Trilha Bernardo Sayão
   {
-    id: "6b97fd34-dd97-45d6-a825-84f2a9001771",
+    id: "bernardo-sayao",
+    parque_id: PARQUE_ECOLOGICO_BERNARDO_SAYAO_ID,
+    name: "Trilha Bernardo Sayão",
+    location: "Parque Ecológico Bernardo Sayão, Lago Sul",
+    description: "A trilha, ideal para iniciantes, passa por áreas planas com curvas e rampas leves, oferecendo uma introdução ao estilo 'singletrack'. Atenção aos galhos e troncos! O parque preserva fauna e flora do Cerrado e abriga a nascente do Córrego Rasgado.",
+    imageUrl: "/images/trilhas/aguamineral.jpg", 
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Fácil",
+    distance: 12.0,
+    duration: "Cerca de 2 horas",
+    elevation: 29,
+    rating: 4.5,
+    reviews: [],
+    coordinates: { lat: -15.867000, lng: -47.830000 },
+    
+    bestSeason: "Ano todo",
+    terrainType: "Terra batida e singletrack",
+    mobileSignal: "Bom",
+    tips: "Ótima para quem está começando no Mountain Bike. Cuidado com raízes expostas em alguns trechos de mata fechada. Leve repelente.",
+
+    path: [ 
+        { lat: -15.867000, lng: -47.830000 }, { lat: -15.867500, lng: -47.830500 }, { lat: -15.868000, lng: -47.831000 },
+        { lat: -15.868500, lng: -47.831500 }, { lat: -15.869000, lng: -47.832000 }, { lat: -15.869500, lng: -47.832500 },
+        { lat: -15.870000, lng: -47.833000 }, { lat: -15.870500, lng: -47.833500 }, { lat: -15.871000, lng: -47.834000 },
+        { lat: -15.871500, lng: -47.834500 }, { lat: -15.872000, lng: -47.835000 }, { lat: -15.871500, lng: -47.835500 },
+        { lat: -15.871000, lng: -47.836000 }, { lat: -15.870500, lng: -47.836500 }, { lat: -15.870000, lng: -47.837000 },
+        { lat: -15.869500, lng: -47.836500 }, { lat: -15.869000, lng: -47.836000 }, { lat: -15.868500, lng: -47.835500 },
+        { lat: -15.868000, lng: -47.835000 }, { lat: -15.867000, lng: -47.834000 }, { lat: -15.867000, lng: -47.830000 }
+    ]
+  },
+
+  // 2. Trilha Cristal Água
+  {
+    id: "cristal-agua",
     parque_id: PARQUE_NACIONAL_BRASILIA_ID,
-    name: "Trilha da Cachoeira do Tororó",
-    location: "Santa Maria, Distrito Federal",
-    description: "Uma trilha encantadora que leva a uma das cachoeiras mais bonitas do DF...",
-    imageUrl: "/images/trilhas/tororo.jpg",
-    difficulty: "Moderado",
-    distance: 5.2,
-    duration: "2-3 horas",
-    elevation: 180,
+    name: "Trilha Cristal Água",
+    location: "Parque Nacional de Brasília",
+    description: "Percurso plano com estrada de terra; possibilidade de trecho escorregadio entre os km 10 e 12. Ideal para iniciantes, com paradas para contemplação na beira do córrego Cristal e possibilidade de banho nas piscinas naturais do parque.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Fácil",
+    distance: 18.0,
+    duration: "3 horas",
+    elevation: 293,
+    rating: 4.6,
+    reviews: [],
+    coordinates: { lat: -15.715000, lng: -47.940000 },
+
+    bestSeason: "Maio a Setembro",
+    terrainType: "Estrada de terra e areia",
+    mobileSignal: "Parcial",
+    tips: "A trilha é longa, então leve bastante água (pelo menos 2L). Há trechos com areia fofa que exigem mais esforço físico se estiver de bicicleta. Chegue cedo para aproveitar o banho nas piscinas depois.",
+
+    path: [
+        { lat: -15.715000, lng: -47.940000 }, { lat: -15.714000, lng: -47.941000 }, { lat: -15.713000, lng: -47.942000 },
+        { lat: -15.712000, lng: -47.943000 }, { lat: -15.711000, lng: -47.944000 }, { lat: -15.710000, lng: -47.945000 },
+        { lat: -15.709000, lng: -47.946000 }, { lat: -15.708000, lng: -47.947000 }, { lat: -15.707000, lng: -47.948000 },
+        { lat: -15.706000, lng: -47.949000 }, { lat: -15.705000, lng: -47.950000 }, { lat: -15.704000, lng: -47.949000 },
+        { lat: -15.703000, lng: -47.948000 }, { lat: -15.702000, lng: -47.947000 }, { lat: -15.701000, lng: -47.946000 },
+        { lat: -15.700000, lng: -47.945000 }, { lat: -15.701000, lng: -47.944000 }, { lat: -15.702000, lng: -47.943000 },
+        { lat: -15.703000, lng: -47.942000 }, { lat: -15.704000, lng: -47.941000 }, { lat: -15.705000, lng: -47.940000 },
+        { lat: -15.706000, lng: -47.939000 }, { lat: -15.707000, lng: -47.938000 }, { lat: -15.708000, lng: -47.937000 },
+        { lat: -15.715000, lng: -47.940000 }
+    ]
+  },
+
+  // 3. Trilha do Santuário Dom Bosco
+  {
+    id: "dom-bosco",
+    parque_id: "santuario-dom-bosco", 
+    name: "Trilha do Santuário Dom Bosco",
+    location: "Santuário Dom Bosco, Asa Sul",
+    description: "Caminhada simples até o Santuário Dom Bosco, com vistas para o Lago Paranoá.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Fácil",
+    distance: 3.0,
+    duration: "1-2 horas",
+    elevation: 20,
+    rating: 4.4,
+    reviews: [],
+    coordinates: { lat: -15.830000, lng: -47.900000 },
+
+    bestSeason: "Ano todo",
+    terrainType: "Calçada e terra batida",
+    mobileSignal: "Excelente",
+    tips: "Ideal para um passeio de fim de tarde para ver o pôr do sol no lago. Muito acessível e segura.",
+
+    path: [
+        { lat: -15.830000, lng: -47.900000 }, { lat: -15.830500, lng: -47.900500 }, { lat: -15.831000, lng: -47.901000 },
+        { lat: -15.831500, lng: -47.901500 }, { lat: -15.832000, lng: -47.902000 }, { lat: -15.832500, lng: -47.902500 },
+        { lat: -15.833000, lng: -47.903000 }, { lat: -15.833500, lng: -47.903500 }, { lat: -15.834000, lng: -47.904000 },
+        { lat: -15.834500, lng: -47.904500 }, { lat: -15.835000, lng: -47.905000 }, { lat: -15.834500, lng: -47.905500 },
+        { lat: -15.834000, lng: -47.906000 }, { lat: -15.833500, lng: -47.905500 }, { lat: -15.833000, lng: -47.905000 },
+        { lat: -15.832500, lng: -47.904500 }, { lat: -15.832000, lng: -47.904000 }, { lat: -15.831500, lng: -47.903500 },
+        { lat: -15.831000, lng: -47.903000 }, { lat: -15.830500, lng: -47.902500 }, { lat: -15.830000, lng: -47.900000 }
+    ]
+  },
+
+  // 4. Trilha Jardim Botânico
+  {
+    id: "jardim-botanico",
+    parque_id: JARDIM_BOTANICO_BRASILIA_ID,
+    name: "Trilha Jardim Botânico",
+    location: "Jardim Botânico de Brasília",
+    description: "Trilha plana, ideal para iniciantes e crianças, com pequenas subidas e trechos escorregadios quando úmido. O trajeto percorre o cerrado preservado do Jardim Botânico. Entrada gratuita para ciclistas entre 7h30 e 8h50; taxa de R$5 após esse horário.",
+    imageUrl: "/images/trilhas/aguamineral.jpg", 
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Fácil",
+    distance: 13.0,
+    duration: "2 horas",
+    elevation: 50,
     rating: 4.7,
     reviews: [],
-    coordinates: { lat: -15.9333, lng: -47.9833 },
+    coordinates: { lat: -15.875000, lng: -47.850000 },
+
+    bestSeason: "Ano todo (Manhã)",
+    terrainType: "Terra batida",
+    mobileSignal: "Bom",
+    tips: "Aproveite para tomar café da manhã no bistrô do Jardim Botânico após a trilha. Chegue cedo para evitar o sol forte e aproveitar a entrada gratuita para ciclistas.",
+
     path: [
-        { lat: -15.93482, lng: -47.98593 }, { lat: -15.93484, lng: -47.98588 },
-        { lat: -15.93486, lng: -47.98583 }, { lat: -15.93489, lng: -47.98577 },
+        { lat: -15.875000, lng: -47.850000 }, { lat: -15.876000, lng: -47.851000 }, { lat: -15.877000, lng: -47.852000 },
+        { lat: -15.878000, lng: -47.853000 }, { lat: -15.879000, lng: -47.854000 }, { lat: -15.880000, lng: -47.855000 },
+        { lat: -15.881000, lng: -47.856000 }, { lat: -15.882000, lng: -47.857000 }, { lat: -15.883000, lng: -47.858000 },
+        { lat: -15.884000, lng: -47.859000 }, { lat: -15.885000, lng: -47.860000 }, { lat: -15.884000, lng: -47.861000 },
+        { lat: -15.883000, lng: -47.862000 }, { lat: -15.882000, lng: -47.861000 }, { lat: -15.881000, lng: -47.860000 },
+        { lat: -15.880000, lng: -47.859000 }, { lat: -15.879000, lng: -47.858000 }, { lat: -15.878000, lng: -47.857000 },
+        { lat: -15.877000, lng: -47.856000 }, { lat: -15.876000, lng: -47.855000 }, { lat: -15.875000, lng: -47.854000 },
+        { lat: -15.874000, lng: -47.853000 }, { lat: -15.875000, lng: -47.850000 }
     ]
   },
+
+  // 5. Trilha Tororó
   {
-    id: "ba2b1c8c-4045-4a42-8475-89b135960ae6",
+    id: "tororo-001",
     parque_id: PARQUE_NACIONAL_BRASILIA_ID,
-    name: "Trilha da Chapada Imperial",
-    location: "Brazlândia, Distrito Federal",
-    description: "A maior reserva particular do DF...",
-    imageUrl: "/images/trilhas/imperial.jpg",
+    name: "Trilha Tororó",
+    location: "Setor Habitacional Tororó",
+    description: "Trilha em estrada de terra com terreno plano, ideal para iniciantes. Passa por chácaras e plantações, com visual cerrado. Possui um acesso a pé para a cachoeira do Tororó, recomendada para descanso e contemplação. Localizado a cerca de 50 km de Brasília, este ponto é ideal para quem gosta de rapel e mountain bike. A trilha que leva à cachoeira de 18 metros é curta e rica em biodiversidade, fazendo dela uma ótima opção para famílias e aventureiros. Melhor época: Durante a seca.",
+    imageUrl: "/images/trilhas/tororo.jpg",
+    images: ["/images/trilhas/tororo.jpg", "/images/trilhas/tororo.jpg", "/images/trilhas/tororo.jpg"],
     difficulty: "Fácil",
-    distance: 3.8,
-    duration: "1-2 horas",
+    distance: 19.0,
+    duration: "2 a 3 horas",
     elevation: 120,
-    rating: 4.8,
-    coordinates: { lat: -15.7801, lng: -48.1223 },
-    path:[
-      { lat: -15.560143, lng: -48.107195 }, { lat: -15.560065, lng: -48.107652 },
-      { lat: -15.560150, lng: -48.108187 }, { lat: -15.560102, lng: -48.108983 },
-      { lat: -15.559851, lng: -48.110423 }, { lat: -15.559881, lng: -48.110878 },
-      { lat: -15.560018, lng: -48.111359 }, { lat: -15.559806, lng: -48.111841 },
-      { lat: -15.559783, lng: -48.112124 }, { lat: -15.559337, lng: -48.112504 },
-      { lat: -15.559118, lng: -48.112888 }, { lat: -15.558186, lng: -48.113585 },
-      { lat: -15.557500, lng: -48.113733 }, { lat: -15.556662, lng: -48.114065 },
-      { lat: -15.555704, lng: -48.114161 }, { lat: -15.554652, lng: -48.114364 },
-      { lat: -15.554122, lng: -48.114333 }, { lat: -15.554078, lng: -48.114400 },
-      { lat: -15.553836, lng: -48.114453 }, { lat: -15.553069, lng: -48.114471 },
-      { lat: -15.552431, lng: -48.114342 }, { lat: -15.551649, lng: -48.114321 },
-      { lat: -15.550981, lng: -48.114162 }, { lat: -15.550273, lng: -48.114249 },
-      { lat: -15.549243, lng: -48.113944 }, { lat: -15.549018, lng: -48.113951 },
-      { lat: -15.548927, lng: -48.114080 }, { lat: -15.548808, lng: -48.114108 },
-      { lat: -15.548118, lng: -48.113643 }, { lat: -15.548055, lng: -48.113052 },
-      { lat: -15.547794, lng: -48.112562 }, { lat: -15.547566, lng: -48.112347 },
-      { lat: -15.546013, lng: -48.111614 }, { lat: -15.545264, lng: -48.111087 },
-      { lat: -15.544952, lng: -48.111044 }, { lat: -15.544502, lng: -48.110675 },
-      { lat: -15.544124, lng: -48.110065 }, { lat: -15.543146, lng: -48.108982 },
-      { lat: -15.543065, lng: -48.108708 }, { lat: -15.542072, lng: -48.107561 },
-      { lat: -15.541702, lng: -48.107366 }, { lat: -15.541542, lng: -48.107438 },
-      { lat: -15.541508, lng: -48.107531 }, { lat: -15.541552, lng: -48.107876 },
-      { lat: -15.541169, lng: -48.107924 }, { lat: -15.540971, lng: -48.107773 },
-      { lat: -15.540983, lng: -48.107664 }, { lat: -15.540899, lng: -48.107601 },
-      { lat: -15.540957, lng: -48.107352 }, { lat: -15.540808, lng: -48.107199 },
-      { lat: -15.540780, lng: -48.107051 }, { lat: -15.540493, lng: -48.107137 },
-      { lat: -15.540403, lng: -48.107045 }, { lat: -15.540385, lng: -48.107115 },
-      { lat: -15.540387, lng: -48.106971 }, { lat: -15.540332, lng: -48.106958 },
-      { lat: -15.540378, lng: -48.106978 }, { lat: -15.540388, lng: -48.106870 },
-      { lat: -15.540285, lng: -48.106706 }, { lat: -15.540055, lng: -48.106719 },
-      { lat: -15.539787, lng: -48.106498 }, { lat: -15.539662, lng: -48.106564 },
-      { lat: -15.539589, lng: -48.106434 }, { lat: -15.539432, lng: -48.106530 },
-      { lat: -15.539161, lng: -48.106478 }, { lat: -15.539004, lng: -48.106164 },
-      { lat: -15.539151, lng: -48.106067 }, { lat: -15.538768, lng: -48.105711 },
-      { lat: -15.538779, lng: -48.105939 }, { lat: -15.538675, lng: -48.106023 },
-      { lat: -15.538483, lng: -48.105692 }, { lat: -15.538622, lng: -48.105814 },
-      { lat: -15.538641, lng: -48.105991 }, { lat: -15.538492, lng: -48.106105 },
-      { lat: -15.538438, lng: -48.106060 }, { lat: -15.538847, lng: -48.105766 },
-      { lat: -15.539243, lng: -48.105927 }, { lat: -15.539291, lng: -48.105703 },
-      { lat: -15.539489, lng: -48.105583 }, { lat: -15.539806, lng: -48.105580 },
-      { lat: -15.540238, lng: -48.105457 }, { lat: -15.540519, lng: -48.105209 },
-      { lat: -15.540599, lng: -48.105263 }, { lat: -15.540836, lng: -48.105102 },
-      { lat: -15.541397, lng: -48.105073 }, { lat: -15.541702, lng: -48.105281 },
-      { lat: -15.542147, lng: -48.105386 }, { lat: -15.542438, lng: -48.105649 },
-      { lat: -15.542667, lng: -48.105645 }, { lat: -15.542569, lng: -48.105693 },
-      { lat: -15.542254, lng: -48.105471 }, { lat: -15.542215, lng: -48.105352 },
-      { lat: -15.542646, lng: -48.105411 }, { lat: -15.543117, lng: -48.105788 },
-      { lat: -15.543641, lng: -48.105988 }, { lat: -15.543758, lng: -48.105954 },
-      { lat: -15.543708, lng: -48.105815 }, { lat: -15.543794, lng: -48.105788 },
-      { lat: -15.544256, lng: -48.106189 }, { lat: -15.544287, lng: -48.106491 },
-      { lat: -15.545239, lng: -48.107039 }, { lat: -15.545624, lng: -48.107479 },
-      { lat: -15.546190, lng: -48.107777 }, { lat: -15.546425, lng: -48.108014 },
-      { lat: -15.546639, lng: -48.107930 }, { lat: -15.546942, lng: -48.107962 },
-      { lat: -15.547185, lng: -48.107905 }, { lat: -15.547899, lng: -48.107442 },
-      { lat: -15.548130, lng: -48.107463 }, { lat: -15.548113, lng: -48.107292 },
-      { lat: -15.548355, lng: -48.107144 }, { lat: -15.548751, lng: -48.107150 },
-      { lat: -15.549334, lng: -48.106930 }, { lat: -15.549486, lng: -48.106612 },
-      { lat: -15.549644, lng: -48.106559 }, { lat: -15.549781, lng: -48.106346 },
-      { lat: -15.549915, lng: -48.106373 }, { lat: -15.549966, lng: -48.106298 },
-      { lat: -15.550063, lng: -48.106347 }, { lat: -15.550585, lng: -48.106236 },
-      { lat: -15.550819, lng: -48.106094 }, { lat: -15.551286, lng: -48.106102 },
-      { lat: -15.551735, lng: -48.105891 }, { lat: -15.552768, lng: -48.105926 },
-      { lat: -15.553654, lng: -48.105806 }, { lat: -15.553796, lng: -48.106049 },
-      { lat: -15.553973, lng: -48.106133 }, { lat: -15.553951, lng: -48.105993 },
-      { lat: -15.553936, lng: -48.106058 }, { lat: -15.554055, lng: -48.106018 },
-      { lat: -15.554351, lng: -48.106189 }, { lat: -15.554899, lng: -48.106223 },
-      { lat: -15.555612, lng: -48.105802 }, { lat: -15.556117, lng: -48.105650 },
-      { lat: -15.557178, lng: -48.105819 }, { lat: -15.557435, lng: -48.106108 },
-      { lat: -15.557595, lng: -48.105934 }, { lat: -15.557684, lng: -48.105924 },
-      { lat: -15.557984, lng: -48.105530 }, { lat: -15.558565, lng: -48.105284 },
-      { lat: -15.559480, lng: -48.105291 }, { lat: -15.559633, lng: -48.105039 },
-      { lat: -15.559894, lng: -48.104923 }, { lat: -15.560658, lng: -48.104871 },
-      { lat: -15.560963, lng: -48.104955 }, { lat: -15.561114, lng: -48.105067 },
-      { lat: -15.561172, lng: -48.105221 }, { lat: -15.561650, lng: -48.105546 },
-      { lat: -15.561659, lng: -48.105696 }, { lat: -15.561535, lng: -48.105860 },
-      { lat: -15.561097, lng: -48.106064 }, { lat: -15.560662, lng: -48.105985 },
-      { lat: -15.560401, lng: -48.106372 }, { lat: -15.560407, lng: -48.106677 },
-      { lat: -15.560256, lng: -48.106739 }, { lat: -15.560143, lng: -48.107195 },
-    ],
-    reviews: [],
-  },
-  {
-    id: "5f23719b-13d0-401f-809e-9b218800b5dd",
-    parque_id: PARQUE_NACIONAL_BRASILIA_ID,
-    name: "Trilha do Poço Azul",
-    location: "Brazlândia, Distrito Federal",
-    description: "Uma das trilhas mais populares do DF, o Poço Azul encanta com suas águas cristalinas...",
-    imageUrl: "/images/trilhas/pocoazul.jpg",
-    difficulty: "Moderado",
-    distance: 2.5,
-    duration: "1 hora",
-    elevation: 90,
     rating: 4.6,
-    coordinates: { lat: -15.7721, lng: -48.1982 },
-    reviews: [
-    ],
+    reviews: [],
+    coordinates: { lat: -15.980155, lng: -47.829761 },
+    
+    bestSeason: "Maio a Setembro (Seca)",
+    terrainType: "Cascalho solto e pedras irregulares",
+    mobileSignal: "Parcial",
+    tips: "A descida final é íngreme e escorregadia devido ao cascalho solto. Use botas de trilha ou tênis com boa aderência. Evite ir em dias de chuva forte pois as pedras ficam muito lisas. Leve água, não há comércio no local.",
+
     path: [
-  { lat: -15.594029, lng: -48.053135 }, { lat: -15.594000, lng: -48.053094 },
-  { lat: -15.592776, lng: -48.053362 }, { lat: -15.590552, lng: -48.054223 },
-  { lat: -15.590349, lng: -48.054363 }, { lat: -15.590056, lng: -48.054372 },
-  { lat: -15.589485, lng: -48.054519 }, { lat: -15.588530, lng: -48.054524 },
-  { lat: -15.588519, lng: -48.054429 }, { lat: -15.588293, lng: -48.054164 },
-  { lat: -15.588017, lng: -48.054067 }, { lat: -15.587023, lng: -48.054227 },
-  { lat: -15.586649, lng: -48.054082 }, { lat: -15.586287, lng: -48.053799 },
-  { lat: -15.585177, lng: -48.053229 }, { lat: -15.585039, lng: -48.053235 },
-  { lat: -15.584647, lng: -48.053692 }, { lat: -15.584297, lng: -48.053850 },
-  { lat: -15.583666, lng: -48.053984 }, { lat: -15.583501, lng: -48.054264 },
-  { lat: -15.583571, lng: -48.054562 }, { lat: -15.583528, lng: -48.054742 },
-  { lat: -15.583396, lng: -48.054886 }, { lat: -15.583163, lng: -48.054628 },
-  { lat: -15.583225, lng: -48.054560 }, { lat: -15.583305, lng: -48.054597 },
-  { lat: -15.583264, lng: -48.054624 }, { lat: -15.583327, lng: -48.054566 },
-  { lat: -15.583114, lng: -48.054581 }, { lat: -15.582808, lng: -48.053891 },
-  { lat: -15.582428, lng: -48.053807 }, { lat: -15.582356, lng: -48.053673 },
-  { lat: -15.582072, lng: -48.053418 }, { lat: -15.581984, lng: -48.053448 },
-  { lat: -15.581842, lng: -48.053391 }, { lat: -15.581415, lng: -48.053463 },
-  { lat: -15.581328, lng: -48.053421 }, { lat: -15.581277, lng: -48.053291 },
-  { lat: -15.581337, lng: -48.053238 }, { lat: -15.581254, lng: -48.053063 },
-  { lat: -15.581324, lng: -48.052929 }, { lat: -15.581244, lng: -48.052717 },
-  { lat: -15.581296, lng: -48.052526 }, { lat: -15.581128, lng: -48.052305 },
-  { lat: -15.581187, lng: -48.052338 }, { lat: -15.581135, lng: -48.052296 },
-  { lat: -15.581167, lng: -48.052165 }, { lat: -15.581095, lng: -48.051583 },
-  { lat: -15.580796, lng: -48.051369 }, { lat: -15.580528, lng: -48.051475 },
-  { lat: -15.580481, lng: -48.051394 }, { lat: -15.580479, lng: -48.051493 },
-  { lat: -15.580451, lng: -48.051454 }, { lat: -15.580492, lng: -48.051477 },
-  { lat: -15.580394, lng: -48.051508 }, { lat: -15.580195, lng: -48.051226 },
-  { lat: -15.580073, lng: -48.051172 }, { lat: -15.580085, lng: -48.051122 },
-  { lat: -15.579974, lng: -48.051152 }, { lat: -15.579646, lng: -48.050719 },
-  { lat: -15.579511, lng: -48.050671 }, { lat: -15.579536, lng: -48.050573 },
-  { lat: -15.579391, lng: -48.050623 }, { lat: -15.579284, lng: -48.050538 },
-  { lat: -15.579293, lng: -48.050489 }, { lat: -15.579060, lng: -48.050288 },
-  { lat: -15.579076, lng: -48.050178 }, { lat: -15.578968, lng: -48.050092 },
-  { lat: -15.578776, lng: -48.049746 }, { lat: -15.578247, lng: -48.049330 },
-  { lat: -15.578082, lng: -48.048911 }, { lat: -15.577986, lng: -48.048872 },
-  { lat: -15.578047, lng: -48.048855 }, { lat: -15.577992, lng: -48.048734 },
-  { lat: -15.577956, lng: -48.048832 }, { lat: -15.578149, lng: -48.049023 },
-  { lat: -15.577786, lng: -48.049077 }, { lat: -15.577462, lng: -48.048857 },
-  { lat: -15.577027, lng: -48.048905 }, { lat: -15.576432, lng: -48.048800 },
-  { lat: -15.576204, lng: -48.048648 }, { lat: -15.576244, lng: -48.048515 },
-  { lat: -15.576182, lng: -48.048391 }, { lat: -15.575989, lng: -48.048279 },
-  { lat: -15.575870, lng: -48.048344 }, { lat: -15.575753, lng: -48.048296 },
-  { lat: -15.575756, lng: -48.048344 }, { lat: -15.575846, lng: -48.048339 },
-  { lat: -15.576037, lng: -48.048307 }, { lat: -15.576035, lng: -48.048259 },
-  { lat: -15.576203, lng: -48.048323 }, { lat: -15.576354, lng: -48.048166 },
-  { lat: -15.576573, lng: -48.048104 }, { lat: -15.576751, lng: -48.048150 },
-  { lat: -15.576825, lng: -48.048095 }, { lat: -15.577093, lng: -48.048141 },
-  { lat: -15.577350, lng: -48.048075 }, { lat: -15.577370, lng: -48.048117 },
-  { lat: -15.578474, lng: -48.048043 }, { lat: -15.578433, lng: -48.048064 },
-  { lat: -15.578818, lng: -48.047838 }, { lat: -15.579095, lng: -48.047781 },
-  { lat: -15.579395, lng: -48.047475 }, { lat: -15.579720, lng: -48.047667 },
-  { lat: -15.579679, lng: -48.047798 }, { lat: -15.579738, lng: -48.047876 },
-  { lat: -15.580161, lng: -48.047979 }, { lat: -15.581019, lng: -48.047560 },
-  { lat: -15.581124, lng: -48.047594 }, { lat: -15.581356, lng: -48.047538 },
-  { lat: -15.581563, lng: -48.047347 }, { lat: -15.581670, lng: -48.047342 },
-  { lat: -15.581717, lng: -48.047188 }, { lat: -15.581909, lng: -48.047462 },
-  { lat: -15.582129, lng: -48.047089 }, { lat: -15.582352, lng: -48.047063 },
-  { lat: -15.582441, lng: -48.047229 }, { lat: -15.582763, lng: -48.047430 },
-  { lat: -15.582803, lng: -48.047518 }, { lat: -15.582871, lng: -48.047794 },
-  { lat: -15.582687, lng: -48.048170 }, { lat: -15.582791, lng: -48.048386 },
-  { lat: -15.582999, lng: -48.048501 }, { lat: -15.583066, lng: -48.048686 },
-  { lat: -15.583006, lng: -48.049176 }, { lat: -15.582813, lng: -48.049740 },
-  { lat: -15.582727, lng: -48.050266 }, { lat: -15.582714, lng: -48.051296 },
-  { lat: -15.583408, lng: -48.052033 }, { lat: -15.583994, lng: -48.052556 },
-  { lat: -15.584833, lng: -48.052951 }, { lat: -15.585339, lng: -48.053313 },
-  { lat: -15.586048, lng: -48.053616 }, { lat: -15.586639, lng: -48.054024 },
-  { lat: -15.586981, lng: -48.054174 }, { lat: -15.587408, lng: -48.054191 },
-  { lat: -15.587618, lng: -48.054069 }, { lat: -15.588095, lng: -48.054049 },
-  { lat: -15.588490, lng: -48.054468 }, { lat: -15.589578, lng: -48.054460 },
-  { lat: -15.590375, lng: -48.054309 }, { lat: -15.591956, lng: -48.053614 },
-  { lat: -15.592774, lng: -48.053321 }, { lat: -15.593782, lng: -48.053084 },
-  { lat: -15.593870, lng: -48.052968 }
-  ],
-  waypoints: [
-        { name: "Primeira passagem", lat: -15.583527, lng: -48.054695 },
-        { name: "Cachoeira Mãe", lat: -15.583321, lng: -48.054569 },
-        { name: "Deck na cachoeira mãe", lat: -15.583276, lng: -48.054576 },
-        { name: "Vale", lat: -15.581458, lng: -48.053460 },
-        { name: "Cachoeira da Árvore", lat: -15.581287, lng: -48.053246 },
-        { name: "Cachoeira da Paz", lat: -15.581185, lng: -48.052341 },
-        { name: "Dois caminhos", lat: -15.580480, lng: -48.051395 },
-        { name: "Cachoeira Rapunzel", lat: -15.580188, lng: -48.051271 },
-        { name: "Cachoeira filha", lat: -15.578240, lng: -48.049329 },
-        { name: "Queda d'água", lat: -15.578074, lng: -48.048909 },
-        { name: "Cachoeira da Caverna", lat: -15.578030, lng: -48.048880 },
-        { name: "Mirante da Cachoeira do veu da noiva", lat: -15.577955, lng: -48.048776 },
-        { name: "Ponto de subida para rodear o veu da noiva", lat: -15.578141, lng: -48.049020 },
-        { name: "Waypoint", lat: -15.576977, lng: -48.048890 },
-        { name: "Descida com corda", lat: -15.576198, lng: -48.048643 },
-        { name: "Cachoeira do Suicídio", lat: -15.576047, lng: -48.048344 },
-        { name: "Encontro dos rios", lat: -15.577343, lng: -48.048066 },
-        { name: "Poço verde", lat: -15.578474, lng: -48.048043 },
-        { name: "Mirante", lat: -15.578832, lng: -48.047848 },
-        { name: "Garganta do diabo", lat: -15.581526, lng: -48.047375 }
+        { lat: -15.980155, lng: -47.829761 }, { lat: -15.980130, lng: -47.829800 }, { lat: -15.980100, lng: -47.829900 },
+        { lat: -15.980080, lng: -47.830000 }, { lat: -15.980060, lng: -47.830200 }, { lat: -15.980042, lng: -47.830513 },
+        { lat: -15.980020, lng: -47.830471 }, { lat: -15.979993, lng: -47.830421 }, { lat: -15.979969, lng: -47.830381 },
+        { lat: -15.979938, lng: -47.830343 }, { lat: -15.979900, lng: -47.830300 }, { lat: -15.979850, lng: -47.830250 },
+        { lat: -15.979800, lng: -47.830200 }, { lat: -15.979750, lng: -47.830150 }, { lat: -15.979700, lng: -47.830100 },
+        { lat: -15.979650, lng: -47.830050 }, { lat: -15.979600, lng: -47.830000 }, { lat: -15.979550, lng: -47.829950 },
+        { lat: -15.979500, lng: -47.829900 }, { lat: -15.979450, lng: -47.829850 }, { lat: -15.979400, lng: -47.829800 },
+        { lat: -15.979350, lng: -47.829750 }, { lat: -15.979300, lng: -47.829700 }, { lat: -15.979250, lng: -47.829650 },
+        { lat: -15.979200, lng: -47.829600 }, { lat: -15.979150, lng: -47.829550 }, { lat: -15.979100, lng: -47.829500 },
+        { lat: -15.979050, lng: -47.829450 }, { lat: -15.979000, lng: -47.829400 }, { lat: -15.978950, lng: -47.829350 }
     ]
   },
+
+  // 6. Trilha do Parque Nacional de Brasília (Trilha das Árvores Gigantes)
   {
-    id: "0548f4dd-e29c-4121-8415-b1c114befab1",
-    parque_id: PARQUE_ESTADUAL_PIRENEUS_ID,
-    name: "Trilha da Serra dos Pireneus (Pico)",
-    location: "Pirenópolis, Goiás",
-    description: "A apenas 150km de Brasília, esta trilha oferece vistas panorâmicas...",
-    imageUrl: "/images/trilhas/pirineus.jpg",
-    difficulty: "Difícil",
-    distance: 8.5,
-    duration: "4-5 horas",
-    elevation: 520,
-    rating: 4.9,
-    coordinates: { lat: -15.7899, lng: -48.8292 },
-    path: [],
+    id: "pnb-arvores-gigantes",
+    parque_id: PARQUE_NACIONAL_BRASILIA_ID,
+    name: "Trilha das Árvores Gigantes",
+    location: "Parque Nacional de Brasília",
+    description: "Trilha curta e fácil, com destaque para grandes árvores nativas do cerrado. Entrada pelo Jardim Botânico de Brasília.",
+    imageUrl: "/images/parques/parquenacional.jpg",
+    images: ["/images/parques/parquenacional.jpg", "/images/parques/parquenacional.jpg"],
+    difficulty: "Fácil",
+    distance: 2.0,
+    duration: "1-2 horas",
+    elevation: 30,
+    rating: 4.5,
     reviews: [],
+    coordinates: { lat: -15.720000, lng: -47.930000 },
+
+    bestSeason: "Ano todo",
+    terrainType: "Terra plana",
+    mobileSignal: "Bom",
+    tips: "Excelente para levar crianças e idosos. As árvores gigantes são fotogênicas. Leve água.",
+
+    path: [
+        { lat: -15.720000, lng: -47.930000 }, { lat: -15.721000, lng: -47.931000 }, { lat: -15.722000, lng: -47.932000 },
+        { lat: -15.723000, lng: -47.933000 }, { lat: -15.722000, lng: -47.934000 }, { lat: -15.721000, lng: -47.935000 },
+        { lat: -15.720000, lng: -47.930000 }
+    ]
   },
+
+  // 7. Trilha do Parque da Cidade Sarah Kubitschek
   {
-    id: "e8ecf5cc-4d24-409d-972b-96facb8ad024",
-    parque_id: PARQUE_NACIONAL_CHAPADA_VEADEIROS_ID,
-    name: "Trilha do Vale da Lua",
-    location: "Alto Paraíso de Goiás, Chapada dos Veadeiros, Goiás",
-    description: "Uma das atrações mais famosas da Chapada dos Veadeiros...",
-    imageUrl: "/images/trilhas/valedalua.jpg",
-    difficulty: "Moderado",
-    distance: 1.8,
+    id: "parque-da-cidade",
+    parque_id: PARQUE_DA_CIDADE_SARAH_KUBITSCHEK_ID,
+    name: "Trilha do Parque da Cidade",
+    location: "Parque da Cidade, Asa Sul",
+    description: "Caminhada simples e acessível dentro do parque urbano, ideal para iniciantes.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Fácil",
+    distance: 3.0,
     duration: "1 hora",
-    elevation: 50,
-    rating: 4.8,
-    coordinates: { lat: -14.180, lng: -47.796 },
-    path: [],
+    elevation: 10,
+    rating: 4.3,
     reviews: [],
+    coordinates: { lat: -15.790000, lng: -47.900000 },
+
+    bestSeason: "Ano todo",
+    terrainType: "Asfalto e terra batida",
+    mobileSignal: "Excelente",
+    tips: "Muito movimentado nos fins de semana. Ótimo para treinos rápidos.",
+
+    path: [
+        { lat: -15.790000, lng: -47.900000 }, { lat: -15.791000, lng: -47.901000 }, { lat: -15.792000, lng: -47.902000 },
+        { lat: -15.793000, lng: -47.903000 }, { lat: -15.792000, lng: -47.904000 }, { lat: -15.791000, lng: -47.905000 },
+        { lat: -15.790000, lng: -47.900000 }
+    ]
   },
+
+  // 8. Trilha do Parque Ecológico de Águas Claras
+  {
+    id: "aguas-claras",
+    parque_id: PARQUE_ECOLOGICO_AGUAS_CLARAS_ID,
+    name: "Trilha do Parque de Águas Claras",
+    location: "Águas Claras",
+    description: "Trilha curta e plana, ideal para iniciantes, com fauna e flora do cerrado.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Fácil",
+    distance: 2.0,
+    duration: "1-2 horas",
+    elevation: 15,
+    rating: 4.4,
+    reviews: [],
+    coordinates: { lat: -15.835000, lng: -48.020000 },
+
+    bestSeason: "Ano todo",
+    terrainType: "Terra plana",
+    mobileSignal: "Excelente",
+    tips: "Cuidado com capivaras que às vezes circulam pelo parque.",
+
+    path: [
+        { lat: -15.835000, lng: -48.020000 }, { lat: -15.836000, lng: -48.021000 }, { lat: -15.837000, lng: -48.022000 },
+        { lat: -15.836000, lng: -48.023000 }, { lat: -15.835000, lng: -48.024000 }, { lat: -15.834000, lng: -48.022000 },
+        { lat: -15.835000, lng: -48.020000 }
+    ]
+  },
+
+  // 9. Trilha do Parque Burle Marx
+  {
+    id: "burle-marx",
+    parque_id: PARQUE_BURLE_MARX_ID,
+    name: "Trilha do Parque Burle Marx",
+    location: "Parque Burle Marx, Asa Sul",
+    description: "Trilha curta e fácil, ideal para iniciantes e famílias, com paisagens agradáveis de área verde urbana.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Fácil",
+    distance: 2.0,
+    duration: "1 hora",
+    elevation: 10,
+    rating: 4.2,
+    reviews: [],
+    coordinates: { lat: -15.750000, lng: -47.880000 },
+
+    bestSeason: "Ano todo",
+    terrainType: "Terra e grama",
+    mobileSignal: "Excelente",
+    tips: "Leve canga para piquenique.",
+
+    path: [
+        { lat: -15.750000, lng: -47.880000 }, { lat: -15.751000, lng: -47.881000 }, { lat: -15.752000, lng: -47.882000 },
+        { lat: -15.751000, lng: -47.883000 }, { lat: -15.750000, lng: -47.880000 }
+    ]
+  },
+
+  // 10. Trilha do Parque Bosque do Sudoeste
+  {
+    id: "bosque-sudoeste",
+    parque_id: PARQUE_BOSQUE_SUDOESTE_ID,
+    name: "Trilha do Bosque do Sudoeste",
+    location: "Parque Bosque do Sudoeste",
+    description: "Trilha tranquila dentro do parque urbano, perfeita para caminhadas leves e lazer.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Fácil",
+    distance: 3.0,
+    duration: "1-2 horas",
+    elevation: 10,
+    rating: 4.3,
+    reviews: [],
+    coordinates: { lat: -15.800000, lng: -47.920000 },
+
+    bestSeason: "Ano todo",
+    terrainType: "Terra batida",
+    mobileSignal: "Excelente",
+    tips: "Muitas sombras, bom para dias quentes.",
+
+    path: [
+        { lat: -15.800000, lng: -47.920000 }, { lat: -15.801000, lng: -47.921000 }, { lat: -15.802000, lng: -47.922000 },
+        { lat: -15.801000, lng: -47.923000 }, { lat: -15.800000, lng: -47.920000 }
+    ]
+  },
+
+  // 11. Trilha do Parque Chico Mendes
+  {
+    id: "chico-mendes",
+    parque_id: PARQUE_CHICO_MENDES_ID,
+    name: "Trilha do Parque Chico Mendes",
+    location: "Parque Chico Mendes, Guará",
+    description: "Trilha simples e curta, com boa infraestrutura para caminhadas leves.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Fácil",
+    distance: 3.0,
+    duration: "1-2 horas",
+    elevation: 10,
+    rating: 4.2,
+    reviews: [],
+    coordinates: { lat: -15.820000, lng: -47.980000 },
+
+    bestSeason: "Ano todo",
+    terrainType: "Terra batida",
+    mobileSignal: "Excelente",
+    tips: "Ótimo para caminhadas matinais.",
+
+    path: [
+        { lat: -15.820000, lng: -47.980000 }, { lat: -15.821000, lng: -47.981000 }, { lat: -15.822000, lng: -47.982000 },
+        { lat: -15.821000, lng: -47.983000 }, { lat: -15.820000, lng: -47.980000 }
+    ]
+  },
+
+  // 12. Trilha do Lago do Descoberto
+  {
+    id: "lago-descoberto",
+    parque_id: LAGO_DO_DESCOBERTO_ID,
+    name: "Trilha do Lago do Descoberto",
+    location: "Lago do Descoberto (BR-020)",
+    description: "Trilha tranquila ao redor da represa, com vistas agradáveis e fácil acesso. Aproximadamente 40 km de Brasília.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Fácil",
+    distance: 4.0,
+    duration: "1-2 horas",
+    elevation: 20,
+    rating: 4.5,
+    reviews: [],
+    coordinates: { lat: -15.600000, lng: -48.050000 },
+
+    bestSeason: "Ano todo",
+    terrainType: "Terra",
+    mobileSignal: "Bom",
+    tips: "Acesso pode ser restrito em algumas áreas da represa, verifique antes.",
+
+    path: [
+        { lat: -15.600000, lng: -48.050000 }, { lat: -15.601000, lng: -48.051000 }, { lat: -15.602000, lng: -48.052000 },
+        { lat: -15.603000, lng: -48.053000 }, { lat: -15.602000, lng: -48.054000 }, { lat: -15.601000, lng: -48.055000 },
+        { lat: -15.600000, lng: -48.050000 }
+    ]
+  },
+
+  // 13. Trilha da Prainha do Lúcio Costa
+  {
+    id: "prainha-lucio-costa",
+    parque_id: LAGO_PARANOA_ID,
+    name: "Trilha da Prainha do Lúcio Costa",
+    location: "Lúcio Costa, Lago Paranoá",
+    description: "Caminhada tranquila ao redor da prainha, com vistas agradáveis do lago, perto da Ponte JK.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Fácil",
+    distance: 2.0,
+    duration: "1-2 horas",
+    elevation: 10,
+    rating: 4.4,
+    reviews: [],
+    coordinates: { lat: -15.810000, lng: -47.830000 },
+
+    bestSeason: "Ano todo",
+    terrainType: "Areia e grama",
+    mobileSignal: "Excelente",
+    tips: "Leve roupa de banho se quiser entrar no lago.",
+
+    path: [
+        { lat: -15.810000, lng: -47.830000 }, { lat: -15.811000, lng: -47.831000 }, { lat: -15.812000, lng: -47.832000 },
+        { lat: -15.811000, lng: -47.833000 }, { lat: -15.810000, lng: -47.830000 }
+    ]
+  },
+
+  // 14. Trilha do Lago do Parque da Cidade
+  {
+    id: "lago-parque-da-cidade",
+    parque_id: PARQUE_DA_CIDADE_SARAH_KUBITSCHEK_ID,
+    name: "Trilha do Lago do Parque da Cidade",
+    location: "Parque da Cidade, Brasília",
+    description: "Trilha plana, rodeada por vegetação típica do Cerrado e que contorna o lago. Possui áreas de piquenique e é ótima para iniciantes ou caminhadas em família.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Fácil",
+    distance: 4.0,
+    duration: "1-2 horas",
+    elevation: 10,
+    rating: 4.6,
+    reviews: [],
+    coordinates: { lat: -15.795000, lng: -47.905000 },
+
+    bestSeason: "Ano todo",
+    terrainType: "Asfalto e calçada",
+    mobileSignal: "Excelente",
+    tips: "Ótimo local para piqueniques após a caminhada.",
+
+    path: [
+        { lat: -15.795000, lng: -47.905000 }, { lat: -15.796000, lng: -47.906000 }, { lat: -15.797000, lng: -47.907000 },
+        { lat: -15.796000, lng: -47.908000 }, { lat: -15.795000, lng: -47.905000 }
+    ]
+  },
+
+  // 15. Trilha do Poço Azul (Fácil)
+  {
+    id: "poco-azul-facil",
+    parque_id: RESERVA_BIOLOGICA_CONTAGEM_ID,
+    name: "Trilha do Poço Azul",
+    location: "Brazlândia",
+    description: "Caminho curto e fácil, levando ao Poço Azul, um ponto turístico ideal para nadar. Trilha acessível, mas com volume de água viável de acordo com a estação do ano.",
+    imageUrl: "/images/trilhas/pocoazul.jpg",
+    images: ["/images/trilhas/pocoazul.jpg", "/images/trilhas/pocoazul.jpg"],
+    difficulty: "Fácil",
+    distance: 1.0,
+    duration: "30-40 min",
+    elevation: 30,
+    rating: 4.5,
+    reviews: [],
+    coordinates: { lat: -15.6020, lng: -48.1550 },
+
+    bestSeason: "Maio a Setembro (Seca para água mais azul)",
+    terrainType: "Terra com pedras",
+    mobileSignal: "Ruim",
+    tips: "Chegue cedo, o local lota nos fins de semana. A água é fria!",
+
+    path: [
+        { lat: -15.5980, lng: -48.1500 }, { lat: -15.5990, lng: -48.1510 }, { lat: -15.6000, lng: -48.1520 },
+        { lat: -15.6020, lng: -48.1550 }
+    ]
+  },
+
+  // 16. Trilha do Capão da Onça
+  {
+    id: "capao-da-onca",
+    parque_id: PARQUE_NACIONAL_BRASILIA_ID,
+    name: "Trilha do Capão da Onça",
+    location: "Parque Nacional de Brasília",
+    description: "Trilha fácil e agradável, com trechos de vegetação densa e pequenos riachos. Ideal para quem quer ter contato com o Cerrado sem esforço físico intenso.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Fácil",
+    distance: 1.5,
+    duration: "1 hora",
+    elevation: 20,
+    rating: 4.4,
+    reviews: [],
+    coordinates: { lat: -15.725000, lng: -47.935000 },
+
+    bestSeason: "Ano todo",
+    terrainType: "Terra batida",
+    mobileSignal: "Bom",
+    tips: "Leve repelente, muitos insetos na mata ciliar.",
+
+    path: [
+        { lat: -15.725000, lng: -47.935000 }, { lat: -15.726000, lng: -47.936000 }, { lat: -15.727000, lng: -47.937000 },
+        { lat: -15.725000, lng: -47.935000 }
+    ]
+  },
+
+  // 17. Trilha do Mirante do Centro de Visitantes
+  {
+    id: "mirante-centro-visitantes",
+    parque_id: PARQUE_NACIONAL_BRASILIA_ID,
+    name: "Trilha do Mirante do Centro de Visitantes",
+    location: "Parque Nacional de Brasília, Asa Norte",
+    description: "Trilha curta e bem demarcada, com leve inclinação e mirante ao final, onde é possível observar a fauna e flora do Cerrado. A trilha é autoguiada e apropriada para iniciantes.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Fácil",
+    distance: 1.3,
+    duration: "1 hora",
+    elevation: 30,
+    rating: 4.5,
+    reviews: [],
+    coordinates: { lat: -15.730000, lng: -47.920000 },
+
+    bestSeason: "Ano todo",
+    terrainType: "Terra batida",
+    mobileSignal: "Bom",
+    tips: "Ótima vista panorâmica do parque.",
+
+    path: [
+        { lat: -15.730000, lng: -47.920000 }, { lat: -15.731000, lng: -47.921000 }, { lat: -15.732000, lng: -47.922000 },
+        { lat: -15.730000, lng: -47.920000 }
+    ]
+  },
+
+  // --- NÍVEL MÉDIO ---
+
+  // 18. Trilha do Parque (PNB)
+  {
+    id: "trilha-do-parque",
+    parque_id: PARQUE_NACIONAL_BRASILIA_ID,
+    name: "Trilha do Parque",
+    location: "Parque Nacional de Brasília, EPIA",
+    description: "A trilha passa por vegetação do cerrado, com paisagens ricas em fauna e flora.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Moderado",
+    distance: 7.0,
+    duration: "2-3 horas",
+    elevation: 50,
+    rating: 4.6,
+    reviews: [],
+    coordinates: { lat: -15.710000, lng: -47.950000 },
+
+    bestSeason: "Maio a Setembro",
+    terrainType: "Terra com raízes",
+    mobileSignal: "Bom",
+    tips: "Fique atento aos macacos-prego, não alimente os animais.",
+
+    path: [
+        { lat: -15.710000, lng: -47.950000 }, { lat: -15.712000, lng: -47.952000 }, { lat: -15.714000, lng: -47.954000 },
+        { lat: -15.716000, lng: -47.956000 }, { lat: -15.714000, lng: -47.958000 }, { lat: -15.712000, lng: -47.960000 },
+        { lat: -15.710000, lng: -47.950000 }
+    ]
+  },
+
+  // 19. Trilha do Vale do Frade
+  {
+    id: "vale-do-frade",
+    parque_id: PARQUE_NACIONAL_BRASILIA_ID,
+    name: "Trilha do Vale do Frade",
+    location: "Parque Nacional de Brasília, EPIA",
+    description: "Trilha que leva ao Vale do Frade, uma região mais isolada, com vegetação de cerrado e vistas panorâmicas.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Moderado",
+    distance: 5.0,
+    duration: "3 horas",
+    elevation: 80,
+    rating: 4.7,
+    reviews: [],
+    coordinates: { lat: -15.700000, lng: -47.960000 },
+
+    bestSeason: "Seca",
+    terrainType: "Terra e pedras soltas",
+    mobileSignal: "Parcial",
+    tips: "Leve boné e protetor solar, pouca sombra no percurso.",
+
+    path: [
+        { lat: -15.700000, lng: -47.960000 }, { lat: -15.702000, lng: -47.962000 }, { lat: -15.704000, lng: -47.964000 },
+        { lat: -15.706000, lng: -47.966000 }, { lat: -15.700000, lng: -47.960000 }
+    ]
+  },
+
+  // 20. Trilha dos Macacos
+  {
+    id: "trilha-dos-macacos",
+    parque_id: PARQUE_NACIONAL_BRASILIA_ID,
+    name: "Trilha dos Macacos",
+    location: "Parque Nacional de Brasília, EPIA",
+    description: "Caminhada por áreas de cerrado e mata ciliar, com avistamentos de macacos e outros animais locais.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Moderado",
+    distance: 6.0,
+    duration: "2-3 horas",
+    elevation: 60,
+    rating: 4.5,
+    reviews: [],
+    coordinates: { lat: -15.715000, lng: -47.945000 },
+
+    bestSeason: "Ano todo",
+    terrainType: "Terra úmida em partes",
+    mobileSignal: "Bom",
+    tips: "Ótima para observação de aves e macacos.",
+
+    path: [
+        { lat: -15.715000, lng: -47.945000 }, { lat: -15.717000, lng: -47.947000 }, { lat: -15.719000, lng: -47.949000 },
+        { lat: -15.721000, lng: -47.951000 }, { lat: -15.715000, lng: -47.945000 }
+    ]
+  },
+
+  // 21. Trilha Buritis
+  {
+    id: "trilha-buritis",
+    parque_id: "solar-da-aguia",
+    name: "Trilha Buritis",
+    location: "Solar da Águia Restaurante e Turismo Rural",
+    description: "Percurso majoritariamente em estrada de terra com descidas até o km 13, seguido de subidas e cascalho. O caminho inclui córregos e uma pequena cachoeira, além de uma bica de água mineral. A vegetação nativa do cerrado, especialmente a palmeira Buriti, está presente ao longo do trajeto.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Moderado",
+    distance: 21.0,
+    duration: "2 a 3 horas",
+    elevation: 200,
+    rating: 4.6,
+    reviews: [],
+    coordinates: { lat: -15.650000, lng: -47.800000 },
+
+    bestSeason: "Maio a Setembro",
+    terrainType: "Estrada de terra e cascalho",
+    mobileSignal: "Ruim",
+    tips: "Leve kit de reparo para bicicleta, há trechos com pedras pontiagudas.",
+
+    path: [
+        { lat: -15.650000, lng: -47.800000 }, { lat: -15.652000, lng: -47.805000 }, { lat: -15.654000, lng: -47.810000 },
+        { lat: -15.656000, lng: -47.815000 }, { lat: -15.650000, lng: -47.800000 }
+    ]
+  },
+
+  // 22. Trilha Catingueiro
+  {
+    id: "trilha-catingueiro",
+    parque_id: "vila-boa-vista",
+    name: "Trilha Catingueiro",
+    location: "Vila Boa Vista",
+    description: "Essa trilha passa pela região da Vila Boa Vista e é caracterizada por subidas e descidas que oferecem um bom treino de resistência.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Moderado",
+    distance: 27.0,
+    duration: "3 horas",
+    elevation: 250,
+    rating: 4.7,
+    reviews: [],
+    coordinates: { lat: -15.680000, lng: -47.850000 },
+
+    bestSeason: "Ano todo",
+    terrainType: "Terra batida com desníveis",
+    mobileSignal: "Parcial",
+    tips: "Exige bom preparo físico devido às subidas constantes.",
+
+    path: [
+        { lat: -15.680000, lng: -47.850000 }, { lat: -15.682000, lng: -47.852000 }, { lat: -15.684000, lng: -47.854000 },
+        { lat: -15.680000, lng: -47.850000 }
+    ]
+  },
+
+  // 23. Trilha da Mata Ciliar (PNB)
+  {
+    id: "mata-ciliar",
+    parque_id: PARQUE_NACIONAL_BRASILIA_ID,
+    name: "Trilha da Mata Ciliar",
+    location: "Parque Nacional de Brasília, EPIA",
+    description: "Trilha curta e fácil, passando por vegetação de mata ciliar e com boa oportunidade de observação de fauna.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Moderado",
+    distance: 3.0,
+    duration: "1-2 horas",
+    elevation: 40,
+    rating: 4.4,
+    reviews: [],
+    coordinates: { lat: -15.720000, lng: -47.940000 },
+
+    bestSeason: "Ano todo",
+    terrainType: "Terra úmida e vegetação densa",
+    mobileSignal: "Bom",
+    tips: "Use calças compridas para evitar arranhões na vegetação.",
+
+    path: [
+        { lat: -15.720000, lng: -47.940000 }, { lat: -15.721000, lng: -47.941000 }, { lat: -15.720000, lng: -47.940000 }
+    ]
+  },
+
+  // --- NÍVEL MODERADO (NOVA SEÇÃO DO PDF) ---
+
+  // 24. Trilha do Itiquira (Cerca do PNB)
+  {
+    id: "itiquira-cerca-pnb",
+    parque_id: PARQUE_MUNICIPAL_ITIQUIRA_ID,
+    name: "Trilha do Itiquira",
+    location: "Próximo a Formosa, GO",
+    description: "Trilha que leva até a famosa Cachoeira Itiquira, com 168 metros de queda d´água.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Moderado",
+    distance: 8.0,
+    duration: "3-4 horas",
+    elevation: 200,
+    rating: 4.8,
+    reviews: [],
+    coordinates: { lat: -15.380000, lng: -47.450000 },
+
+    bestSeason: "Ano todo (Volume de água maior na chuva)",
+    terrainType: "Calçada (parte) e trilha natural",
+    mobileSignal: "Inexistente",
+    tips: "A parte pavimentada é fácil, mas a trilha até o topo é exigente. Não é permitido nadar na queda principal (perigo de impacto da água).",
+
+    path: [
+        { lat: -15.380000, lng: -47.450000 }, { lat: -15.382000, lng: -47.452000 }, { lat: -15.380000, lng: -47.450000 }
+    ]
+  },
+
+  // 25. Trilha do Morro da Capelinha
+  {
+    id: "morro-capelinha",
+    parque_id: "planaltina",
+    name: "Trilha do Morro da Capelinha",
+    location: "Planaltina, DF",
+    description: "Caminho com subidas acentuadas e pontos de observação panorâmica. Ideal para quem busca um pouco mais de desafio físico.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Moderado",
+    distance: 8.0,
+    duration: "3-4 horas",
+    elevation: 300,
+    rating: 4.6,
+    reviews: [],
+    coordinates: { lat: -15.600000, lng: -47.650000 },
+
+    bestSeason: "Páscoa (Via Sacra) ou Seca",
+    terrainType: "Terra íngreme",
+    mobileSignal: "Bom",
+    tips: "Local da Via Sacra. A subida é forte, vá devagar.",
+
+    path: [
+        { lat: -15.600000, lng: -47.650000 }, { lat: -15.602000, lng: -47.652000 }, { lat: -15.600000, lng: -47.650000 }
+    ]
+  },
+
+  // 26. Trilha do Jerivá
+  {
+    id: "trilha-jeriva",
+    parque_id: PARQUE_NACIONAL_CHAPADA_VEADEIROS_ID,
+    name: "Trilha do Jerivá",
+    location: "Alto Paraíso, GO",
+    description: "Caminhada entre vegetação densa e campo aberto, com mirantes naturais. Trilha com algumas subidas e descidas e paisagens de tirar o fôlego.",
+    imageUrl: "/images/parques/chapada.jpg",
+    images: ["/images/parques/chapada.jpg", "/images/parques/chapada.jpg"],
+    difficulty: "Moderado",
+    distance: 10.0,
+    duration: "4 horas",
+    elevation: 250,
+    rating: 4.7,
+    reviews: [],
+    coordinates: { lat: -14.140000, lng: -47.750000 },
+
+    bestSeason: "Maio a Outubro",
+    terrainType: "Pedras e terra",
+    mobileSignal: "Inexistente",
+    tips: "Leve bastão de caminhada para auxiliar nas descidas.",
+
+    path: [
+        { lat: -14.140000, lng: -47.750000 }, { lat: -14.142000, lng: -47.752000 }, { lat: -14.140000, lng: -47.750000 }
+    ]
+  },
+
+  // 27. Trilha da Janela e Abismo
+  {
+    id: "janela-abismo",
+    parque_id: PARQUE_NACIONAL_CHAPADA_VEADEIROS_ID,
+    name: "Trilha da Janela e Abismo",
+    location: "Alto Paraíso, GO",
+    description: "Trilha difícil e icônica da Chapada dos Veadeiros, com vista para o Vale dos Macacos e cachoeiras. Exige preparo físico e cuidado devido à elevação e às pedras no trajeto.",
+    imageUrl: "/images/parques/chapada.jpg",
+    images: ["/images/parques/chapada.jpg", "/images/parques/chapada.jpg"],
+    difficulty: "Moderado",
+    distance: 8.0,
+    duration: "4-5 horas",
+    elevation: 350,
+    rating: 4.9,
+    reviews: [],
+    coordinates: { lat: -14.120000, lng: -47.780000 },
+
+    bestSeason: "Seca (para ver a cachoeira do Abismo sem água excessiva)",
+    terrainType: "Pedras grandes e desníveis",
+    mobileSignal: "Parcial (topo)",
+    tips: "A vista da Janela para os Saltos do Rio Preto é a mais clássica da Chapada. Cuidado nas bordas.",
+
+    path: [
+        { lat: -14.120000, lng: -47.780000 }, { lat: -14.122000, lng: -47.782000 }, { lat: -14.120000, lng: -47.780000 }
+    ]
+  },
+
+  // 28. Trilha da Cachoeira do Salto do Corumbá
+  {
+    id: "salto-corumba",
+    parque_id: "corumba-de-goias",
+    name: "Trilha do Salto do Corumbá",
+    location: "Corumbá de Goiás",
+    description: "Caminho com terreno variado, incluindo subidas e áreas de mata, levando até uma cachoeira. Recomendada para trilheiros experientes.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Moderado",
+    distance: 5.0,
+    duration: "2-3 horas",
+    elevation: 150,
+    rating: 4.5,
+    reviews: [],
+    coordinates: { lat: -15.900000, lng: -48.800000 },
+
+    bestSeason: "Ano todo (Cachoeira sempre com volume)",
+    terrainType: "Terra e pedras escorregadias",
+    mobileSignal: "Parcial",
+    tips: "A cachoeira é muito forte, cuidado ao se aproximar da queda. Há estrutura de camping perto.",
+
+    path: [
+        { lat: -15.900000, lng: -48.800000 }, { lat: -15.902000, lng: -48.802000 }, { lat: -15.900000, lng: -48.800000 }
+    ]
+  },
+
+  // --- NÍVEL DIFÍCIL E MUITO DIFÍCIL ---
+
+  // 29. Trilha da Pedra Fundamental
+  {
+    id: "pedra-fundamental",
+    parque_id: "planaltina",
+    name: "Trilha da Pedra Fundamental",
+    location: "Planaltina, DF",
+    description: "Trilha com subidas e descidas acentuadas, levando a um mirante com vista panorâmica. Exige preparo físico e é recomendada para trilheiros experientes.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Difícil",
+    distance: 10.0,
+    duration: "4-5 horas",
+    elevation: 400,
+    rating: 4.6,
+    reviews: [],
+    coordinates: { lat: -15.610000, lng: -47.660000 },
+
+    bestSeason: "Inverno (Céu limpo)",
+    terrainType: "Terra e cascalho",
+    mobileSignal: "Bom",
+    tips: "Marco histórico de Brasília. Local isolado, vá em grupo.",
+
+    path: [
+        { lat: -15.610000, lng: -47.660000 }, { lat: -15.612000, lng: -47.662000 }, { lat: -15.610000, lng: -47.660000 }
+    ]
+  },
+
+  // 30. Trilha da Cachoeira do Itiquira
+  {
+    id: "cachoeira-itiquira",
+    parque_id: PARQUE_MUNICIPAL_ITIQUIRA_ID,
+    name: "Trilha da Cachoeira do Itiquira",
+    location: "Formosa, GO",
+    description: "Trilha com terrenos acidentados e inclinações acentuadas, levando a uma das cachoeiras mais altas do Brasil. É necessário preparo físico, pois o trajeto é longo e desafiador.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Difícil",
+    distance: 13.0,
+    duration: "5-6 horas",
+    elevation: 500,
+    rating: 4.9,
+    reviews: [],
+    coordinates: { lat: -15.385000, lng: -47.455000 },
+
+    bestSeason: "Ano todo",
+    terrainType: "Trilha técnica",
+    mobileSignal: "Inexistente",
+    tips: "Esta trilha (topo) é diferente da turística (base). Requer guia experiente.",
+
+    path: [
+        { lat: -15.385000, lng: -47.455000 }, { lat: -15.387000, lng: -47.457000 }, { lat: -15.385000, lng: -47.455000 }
+    ]
+  },
+
+  // 31. Trilha Cachoeira do Indaiá (Difícil)
+  {
+    id: "cachoeira-indaia-dificil",
+    parque_id: PARQUE_MUNICIPAL_ITIQUIRA_ID,
+    name: "Cachoeira do Indaiá",
+    location: "Formosa, GO",
+    description: "Passando por diferentes tipos de vegetação e travessia de riachos, o trajeto inclui subidas e descidas íngremes e um longo caminho até a cachoeira. É recomendado para trilheiros experientes.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Difícil",
+    distance: 12.0,
+    duration: "5-6 horas",
+    elevation: 400,
+    rating: 4.8,
+    reviews: [],
+    coordinates: { lat: -15.400000, lng: -47.400000 },
+
+    bestSeason: "Maio a Setembro",
+    terrainType: "Pedras e travessia de rio",
+    mobileSignal: "Inexistente",
+    tips: "Cuidado com cabeças d'água nas travessias de rio.",
+
+    path: [
+        { lat: -15.400000, lng: -47.400000 }, { lat: -15.402000, lng: -47.402000 }, { lat: -15.400000, lng: -47.400000 }
+    ]
+  },
+
+  // 32. Trilha Pico do Roncador
+  {
+    id: "pico-roncador",
+    parque_id: RESERVA_PICO_RONCADOR_ID,
+    name: "Trilha Pico do Roncador",
+    location: "São João da Aliança, GO",
+    description: "Uma das trilhas mais difíceis da região, com subidas íngremes e paisagens deslumbrantes. Leva ao Pico do Roncador, ponto alto com vista espetacular. Para quem tem experiência e preparo físico.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Difícil",
+    distance: 15.0,
+    duration: "6 a 7 horas",
+    elevation: 600,
+    rating: 4.9,
+    reviews: [],
+    coordinates: { lat: -14.700000, lng: -47.500000 },
+
+    bestSeason: "Inverno (menos chuva e risco)",
+    terrainType: "Escalada em rocha e trilha íngreme",
+    mobileSignal: "Inexistente",
+    tips: "Exige guia credenciado. Não tente subir sem equipamento e experiência.",
+
+    path: [
+        { lat: -14.700000, lng: -47.500000 }, { lat: -14.702000, lng: -47.502000 }, { lat: -14.700000, lng: -47.500000 }
+    ]
+  },
+
+  // 33. Trilha das Sete Quedas
+  {
+    id: "sete-quedas",
+    parque_id: PARQUE_NACIONAL_CHAPADA_VEADEIROS_ID,
+    name: "Trilha das Sete Quedas",
+    location: "Chapada dos Veadeiros (Cavalcante)",
+    description: "Trilha extremamente desafiadora que exige pernoite e envolve travessias de rios, subidas íngremes e longas caminhadas. Leva até uma série de cachoeiras conhecidas como Sete Quedas. É indicada para trilheiros experientes.",
+    imageUrl: "/images/trilhas/aguamineral.jpg",
+    images: ["/images/trilhas/aguamineral.jpg", "/images/trilhas/aguamineral.jpg"],
+    difficulty: "Extrema",
+    distance: 23.0,
+    duration: "2 dias",
+    elevation: 800,
+    rating: 5.0,
+    reviews: [],
+    coordinates: { lat: -14.000000, lng: -47.500000 },
+
+    bestSeason: "Junho a Outubro (Seca)",
+    terrainType: "Travessias de rio e pedras",
+    mobileSignal: "Inexistente",
+    tips: "Obrigatório agendamento prévio e pernoite no parque. Leve barraca e comida suficiente para 2 dias.",
+
+    path: [
+        { lat: -14.000000, lng: -47.500000 }, { lat: -14.002000, lng: -47.502000 }, { lat: -14.000000, lng: -47.500000 }
+    ]
+  },
+
+  // 34. Trilha do Vale do Macaco
+  {
+    id: "vale-do-macaco",
+    parque_id: PARQUE_NACIONAL_CHAPADA_VEADEIROS_ID,
+    name: "Trilha do Vale do Macaco",
+    location: "São Jorge, Alto Paraíso",
+    description: "Trilha com grande elevação, terreno rochoso e desafios naturais. O destino é um vale isolado com piscinas naturais e cachoeiras.",
+    imageUrl: "/images/parques/chapada.jpg",
+    images: ["/images/parques/chapada.jpg", "/images/parques/chapada.jpg"],
+    difficulty: "Difícil",
+    distance: 10.0,
+    duration: "6 horas",
+    elevation: 400,
+    rating: 4.8,
+    reviews: [],
+    coordinates: { lat: -14.110000, lng: -47.660000 },
+
+    bestSeason: "Maio a Setembro",
+    terrainType: "Cânion com pedras grandes",
+    mobileSignal: "Inexistente",
+    tips: "A descida para o vale é muito íngreme (paredão). Requer bom preparo de joelhos e pernas.",
+
+    path: [
+        { lat: -14.110000, lng: -47.660000 }, { lat: -14.112000, lng: -47.662000 }, { lat: -14.110000, lng: -47.660000 }
+    ]
+  }
 ];
 
 // --- FUNÇÕES DE BUSCA ---
@@ -305,31 +1154,22 @@ export function getTrailById(id?: string): Trilhas | undefined {
     return featuredTrails.find((trail) => trail.id === id);
 }
 
-// ...funções getNearbyTrails, getTopRatedTrails, getPopularTrails...
 export function getTopRatedTrails(): Trilhas[] {
-  // Retorna as trilhas ordenadas pela maior nota (rating)
   return [...featuredTrails].sort((a, b) => (b.rating || 0) - (a.rating || 0));
 }
 
 export function getPopularTrails(): Trilhas[] {
-  // Simplesmente retorna a lista padrão por enquanto,
-  // mas poderia ter uma lógica mais complexa (ex: por número de reviews)
   return featuredTrails;
 }
 
 export function getNearbyTrails(latitude: number | null, longitude: number | null): Trilhas[] {
-  if (!latitude || !longitude) {
-    return []; // Retorna vazio se a localização não estiver disponível
-  }
-
+  if (!latitude || !longitude) return [];
   const trailsWithDistance = featuredTrails.map(trail => {
     if (trail.coordinates) {
       const distance = calculateDistance(latitude, longitude, trail.coordinates.lat, trail.coordinates.lng);
       return { ...trail, distancia_usuario: distance };
     }
-    return { ...trail, distancia_usuario: Infinity }; // Trilhas sem coordenadas ficam no final
+    return { ...trail, distancia_usuario: Infinity };
   });
-
-  // Ordena pela menor distância
   return trailsWithDistance.sort((a, b) => a.distancia_usuario - b.distancia_usuario);
 }
