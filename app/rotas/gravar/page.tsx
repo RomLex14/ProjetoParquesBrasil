@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import dynamic from "next/dynamic";
-import LeafletMap from "@/components/leaflet-map";
+
 import { 
   ArrowLeft, Play, Pause, StopCircle, Clock, TrendingUp, 
   Loader2, Save, PlayCircle, Trash2
@@ -16,6 +16,7 @@ import { useGeolocation } from "@/hooks/use-geolocation";
 
 import type { MapComponentProps } from "@/components/map-component-for-recorder";
 
+// Componente carregado dinamicamente com SSR desligado
 const MapForRecorder = dynamic<MapComponentProps>(() => import("@/components/map-component-for-recorder"), {
     ssr: false,
     loading: () => <div className="h-full w-full bg-muted flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>
@@ -25,9 +26,7 @@ type RecordingStatus = 'idle' | 'recording' | 'paused' | 'finished';
 
 export default function GravarRotaPage() {
   const router = useRouter();
-  
   const [status, setStatus] = useState<RecordingStatus>('idle'); 
-  
   const [elapsedTime, setElapsedTime] = useState(0);
   const [distance, setDistance] = useState(0);
   
@@ -35,9 +34,14 @@ export default function GravarRotaPage() {
     enableHighAccuracy: true,
     maximumAge: 0,
   });
-  const [recordedPath, setRecordedPath] = useState<L.LatLng[]>([]);
-  const lastPosition = useRef<L.LatLng | null>(null);
 
+  // ✅ ALTERAÇÃO: Estado agora guarda objetos simples, sem depender de tipos do Leaflet
+  const [recordedPath, setRecordedPath] = useState<{ lat: number; lng: number }[]>([]);
+  
+  // ✅ ALTERAÇÃO: Ref também guarda objeto simples
+  const lastPosition = useRef<{ lat: number; lng: number } | null>(null);
+
+  // Timer
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (status === 'recording') {
@@ -48,18 +52,32 @@ export default function GravarRotaPage() {
     return () => clearInterval(interval);
   }, [status]);
 
+  // Lógica de GPS e Distância
   useEffect(() => {
-    if (status === 'recording' && latitude && longitude) {
-      const newPosition = new L.LatLng(latitude, longitude);
-      setRecordedPath(prevPath => [...prevPath, newPosition]);
+    const processPosition = async () => {
+      if (status === 'recording' && latitude && longitude) {
+        const newPoint = { lat: latitude, lng: longitude };
+        
+        setRecordedPath(prevPath => [...prevPath, newPoint]);
 
-      if (lastPosition.current) {
-        setDistance(prev => prev + lastPosition.current!.distanceTo(newPosition));
+        if (lastPosition.current) {
+          // ✅ Importamos o Leaflet dinamicamente SÓ para calcular a distância
+          // Isso evita o erro "window is not defined" no servidor
+          const L = (await import('leaflet')).default;
+          
+          const from = L.latLng(lastPosition.current.lat, lastPosition.current.lng);
+          const to = L.latLng(newPoint.lat, newPoint.lng);
+          
+          setDistance(prev => prev + from.distanceTo(to));
+        }
+        lastPosition.current = newPoint;
       }
-      lastPosition.current = newPosition;
-    }
+    };
+
+    processPosition();
   }, [latitude, longitude, status]);
 
+  // ... Restante das funções (formatTime, handleStart, etc) continuam iguais ...
   const formatTime = (seconds: number) => {
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
@@ -93,7 +111,7 @@ export default function GravarRotaPage() {
   const handleSave = () => {
     if (recordedPath.length > 1) {
       const routeData = {
-        waypoints: recordedPath.map(p => ({ lat: p.lat, lng: p.lng })),
+        waypoints: recordedPath, // Já está no formato correto {lat, lng}
         distance: distance,
         name: `Minha trilha de ${new Date().toLocaleDateString('pt-BR')}`
       };
@@ -127,6 +145,7 @@ export default function GravarRotaPage() {
 
       <main className="flex-1 flex flex-col">
         <div className="flex-1 relative">
+          {/* O mapa agora aceita nosso array de objetos simples */}
           <MapForRecorder userPath={recordedPath} />
         </div>
 

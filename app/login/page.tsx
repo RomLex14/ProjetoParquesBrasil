@@ -113,7 +113,7 @@ export default function LoginPage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Senha</Label>
-                <Link href="/forgot-password" className="text-sm text-primary hover:underline">
+                <Link href="forgot-password" className="text-sm text-primary hover:underline">
                   Esqueceu a senha?
                 </Link>
               </div>
@@ -140,7 +140,7 @@ export default function LoginPage() {
               </Link>
             </div>
             <div className="mt-2 text-center text-sm">
-              <Link href="/forgot-password" className="text-sm underline text-muted-foreground hover:text-primary">
+              <Link href="forgot-password" className="text-sm underline text-muted-foreground hover:text-primary">
                 Esqueceu sua senha?
               </Link>
             </div>
