@@ -1,12 +1,9 @@
-// app/rotas/[id]/page.tsx
-
 "use client";
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
-// ❌ REMOVIDO: import L from "leaflet"; (Causava o erro de window is not defined)
 import {
   ArrowLeft,
   Loader2,
@@ -116,24 +113,23 @@ export default function RotaDetalhePage() {
     }
   };
 
-  // ✅ CORREÇÃO: Retorna objetos simples {lat, lng} em vez de classes Leaflet
+  // ✅ FUNÇÃO DE SEGURANÇA: Converte qualquer formato para o que o mapa espera
   const getLeafletPath = (waypoints: any): { lat: number; lng: number }[] => {
     if (!waypoints) return [];
 
-    // CASO 1: Formato Antigo (Array de objetos {lat, lng})
+    // CASO 1: Formato Antigo (Array)
     if (Array.isArray(waypoints)) {
-      // Mapeia diretamente para garantir a estrutura, sem usar new L.LatLng
       return waypoints.map((wp: any) => ({ lat: wp.lat, lng: wp.lng }));
     }
 
-    // CASO 2: Formato Novo (GeoJSON FeatureCollection)
+    // CASO 2: Formato Novo (GeoJSON)
     if (waypoints.type === "FeatureCollection" && Array.isArray(waypoints.features)) {
       const latLngs: { lat: number; lng: number }[] = [];
       
       waypoints.features.forEach((feature: any) => {
         if (feature.geometry.type === "LineString") {
-          // GeoJSON é [lng, lat], invertemos para {lat, lng}
           feature.geometry.coordinates.forEach((coord: number[]) => {
+            // GeoJSON é [lng, lat], invertemos para {lat, lng}
             latLngs.push({ lat: coord[1], lng: coord[0] });
           });
         } 
@@ -174,6 +170,7 @@ export default function RotaDetalhePage() {
     );
   }
   
+  // ✅ AQUI A MÁGICA ACONTECE: Usamos a função segura
   const rotaPath = getLeafletPath(rota.waypoints);
 
   return (
@@ -192,6 +189,7 @@ export default function RotaDetalhePage() {
           <div className="grid md:grid-cols-3 gap-8">
             <div className="md:col-span-2">
               <Card className="overflow-hidden shadow-lg h-[400px] md:h-[600px]">
+                {/* Passamos o userPath corrigido */}
                 <LeafletMap userPath={rotaPath} fullscreen />
               </Card>
             </div>
