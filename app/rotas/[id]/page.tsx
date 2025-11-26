@@ -6,14 +6,13 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
-import L from "leaflet";
+// ❌ REMOVIDO: import L from "leaflet"; (Causava o erro de window is not defined)
 import {
   ArrowLeft,
   Loader2,
   Share2,
   Edit,
   Trash2,
-  CalendarDays,
   Mountain,
   TrendingUp,
 } from "lucide-react";
@@ -24,8 +23,18 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import AuthGuard from "@/components/auth-guard";
 import { useToast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
-// Tipo para os dados da rota que virão do banco
 interface RotaUsuario {
   id: string;
   nome: string;
@@ -33,7 +42,7 @@ interface RotaUsuario {
   criado_em: string;
   dificuldade?: string | null;
   distancia_total_km?: number | null;
-  waypoints: { lat: number; lng: number }[];
+  waypoints: any; 
 }
 
 export default function RotaDetalhePage() {
@@ -44,6 +53,7 @@ export default function RotaDetalhePage() {
 
   const [rota, setRota] = useState<RotaUsuario | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const fetchRotaData = async () => {
@@ -75,6 +85,68 @@ export default function RotaDetalhePage() {
     fetchRotaData();
   }, [rotaId, toast]);
 
+  const handleDeleteRota = async () => {
+    if (!rotaId) return;
+
+    setIsDeleting(true);
+    try {
+      const { error } = await supabase
+        .from('rotas_usuario')
+        .delete()
+        .eq('id', rotaId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Rota excluída",
+        description: "A rota foi removida com sucesso.",
+      });
+
+      router.push('/rotas');
+      router.refresh(); 
+
+    } catch (error: any) {
+      console.error("Erro ao excluir rota:", error);
+      toast({
+        title: "Erro ao excluir",
+        description: error.message || "Não foi possível excluir a rota.",
+        variant: "destructive",
+      });
+      setIsDeleting(false);
+    }
+  };
+
+  // ✅ CORREÇÃO: Retorna objetos simples {lat, lng} em vez de classes Leaflet
+  const getLeafletPath = (waypoints: any): { lat: number; lng: number }[] => {
+    if (!waypoints) return [];
+
+    // CASO 1: Formato Antigo (Array de objetos {lat, lng})
+    if (Array.isArray(waypoints)) {
+      // Mapeia diretamente para garantir a estrutura, sem usar new L.LatLng
+      return waypoints.map((wp: any) => ({ lat: wp.lat, lng: wp.lng }));
+    }
+
+    // CASO 2: Formato Novo (GeoJSON FeatureCollection)
+    if (waypoints.type === "FeatureCollection" && Array.isArray(waypoints.features)) {
+      const latLngs: { lat: number; lng: number }[] = [];
+      
+      waypoints.features.forEach((feature: any) => {
+        if (feature.geometry.type === "LineString") {
+          // GeoJSON é [lng, lat], invertemos para {lat, lng}
+          feature.geometry.coordinates.forEach((coord: number[]) => {
+            latLngs.push({ lat: coord[1], lng: coord[0] });
+          });
+        } 
+        else if (feature.geometry.type === "Point") {
+           latLngs.push({ lat: feature.geometry.coordinates[1], lng: feature.geometry.coordinates[0] });
+        }
+      });
+      return latLngs;
+    }
+
+    return [];
+  };
+
   if (loading) {
     return (
       <div className="flex flex-col min-h-screen">
@@ -102,8 +174,7 @@ export default function RotaDetalhePage() {
     );
   }
   
-  // Converte os waypoints para o formato que o Leaflet espera
-  const rotaPath = rota.waypoints.map(wp => new L.LatLng(wp.lat, wp.lng));
+  const rotaPath = getLeafletPath(rota.waypoints);
 
   return (
     <AuthGuard>
@@ -138,7 +209,7 @@ export default function RotaDetalhePage() {
                     {rota.descricao || "Nenhuma descrição fornecida para esta rota."}
                   </p>
                   <div className="grid grid-cols-2 gap-4 pt-4 border-t">
-                    {rota.distancia_total_km && (
+                    {rota.distancia_total_km !== null && rota.distancia_total_km !== undefined && (
                       <div className="flex items-center gap-2">
                         <TrendingUp className="h-5 w-5 text-primary" />
                         <div>
@@ -166,8 +237,39 @@ export default function RotaDetalhePage() {
                 </CardHeader>
                 <CardContent className="flex flex-col gap-2">
                     <Button variant="outline"><Share2 className="mr-2 h-4 w-4" /> Compartilhar</Button>
-                    <Button variant="outline"><Edit className="mr-2 h-4 w-4" /> Editar Rota (Em breve)</Button>
-                    <Button variant="destructive" disabled><Trash2 className="mr-2 h-4 w-4" /> Excluir Rota</Button>
+                    <Button variant="outline" disabled title="Em breve"><Edit className="mr-2 h-4 w-4" /> Editar Rota</Button>
+                    
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="destructive" disabled={isDeleting}>
+                          {isDeleting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
+                          Excluir Rota
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Tem certeza absoluta?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Esta ação não pode ser desfeita. Isso excluirá permanentemente a rota 
+                            <strong> "{rota.nome}"</strong> dos nossos servidores.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
+                          <AlertDialogAction 
+                            onClick={(e) => {
+                              e.preventDefault(); 
+                              handleDeleteRota();
+                            }}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            disabled={isDeleting}
+                          >
+                            {isDeleting ? "Excluindo..." : "Sim, excluir"}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+
                 </CardContent>
               </Card>
 

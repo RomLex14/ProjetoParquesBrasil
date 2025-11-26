@@ -1,7 +1,7 @@
+// components/auth-guard.tsx
 "use client"
 
 import type React from "react"
-
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabase"
@@ -25,67 +25,66 @@ export default function AuthGuard({
   const router = useRouter()
 
   useEffect(() => {
-    // Verificar sessão existente ao carregar o componente
+    let mounted = true;
+
     const checkSession = async () => {
       try {
-        // Verifica se há uma sessão existente
-        const {
-          data: { session },
-        } = await supabase.auth.getSession()
+        const { data: { session } } = await supabase.auth.getSession()
 
-        // Se houver uma sessão, define o usuário
-        setUser(session?.user || null)
+        if (mounted) {
+          setUser(session?.user || null)
+          setLoading(false)
 
-        // Se requer autenticação e não há usuário, redireciona
-        if (requireAuth && !session?.user) {
-          router.push(redirectTo)
+          // Redirecionamento deve acontecer AQUI, dentro do useEffect
+          if (requireAuth && !session?.user) {
+            router.push(redirectTo)
+          }
         }
       } catch (error) {
         console.error("Erro ao verificar sessão:", error)
-        if (requireAuth) {
-          router.push(redirectTo)
+        // Em caso de erro, assume sem usuário e termina loading
+        if (mounted) {
+            setLoading(false);
+            if(requireAuth) router.push(redirectTo);
         }
-      } finally {
-        setLoading(false)
       }
     }
 
     checkSession()
 
-    // Escutar mudanças de autenticação
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      // Atualiza o estado do usuário quando a autenticação muda
-      setUser(session?.user ?? null)
-
-      // Se o evento for SIGNED_OUT e requer autenticação, redireciona
-      if (event === "SIGNED_OUT" && requireAuth) {
-        router.push(redirectTo)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (mounted) {
+        setUser(session?.user ?? null)
+        
+        // Lógica de redirecionamento em mudança de estado
+        if (event === "SIGNED_OUT" && requireAuth) {
+          router.push(redirectTo)
+        }
+        
+        // Se preferir redirecionar para dashboard quando loga em página pública, descomente:
+        // if (event === "SIGNED_IN" && !requireAuth) { router.push("/dashboard") }
+        
+        setLoading(false)
       }
-
-      // Se o evento for SIGNED_IN e não requer autenticação, redireciona para o dashboard
-      if (event === "SIGNED_IN" && !requireAuth) {
-        router.push("/dashboard")
-      }
-
-      setLoading(false)
     })
 
-    return () => subscription.unsubscribe()
+    return () => {
+      mounted = false;
+      subscription.unsubscribe()
+    }
   }, [requireAuth, redirectTo, router])
 
-  // Se ainda está carregando, mostrar fallback
+  // Se está carregando, mostra fallback
   if (loading) {
     return <>{fallback}</>
   }
 
-  // Se requer autenticação mas usuário não está logado
+  // Se requer autenticação e não tem usuário, mostra fallback enquanto o useEffect redireciona.
+  // NÃO chamamos router.push() aqui para evitar o erro.
   if (requireAuth && !user) {
-    router.push(redirectTo)
     return <>{fallback}</>
   }
 
-  // Se não requer autenticação ou usuário está logado
+  // Se não requer autenticação ou usuário está logado, renderiza o conteúdo
   return <>{children}</>
 }

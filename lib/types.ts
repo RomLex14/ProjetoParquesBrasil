@@ -83,6 +83,7 @@ export interface Trilhas {
 
 // Tipos para o Banco de Dados (Supabase) - Opcional se você usar direto no componente
 export interface Perfil {
+  xp: number;
   id: string;
   nome_usuario?: string | null;
   nome_completo?: string | null;

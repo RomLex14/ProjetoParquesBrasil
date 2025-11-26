@@ -2,7 +2,7 @@ import withPWAInit from "next-pwa";
 
 /** @type {import('next').NextConfig} */
 const baseConfig = {
-  reactStrictMode: process.env.NODE_ENV === "production", // ✅ Desativa apenas no dev
+  reactStrictMode: process.env.NODE_ENV === "production", 
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -16,7 +16,7 @@ const baseConfig = {
 
 const withPWA = withPWAInit({
   dest: "public",
-  disable: process.env.NODE_ENV === "development", // 🔹 PWA desativado no dev
+  disable: process.env.NODE_ENV === "development", 
   register: true,
   skipWaiting: true,
 });

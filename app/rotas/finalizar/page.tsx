@@ -1,4 +1,4 @@
-// app/rotas/finalizar/page.tsx
+
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Info, Route, Radio as RadioIcon, CalendarIcon, Cloud, CloudRain, CloudSnow, Sun, CloudLightning, CloudFog } from "lucide-react";
+import { Loader2, Route, Radio as RadioIcon, CalendarIcon, Cloud, CloudRain, CloudSnow, Sun, CloudLightning, CloudFog } from "lucide-react";
 import Navbar from "@/components/navbar";
 import AuthGuard from "@/components/auth-guard";
 import { Card, CardContent } from "@/components/ui/card";
@@ -49,7 +49,11 @@ const hourOptions = generateOptions(24);
 const minuteOptions = generateOptions(60, 15);
 
 export default function FinalizarRotaPage() {
-  const [waypoints, setWaypoints] = useState<{ lat: number; lng: number }[]>([]);
+  // Estado para o GeoJSON (novo formato)
+  const [geoJsonData, setGeoJsonData] = useState<any>(null);
+  // Mantemos waypoints apenas para compatibilidade retroativa se necessário, ou extração de pontos chave
+  const [waypointsCount, setWaypointsCount] = useState(0);
+  
   const [distance, setDistance] = useState<number | null>(null);
   const [routeName, setRouteName] = useState("");
   const [routeDescription, setRouteDescription] = useState("");
@@ -96,7 +100,6 @@ export default function FinalizarRotaPage() {
 
  useEffect(() => {
     setIsLoading(true);
-    let initialWaypoints: { lat: number, lng: number }[] = [];
 
     const loadData = async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -108,6 +111,7 @@ export default function FinalizarRotaPage() {
 
       const { data: profileData, error: profileError } = await supabase
         .from('perfis').select('*').eq('id', user.id).single<Perfil>();
+      
       if (profileError && profileError.code !== 'PGRST116') {
           console.error("Erro ao buscar perfil:", profileError);
       } else {
@@ -118,14 +122,62 @@ export default function FinalizarRotaPage() {
       if (storedData) {
           try {
               const data = JSON.parse(storedData);
-              initialWaypoints = data.waypoints || [];
-              if (initialWaypoints.length === 0) throw new Error("Waypoints vazios.");
-              setWaypoints(initialWaypoints);
-              setDistance(data.distance || null);
-              setRouteName(data.name || `Minha rota ${routeType === 'gravada' ? 'gravada' : 'planejada'} em ${new Date().toLocaleDateString('pt-BR')}`);
+              
+              // LÓGICA NOVA PARA GEOJSON
+              if (data.geojson) {
+                setGeoJsonData(data.geojson);
+                setDistance(data.distance);
+                
+                // Extrai o primeiro ponto do primeiro feature para usar no Clima
+                const features = data.geojson.features;
+                if (features && features.length > 0) {
+                    const firstFeature = features[0];
+                    setWaypointsCount(features.length); // Conta quantos traços foram feitos
 
-              const firstWaypoint = initialWaypoints[0];
-              await fetchFullWeatherForLocation({ lat: firstWaypoint.lat, lon: firstWaypoint.lng });
+                    let startCoords = { lat: 0, lon: 0 };
+                    
+                    // GeoJSON guarda coords como [Longitude, Latitude]
+                    if (firstFeature.geometry.type === "LineString") {
+                        startCoords = { 
+                            lat: firstFeature.geometry.coordinates[0][1], 
+                            lon: firstFeature.geometry.coordinates[0][0] 
+                        };
+                    } else if (firstFeature.geometry.type === "Point") {
+                        startCoords = { 
+                            lat: firstFeature.geometry.coordinates[1], 
+                            lon: firstFeature.geometry.coordinates[0] 
+                        };
+                    }
+
+                    if (startCoords.lat !== 0) {
+                        await fetchFullWeatherForLocation(startCoords);
+                    }
+                }
+              } 
+              // FALLBACK PARA ROTA GRAVADA (AINDA USA WAYPOINTS SIMPLES)
+              else if (data.waypoints && data.waypoints.length > 0) {
+                  const first = data.waypoints[0];
+                  setWaypointsCount(data.waypoints.length);
+                  setDistance(data.distance);
+                  // Converte formato antigo para GeoJSON para salvar padronizado
+                  const geoJsonFallback = {
+                      type: "FeatureCollection",
+                      features: [{
+                          type: "Feature",
+                          properties: {},
+                          geometry: {
+                              type: "LineString",
+                              coordinates: data.waypoints.map((wp: any) => [wp.lng, wp.lat])
+                          }
+                      }]
+                  };
+                  setGeoJsonData(geoJsonFallback);
+                  await fetchFullWeatherForLocation({ lat: first.lat, lon: first.lng });
+              } else {
+                  throw new Error("Formato de rota inválido ou vazio.");
+              }
+
+              setRouteName(data.name || `Minha rota ${routeType === 'gravada' ? 'gravada' : 'planejada'} em ${new Date().toLocaleDateString('pt-BR')}`);
 
           } catch (e: any) {
               console.error("Erro ao processar dados da rota:", e);
@@ -191,13 +243,11 @@ export default function FinalizarRotaPage() {
    };
 
   useEffect(() => {
-    if (!isLoadingFullForecast && waypoints.length > 0 && selectedDate) {
+    if (!isLoadingFullForecast && geoJsonData && selectedDate) {
       findSpecificForecast();
-    } else if (waypoints.length === 0) {
-      setSpecificForecast(null);
-    }
+    } 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDate, selectedHour, selectedMinute, fullForecastList, isLoadingFullForecast, waypoints]);
+  }, [selectedDate, selectedHour, selectedMinute, fullForecastList, isLoadingFullForecast, geoJsonData]);
 
   const getWeatherConditionCode = (weatherId: number): WeatherData["condition"] => {
       if (weatherId >= 200 && weatherId < 300) return "stormy";
@@ -233,12 +283,13 @@ export default function FinalizarRotaPage() {
     setIsSaving(true);
 
     try {
+        // Salva no formato JSONB 'waypoints' (suporta GeoJSON perfeitamente)
         const { data: routeSaveData, error: routeSaveError } = await supabase.from('rotas_usuario').insert({
             usuario_id: userProfile.id,
             nome: routeName,
             descricao: routeDescription || null,
             dificuldade: routeDifficulty || null,
-            waypoints: waypoints,
+            waypoints: geoJsonData, // Agora salvamos o objeto GeoJSON completo
             distancia_total_km: distance ? parseFloat((distance / 1000).toFixed(2)) : null,
         }).select().single();
 
@@ -250,19 +301,15 @@ export default function FinalizarRotaPage() {
             const newXp = currentXp + xpGain;
             const newLevel = calculateLevel(newXp);
 
-            const { error: profileUpdateError } = await supabase
+            await supabase
                 .from('perfis')
                 .update({ xp: newXp, nivel: newLevel })
                 .eq('id', userProfile.id);
 
-            if (profileUpdateError) {
-                console.error("Erro ao atualizar XP/Nível:", profileUpdateError);
-                toast({ title: "Aviso", description: "Rota salva, mas erro ao atualizar XP/Nível.", variant: "default" });
-            } else {
-                toast({ title: "Sucesso!", description: `Rota salva! +${xpGain.toFixed(1)} XP.` });
-            }
+            toast({ title: "Sucesso!", description: `Rota salva! +${xpGain.toFixed(1)} XP.` });
 
             sessionStorage.removeItem('finalizingRoute');
+            // Redireciona para a página de detalhes da rota criada
             router.push(`/rotas/${routeSaveData.id}`);
         } else { throw new Error("Dados da rota não retornados."); }
 
@@ -285,17 +332,20 @@ export default function FinalizarRotaPage() {
         <main className="container max-w-2xl mx-auto py-8 px-4">
           <div className="mb-6">
               <h1 className="text-3xl font-bold">
-                {routeType === 'gravada' ? 'Finalizar Rota Gravada' : 'Finalizar Rota Planejada'}
+                {routeType === 'gravada' ? 'Finalizar Rota Gravada' : 'Finalizar Planejamento'}
               </h1>
               <p className="text-muted-foreground">Adicione os detalhes para salvar o seu percurso.</p>
           </div>
+          
           <div className="p-4 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-md text-sm text-blue-800 dark:text-blue-300 flex items-start gap-3 mb-6">
               {routeType === 'gravada' ? <RadioIcon className="h-5 w-5 flex-shrink-0 mt-0.5" /> : <Route className="h-5 w-5 flex-shrink-0 mt-0.5" />}
-              <p>
-                Percurso com <strong>{waypoints.length} pontos</strong>
-                {distance !== null && <span> e distância ~<strong>{(distance / 1000).toFixed(2)} km</strong></span>}.
-                Complete os detalhes abaixo.
-              </p>
+              <div>
+                <p className="font-medium">Resumo do Percurso:</p>
+                <ul className="list-disc list-inside mt-1 space-y-1">
+                    {distance !== null && <li>Distância Total: <strong>{(distance / 1000).toFixed(2)} km</strong></li>}
+                    <li>Tipo: {routeType === 'gravada' ? 'Gravação GPS' : 'Desenho Manual (Satélite)'}</li>
+                </ul>
+              </div>
           </div>
 
           <div className="space-y-6">
@@ -305,10 +355,10 @@ export default function FinalizarRotaPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="description">Descrição</Label>
-                <Textarea id="description" value={routeDescription} onChange={(e) => setRouteDescription(e.target.value)} placeholder="Como foi a experiência? Pontos de interesse?" />
+                <Textarea id="description" value={routeDescription} onChange={(e) => setRouteDescription(e.target.value)} placeholder="Como foi a experiência? O terreno era difícil?" />
               </div>
               <div className="space-y-2">
-                <Label>Dificuldade</Label>
+                <Label>Dificuldade Estimada</Label>
                 <RadioGroup value={routeDifficulty} onValueChange={setRouteDifficulty} className="flex flex-wrap gap-x-4 gap-y-2 pt-2">
                     {["Fácil", "Moderado", "Difícil", "Extrema"].map(level => (
                         <div key={level} className="flex items-center space-x-2">
@@ -320,14 +370,14 @@ export default function FinalizarRotaPage() {
               </div>
 
                <div className="space-y-4 border-t pt-6">
-                 <h3 className="text-lg font-medium">Consultar Previsão (Opcional)</h3>
-                 <p className="text-sm text-muted-foreground">Verifique a previsão para o local e data planejados.</p>
+                 <h3 className="text-lg font-medium">Previsão do Tempo (Opcional)</h3>
+                 <p className="text-sm text-muted-foreground">Ideal para planejar a data da sua aventura.</p>
                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
                    <div className="space-y-1">
                      <Label htmlFor="routeDate" className="text-xs">Data</Label>
                      <Popover>
                        <PopoverTrigger asChild>
-                         <Button id="routeDate" variant={"outline"} size="sm" className={cn("w-full justify-start text-left font-normal h-10", !selectedDate && "text-muted-foreground")} disabled={isLoadingFullForecast || waypoints.length === 0}>
+                         <Button id="routeDate" variant={"outline"} size="sm" className={cn("w-full justify-start text-left font-normal h-10", !selectedDate && "text-muted-foreground")} disabled={isLoadingFullForecast || !geoJsonData}>
                            <CalendarIcon className="mr-2 h-4 w-4" />
                            {selectedDate ? format(selectedDate, "PPP", { locale: ptBR }) : <span>Escolha a data</span>}
                          </Button>
@@ -387,7 +437,7 @@ export default function FinalizarRotaPage() {
 
               <div className="flex justify-end gap-2 pt-4 border-t">
                  <Button variant="outline" asChild><Link href="/rotas">Cancelar</Link></Button>
-                 <Button onClick={handleSaveRoute} disabled={isSaving || isLoading}><Loader2 className={cn("mr-2 h-4 w-4 animate-spin", !isSaving && "hidden")} />Salvar Rota</Button>
+                 <Button onClick={handleSaveRoute} disabled={isSaving || isLoading} className="min-w-[140px]"><Loader2 className={cn("mr-2 h-4 w-4 animate-spin", !isSaving && "hidden")} />Salvar Rota</Button>
               </div>
           </div>
         </main>
