@@ -1,15 +1,25 @@
-// app/map/page.tsx
 "use client"
 
 import { useState } from "react";
-import { Search, Star, MapPin, TrendingUp, Mountain } from "lucide-react";
+import { Search, Star, MapPin, TrendingUp, Mountain, Loader2 } from "lucide-react";
 import Navbar from "@/components/navbar";
 import { Input } from "@/components/ui/input";
 import { featuredTrails } from "@/lib/data";
-import LeafletMap from "@/components/leaflet-map";
+// REMOVIDO: import LeafletMap from "@/components/leaflet-map";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import dynamic from "next/dynamic"; // ADICIONADO
+
+// ADICIONADO: Importação dinâmica para evitar erro de window is not defined
+const LeafletMap = dynamic(() => import("@/components/leaflet-map"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center bg-muted/20">
+      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+    </div>
+  ),
+});
 
 export default function MapPage() {
     const [selectedTrailId, setSelectedTrailId] = useState<string | undefined>(undefined);
