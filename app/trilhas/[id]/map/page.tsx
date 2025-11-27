@@ -4,8 +4,15 @@ import Link from "next/link"
 import { ArrowLeft, Mountain } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { getTrailById } from "@/lib/data"
-import LeafletMap from "@/components/leaflet-map"
+// REMOVIDO: import LeafletMap from "@/components/leaflet-map"
 import Navbar from "@/components/navbar"
+import dynamic from "next/dynamic" // ADICIONADO
+
+// ADICIONADO
+const LeafletMap = dynamic(() => import("@/components/leaflet-map"), {
+  ssr: false,
+  loading: () => <div className="w-full h-full bg-muted animate-pulse" />
+})
 
 export default function TrailMapPage({ params }: { params: { id: string } }) {
   const trail = getTrailById(params.id)
