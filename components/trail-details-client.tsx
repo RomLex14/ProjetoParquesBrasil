@@ -86,14 +86,27 @@ export default function TrilhaDetalhesClient({ trail }: { trail: Trilhas }) {
           >
             <CarouselContent>
               {carouselImages.map((imgSrc, index) => (
-                <CarouselItem key={index} className="relative w-full h-[300px] md:h-[400px] lg:h-[450px]">
+                <CarouselItem key={index} className="relative w-full h-[300px] md:h-[400px] lg:h-[450px] overflow-hidden bg-black">
+                  
+                  {/* 1. Fundo Borrado (Ambientação) */}
+                  <div className="absolute inset-0 opacity-50">
+                    <Image
+                      src={imgSrc}
+                      alt="Background Blur"
+                      fill
+                      className="object-cover blur-2xl scale-110" 
+                    />
+                  </div>
+
+                  {/* 2. Imagem Principal (Nítida e sem cortes) */}
                   <Image
                     src={imgSrc}
                     alt={`${trail.name} - Imagem ${index + 1}`}
                     fill
-                    className="object-cover opacity-90"
+                    className="object-contain z-10 relative"
                     priority={index === 0}
                   />
+                  
                 </CarouselItem>
               ))}
             </CarouselContent>

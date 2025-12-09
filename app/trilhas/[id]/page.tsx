@@ -31,5 +31,6 @@ export default async function TrailDetailsPage({ params }: PageProps) {
         <TrilhaDetalhesClient trail={trail} />
       </main>
     </div>
+    
   );
 }

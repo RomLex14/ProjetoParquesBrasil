@@ -40,28 +40,23 @@ export interface Trilhas {
   location: string;
   description: string;
   imageUrl: string;     // Imagem de capa principal
-  
-  // Nova propriedade para o carrossel de imagens
+    // Nova propriedade para o carrossel de imagens
   // Opcional (?) para não quebrar dados antigos imediatamente, 
   // mas recomendado preencher em todas.
-  images?: string[];    
-
+  images: string[];
   difficulty: "Fácil" | "Moderado" | "Difícil" | "Extrema"; 
   distance: number;
   duration: string;
   elevation: number;
-  rating: number;
-  
+  rating: number;  
   // Lista de avaliações. 
   // No data.ts, você deve passar um array vazio [] se não houver reviews ainda.
-  reviews: Review[];
-  
+  reviews: Review[];  
   // Coordenadas para ponto único (marcador no mapa)
   coordinates?: {
     lat: number;
     lng: number;
-  };
-  
+  };  
   // Caminho para desenhar a linha da trilha (array de pontos)
   path?: Array<{
     lat: number;

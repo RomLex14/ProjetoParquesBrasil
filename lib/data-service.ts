@@ -52,9 +52,8 @@ export const getTrilhas = cache(async (): Promise<Trilhas[]> => {
 
 // --- BUSCA DE TRILHA POR ID (DETALHES) ---
 export const getTrilhaById = cache(async (id: string): Promise<Trilhas | undefined> => {
-  // 1. Busca os dados principais da View
   const { data: trilhaData, error: trilhaError } = await supabase
-    .from('view_trilhas_app')
+    .from('trilhas')
     .select('*')
     .eq('id', id)
     .single();
@@ -96,7 +95,7 @@ export const getTrilhaById = cache(async (id: string): Promise<Trilhas | undefin
     location: `${trilhaData.parque_nome}, ${trilhaData.parque_estado}`,
     description: trilhaData.descricao,
     imageUrl: trilhaData.url_imagem,
-    images: trilhaData.url_imagem ? [trilhaData.url_imagem] : [],
+    images: trilhaData.images || (trilhaData.url_imagem ? [trilhaData.url_imagem] : []),
     difficulty: trilhaData.dificuldade,
     distance: Number(trilhaData.distancia),
     duration: `${trilhaData.duracao} horas`,
