@@ -168,7 +168,7 @@ export default function Navbar() {
                     <DropdownMenuItem asChild>
                       <Link href="/dashboard" className="cursor-pointer w-full flex items-center">
                         <LayoutDashboard className="mr-2 h-4 w-4" />
-                        Minha Área
+                        Dashboard
                       </Link> 
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
