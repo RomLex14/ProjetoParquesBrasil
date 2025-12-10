@@ -8,7 +8,7 @@ export default async function HomePage() {
 
   const todasAsTrilhas = await getTrilhas();
 
-  const trilhasDestaque = todasAsTrilhas.slice(0, 5);
+  const trilhasDestaque = todasAsTrilhas.slice(0,5);
 
 
   return (

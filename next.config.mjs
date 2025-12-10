@@ -1,26 +1,15 @@
-import withPWAInit from "next-pwa";
-
 /** @type {import('next').NextConfig} */
-const baseConfig = {
-  reactStrictMode: process.env.NODE_ENV === "production", 
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+const nextConfig = {
+  reactStrictMode: process.env.NODE_ENV === "production",
+
   typescript: {
     ignoreBuildErrors: true,
   },
+
   images: {
     unoptimized: true,
   },
+  turbopack: {},
 };
-
-const withPWA = withPWAInit({
-  dest: "public",
-  disable: process.env.NODE_ENV === "development", 
-  register: true,
-  skipWaiting: true,
-});
-
-const nextConfig = withPWA(baseConfig);
 
 export default nextConfig;
